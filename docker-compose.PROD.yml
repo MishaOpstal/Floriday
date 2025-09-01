@@ -1,15 +1,16 @@
 services:
-  floriday-npm:
+  school-introductie:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
+      - "8080:80"
       - "3000:3000"
     volumes:
       - .:/app
-    command: npm run dev
+    command: tail -f /dev/null
     restart: unless-stopped
-#  floriday-maria-db:
+#  school-maria-db:
 #    image: mariadb:11
 #    container_name: mariadb-db
 #    ports:
@@ -22,7 +23,7 @@ services:
 #    volumes:
 #      - mariadb-data:/var/lib/mysql
 #    restart: unless-stopped
-  floriday-pgsql:
+  pgsql:
     image: postgres:15
     container_name: 3d-pgsql
     ports:
