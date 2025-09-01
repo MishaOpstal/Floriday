@@ -24,7 +24,7 @@ services:
 #    restart: unless-stopped
   floriday-pgsql:
     image: postgres:15
-    container_name: 3d-pgsql
+    container_name: floriday-pgsql
     ports:
       - "5432:5432"
     environment:
@@ -33,6 +33,7 @@ services:
       POSTGRES_PASSWORD: secret
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./app:/app
     restart: unless-stopped
 
 volumes:
