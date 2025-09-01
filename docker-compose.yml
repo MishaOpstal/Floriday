@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ./app:/app
     command: npm run dev
     restart: unless-stopped
 #  floriday-maria-db:
