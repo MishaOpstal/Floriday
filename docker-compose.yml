@@ -1,0 +1,41 @@
+services:
+  school-introductie:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: tail -f /dev/null
+    restart: unless-stopped
+#  school-maria-db:
+#    image: mariadb:11
+#    container_name: mariadb-db
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: examplePassword
+#      MYSQL_DATABASE: mydb
+#      MYSQL_USER: user
+#      MYSQL_PASSWORD: userpass
+#    volumes:
+#      - mariadb-data:/var/lib/mysql
+#    restart: unless-stopped
+  pgsql:
+    image: postgres:15
+    container_name: 3d-pgsql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+#  mariadb-data:
+  pgdata:
