@@ -13,6 +13,8 @@ services:
       "sed -i 's/\r$$//' /app/entrypoint_npm.DEV.sh &&
        chmod +x /app/entrypoint_npm.DEV.sh &&
        /app/entrypoint_npm.DEV.sh"
+    # entrypoint: ["/bin/bash", "-c", "/app/entrypoint_npm.DEV.sh && tail -f /dev/null"] # OLD normal entrypoint
+    # entrypoint: ["tail", "-f", "/dev/null"] # DEBUGGING ENTRYPOINT
     restart: unless-stopped
   pgsql:
     image: postgres:15
