@@ -1,41 +1,26 @@
 services:
-  floriday-npm:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+  npm:
+    container_name: floriday-npm
+    image: node:20
     volumes:
       - ./app:/app
-    command: npm run dev
+    ports:
+      - "3000:3000"
+    entrypoint: ["/bin/bash", "-c", "/app/entrypoint_npm.DEV.sh && tail -f /dev/null"]
     restart: unless-stopped
-#  floriday-maria-db:
-#    image: mariadb:11
-#    container_name: mariadb-db
-#    ports:
-#      - "3306:3306"
-#    environment:
-#      MYSQL_ROOT_PASSWORD: examplePassword
-#      MYSQL_DATABASE: mydb
-#      MYSQL_USER: user
-#      MYSQL_PASSWORD: userpass
-#    volumes:
-#      - mariadb-data:/var/lib/mysql
-#    restart: unless-stopped
-  floriday-pgsql:
+  pgsql:
     image: postgres:15
     container_name: floriday-pgsql
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: laravel
-      POSTGRES_USER: laravel
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: floriday
+      POSTGRES_USER: floriday
+      POSTGRES_PASSWORD: secretFloriday
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./app:/app
     restart: unless-stopped
 
 volumes:
-#  mariadb-data:
   pgdata:
