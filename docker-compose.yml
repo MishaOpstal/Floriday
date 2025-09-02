@@ -7,6 +7,7 @@ services:
     ports:
       - "3000:3000"
     entrypoint: ["/bin/bash", "-c", "/app/entrypoint_npm.DEV.sh && tail -f /dev/null"]
+    # entrypoint: ["tail", "-f", "/dev/null"]
     restart: unless-stopped
   pgsql:
     image: postgres:15
