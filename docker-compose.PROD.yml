@@ -4,9 +4,15 @@ services:
     image: node:20
     volumes:
       - ./app:/app
+      - node_modules_prod:/app/node_modules
     ports:
       - "3000:3000"
-    entrypoint: ["/bin/bash", "-c", "/app/entrypoint_npm.PROD.sh && tail -f /dev/null"]
+    working_dir: /app
+    entrypoint: ["/bin/bash", "-c"]
+    command: >
+      "sed -i 's/\r$$//' /app/entrypoint_npm.PROD.sh &&
+       chmod +x /app/entrypoint_npm.PROD.sh &&
+       /app/entrypoint_npm.PROD.sh"
     restart: unless-stopped
   pgsql:
     image: postgres:15
@@ -22,3 +28,4 @@ services:
 
 volumes:
   pgdata-prod:
+  node_modules_prod:
