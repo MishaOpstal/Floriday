@@ -1,20 +1,14 @@
 services:
   npm:
     container_name: floriday-npm
-    image: node:20
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
     volumes:
       - ./app:/app
       - node_modules:/app/node_modules
     ports:
       - "3000:3000"
-    working_dir: /app
-    entrypoint: ["/bin/bash", "-c"]
-    command: >
-      "sed -i 's/\r$$//' /app/entrypoint_npm.DEV.sh &&
-       chmod +x /app/entrypoint_npm.DEV.sh &&
-       /app/entrypoint_npm.DEV.sh"
-    # entrypoint: ["/bin/bash", "-c", "/app/entrypoint_npm.DEV.sh && tail -f /dev/null"] # OLD normal entrypoint
-    # entrypoint: ["tail", "-f", "/dev/null"] # DEBUGGING ENTRYPOINT
     restart: unless-stopped
   pgsql:
     image: postgres:15
