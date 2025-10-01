@@ -1,0 +1,7 @@
+﻿services:
+  leafbidapi:
+    image: leafbidapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+
