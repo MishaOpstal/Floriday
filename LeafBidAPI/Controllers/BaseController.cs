@@ -1,6 +1,14 @@
-﻿namespace LeafBidAPI.Controllers;
+﻿using LeafBidAPI.Data;
+using Microsoft.AspNetCore.Mvc;
 
-public class BaseController
+namespace LeafBidAPI.Controllers;
+
+public class BaseController(ApplicationDbContext dbContext)
 {
-    
+    protected readonly ApplicationDbContext DbContext = dbContext;
+
+    protected static ActionResult NotFound()
+    {
+        return new JsonResult(new { message = "Not Found" }) { StatusCode = 404 };
+    }
 }

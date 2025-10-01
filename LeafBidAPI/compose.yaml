@@ -1,7 +1,37 @@
-﻿services:
-  leafbidapi:
-    image: leafbidapi
+﻿name: leafbidapi
+services:
+  api:
+    image: api
+    container_name: leafbidapi-api
+    ports:
+      - "5000:8080"
+    environment:
+      - SQL_PORT=1433
     build:
       context: .
       dockerfile: Dockerfile
+    networks:
+      - leafbidapi-network
+    depends_on:
+      - mssql
+      
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: leafbidapi-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "ibUu6nv7tuwt66MJ9cVdkXJJdN"
+    ports:
+      - "1430:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - leafbidapi-network
 
+volumes:
+  mssql_data:
+
+networks:
+  leafbidapi-network:
+    driver: bridge
