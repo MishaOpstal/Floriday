@@ -7,6 +7,8 @@ services:
       - "5000:8080"
     environment:
       - SQL_PORT=1433
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=LeafBidDb;User Id=sa;Password=ibUu6nv7tuwt66MJ9cVdkXJJdN;TrustServerCertificate=True;
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,7 +16,7 @@ services:
       - leafbidapi-network
     depends_on:
       - mssql
-      
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: leafbidapi-mssql
