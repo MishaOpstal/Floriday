@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class AuctionSalesController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class AuctionSaleController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
     [HttpGet]
     public async Task<ActionResult<List<AuctionSales>>> GetAuctionSales()
