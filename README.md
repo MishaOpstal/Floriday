@@ -53,7 +53,7 @@ docker compose restart
 ```
 
 #### 6. Access the Application
-The API should now be running at: [http://localhost:5000/swagger](http://localhost:5000/swagger/index.html)
+The API should now be running at: [http://localhost:5001/swagger](http://localhost:5001/swagger/index.html)
 
 ## Development Configuration
 
@@ -73,14 +73,14 @@ environment:
 ## Docker Services
 The `docker-compose.yml` file includes:
 - SQL Server (exposed on port 1430)
-- LeafBid API (exposed on port 5000)
+- LeafBid API (exposed on port 5001)
 
 Services communicate internally via Docker networking. The API references SQL Server by service name, not `localhost`.
 
 ## Troubleshooting
 
 ### Port Already in Use
-If ports 5000 or 1430 are already in use, modify the port mappings in `docker-compose.yml`.
+If ports 5001 or 1430 are already in use, modify the port mappings in `docker-compose.yml`.
 
 ### Database Connection Issues
 Ensure Docker services are running and the connection string in `appsettings.Development.json` uses the SQL Server service name from docker-compose (e.g., `Server=sqlserver,1433`).
