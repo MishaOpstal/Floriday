@@ -18,15 +18,15 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        var Product = await DbContext.Products.FindAsync(id);
-        if (Product == null)
+        var product = await DbContext.Products.FindAsync(id);
+        if (product == null)
             return NotFound();
 
-        return Product;
+        return product;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Buyer>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
         DbContext.Products.Add(product);
         await DbContext.SaveChangesAsync();
