@@ -35,20 +35,20 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProduct(int id, Product products)
+    public async Task<ActionResult> UpdateProduct(int id, Product updatedProducts)
     {
         var product = await DbContext.Products.FindAsync(id);
         if (product == null)
             return NotFound();
         
-        product.Name = products.Name;
-        product.Weight = products.Weight;
-        product.Picture = products.Picture;
-        product.Species = products.Species;
-        product.PotSize = products.PotSize;
-        product.StemLength = products.StemLength;
-        product.Stock = products.Stock;
-        product.Auction = products.Auction;
+        product.Name = updatedProducts.Name;
+        product.Weight = updatedProducts.Weight;
+        product.Picture = updatedProducts.Picture;
+        product.Species = updatedProducts.Species;
+        product.PotSize = updatedProducts.PotSize;
+        product.StemLength = updatedProducts.StemLength;
+        product.Stock = updatedProducts.Stock;
+        product.Auction = updatedProducts.Auction;
         
         await DbContext.SaveChangesAsync();
         return new JsonResult(product);
