@@ -35,27 +35,27 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProduct(int id, Product updatedProducts)
+    public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
     {
         var product = await DbContext.Products.FindAsync(id);
         if (product == null)
             return NotFound();
         
-        product.Name = updatedProducts.Name;
-        product.Weight = updatedProducts.Weight;
-        product.Picture = updatedProducts.Picture;
-        product.Species = updatedProducts.Species;
-        product.Stock = updatedProducts.Stock;
-        product.Auction = updatedProducts.Auction;
+        product.Name = updatedProduct.Name;
+        product.Weight = updatedProduct.Weight;
+        product.Picture = updatedProduct.Picture;
+        product.Species = updatedProduct.Species;
+        product.Stock = updatedProduct.Stock;
+        product.Auction = updatedProduct.Auction;
 
-        if (updatedProducts.PotSize.HasValue)
+        if (updatedProduct.PotSize.HasValue)
         {
-            product.PotSize = updatedProducts.PotSize;
-            updatedProducts.StemLength = null;
-        } else if (updatedProducts.StemLength.HasValue)
+            product.PotSize = updatedProduct.PotSize;
+            updatedProduct.StemLength = null;
+        } else if (updatedProduct.StemLength.HasValue)
         {
-            product.StemLength = updatedProducts.StemLength;
-            updatedProducts.PotSize = null;       
+            product.StemLength = updatedProduct.StemLength;
+            updatedProduct.PotSize = null;       
         }
         
         await DbContext.SaveChangesAsync();
