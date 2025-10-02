@@ -86,6 +86,10 @@ dotnet ef migrations list
 dotnet ef database update
 ```
 
+### Changes I make don't reflect in the API container
+This is normal as we do not have live-reloading yet.
+In order to apply changes made to the codebase, (re)run `docker compose up --build -d`
+
 ## Useful Commands
 ```bash
 # Create a new migration when you've changed a model
