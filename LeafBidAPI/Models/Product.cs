@@ -1,6 +1,4 @@
-﻿using LeafBidAPI.Enums;
-
-namespace LeafBidAPI.Models;
+﻿namespace LeafBidAPI.Models;
 
 public class Product
 {
