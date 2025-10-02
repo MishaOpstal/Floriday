@@ -45,10 +45,18 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
         product.Weight = updatedProducts.Weight;
         product.Picture = updatedProducts.Picture;
         product.Species = updatedProducts.Species;
-        product.PotSize = updatedProducts.PotSize;
-        product.StemLength = updatedProducts.StemLength;
         product.Stock = updatedProducts.Stock;
         product.Auction = updatedProducts.Auction;
+
+        if (updatedProducts.PotSize.HasValue)
+        {
+            product.PotSize = updatedProducts.PotSize;
+            updatedProducts.StemLength = null;
+        } else if (updatedProducts.StemLength.HasValue)
+        {
+            product.StemLength = updatedProducts.StemLength;
+            updatedProducts.PotSize = null;       
+        }
         
         await DbContext.SaveChangesAsync();
         return new JsonResult(product);
