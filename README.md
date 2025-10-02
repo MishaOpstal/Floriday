@@ -34,6 +34,12 @@ docker compose up --build -d
 
 **Note:** If Docker requests storage permissions, accept them. If the initial run fails after granting permissions, simply run the command again.
 
+#### 3.5. Install dotnet-ef
+Run the following command to install dotnet-ef for use in the next steps:
+```bash
+dotnet tool install --global dotnet-ef
+```
+
 #### 4. Apply Database Migrations
 Run the Entity Framework migrations to set up the database schema:
 ```bash
