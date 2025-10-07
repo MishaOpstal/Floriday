@@ -9,12 +9,18 @@ namespace LeafBidAPI.Controllers;
 [ApiController]
 public class UserController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
+    /// <summary>
+    /// Get all users.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsers()
     {
         return await DbContext.Users.ToListAsync();
     }
-
+    
+    /// <summary>
+    /// Get a user by ID.
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
@@ -24,7 +30,10 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
 
         return user;
     }
-
+    
+    /// <summary>
+    /// Create a new user.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<User>> CreateUser(User user)
     {
@@ -33,7 +42,10 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
 
         return new JsonResult(user) { StatusCode = 201 };
     }
-
+    
+    /// <summary>
+    /// Update an existing user by ID.
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateUser(int id, User updatedUser)
     {
