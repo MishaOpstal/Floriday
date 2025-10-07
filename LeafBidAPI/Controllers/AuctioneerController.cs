@@ -9,12 +9,19 @@ namespace LeafBidAPI.Controllers;
 [ApiController]
 public class AuctioneerController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
+    
+    /// <summary>
+    /// Get all auctioneers
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<Auctioneer>>> GetAuctioneers()
     {
         return await DbContext.Auctioneers.ToListAsync();
     }
 
+    /// <summary>
+    /// Get auctioneer by id
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Auctioneer>> GetAuctioneer(int id)
     {
@@ -25,6 +32,9 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
         return auctioneer;
     }
 
+    /// <summary>
+    /// Create a new auctioneer
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Auctioneer>> CreateAuctioneer(Auctioneer auctioneer)
     {
@@ -34,6 +44,9 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
         return new JsonResult(auctioneer) { StatusCode = 201 };
     }
 
+    /// <summary>
+    /// Update an existing auctioneer
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateAuctioneer(int id, Auctioneer updatedAuctioneer)
     {
