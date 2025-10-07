@@ -20,7 +20,9 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     {
         var provider = await DbContext.Providers.FindAsync(id);
         if (provider == null)
+        {
             return NotFound();
+        }
 
         return provider;
     }
@@ -39,8 +41,10 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     {
         var provider = await DbContext.Providers.FindAsync(id);
         if (provider == null)
+        {
             return NotFound();
-        
+        }
+
         provider.CompanyName = updatedProvider.CompanyName;
         
         await DbContext.SaveChangesAsync();

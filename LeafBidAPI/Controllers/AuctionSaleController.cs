@@ -20,7 +20,9 @@ public class AuctionSaleController(ApplicationDbContext dbContext) : BaseControl
     {
         var auctionSale = await DbContext.AuctionSales.FindAsync(id);
         if (auctionSale == null)
+        {
             return NotFound();
+        }
 
         return auctionSale;
     }

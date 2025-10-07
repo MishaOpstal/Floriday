@@ -20,7 +20,9 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     {
         var buyer = await DbContext.Buyers.FindAsync(id);
         if (buyer == null)
+        {
             return NotFound();
+        }
 
         return buyer;
     }
@@ -39,8 +41,10 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     {
         var buyer = await DbContext.Buyers.FindAsync(id);
         if (buyer == null)
+        {
             return NotFound();
-        
+        }
+
         buyer.CompanyName = updatedBuyer.CompanyName;
         
         await DbContext.SaveChangesAsync();

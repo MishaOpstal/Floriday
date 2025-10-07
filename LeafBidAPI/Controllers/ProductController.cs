@@ -20,7 +20,9 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     {
         var product = await DbContext.Products.FindAsync(id);
         if (product == null)
+        {
             return NotFound();
+        }
 
         return product;
     }
@@ -39,8 +41,10 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     {
         var product = await DbContext.Products.FindAsync(id);
         if (product == null)
+        {
             return NotFound();
-        
+        }
+
         product.Name = updatedProduct.Name;
         product.Weight = updatedProduct.Weight;
         product.Picture = updatedProduct.Picture;

@@ -20,7 +20,9 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     {
         var auctioneer = await DbContext.Auctioneers.FindAsync(id);
         if (auctioneer == null)
+        {
             return NotFound();
+        }
 
         return auctioneer;
     }
@@ -39,7 +41,9 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     {
         var auctioneer = await DbContext.Auctioneers.FindAsync(id);
         if (auctioneer == null)
+        {
             return NotFound();
+        }
 
         auctioneer.User = updatedAuctioneer.User;
         await DbContext.SaveChangesAsync();
