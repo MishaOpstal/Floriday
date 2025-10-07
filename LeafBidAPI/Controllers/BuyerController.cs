@@ -9,12 +9,19 @@ namespace LeafBidAPI.Controllers;
 [ApiController]
 public class BuyerController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
+    
+    /// <summary>
+    /// Get all buyers
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<Buyer>>> GetBuyers()
     {
         return await DbContext.Buyers.ToListAsync();
     }
 
+    /// <summary>
+    /// Get a buyer by id
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Buyer>> GetBuyer(int id)
     {
@@ -27,6 +34,9 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
         return buyer;
     }
 
+    /// <summary>
+    /// Create a new buyer
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Buyer>> CreateBuyer(Buyer buyer)
     {
@@ -36,6 +46,9 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
         return new JsonResult(buyer) { StatusCode = 201 };
     }
 
+    /// <summary>
+    /// Update an existing buyer
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateBuyer(int id, Buyer updatedBuyer)
     {

@@ -9,12 +9,19 @@ namespace LeafBidAPI.Controllers;
 [ApiController]
 public class AuctionSaleController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
+    
+    /// <summary>
+    /// Get all auction sales
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<AuctionSales>>> GetAuctionSales()
     {
         return await DbContext.AuctionSales.ToListAsync();
     }
 
+    /// <summary>
+    /// Get auction sale by id
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AuctionSales>> GetAuctionSale(int id)
     {
@@ -26,7 +33,10 @@ public class AuctionSaleController(ApplicationDbContext dbContext) : BaseControl
 
         return auctionSale;
     }
-
+    
+    /// <summary>
+    /// Create a new auction sale
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<AuctionSales>> CreateAuctionSale(AuctionSales auctionSale)
     {
