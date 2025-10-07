@@ -78,6 +78,9 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
         return new JsonResult(product);
     }
     
+    /// <summary>
+    /// Delete a product by ID.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {

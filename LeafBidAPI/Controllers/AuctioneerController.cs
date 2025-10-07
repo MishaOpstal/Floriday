@@ -63,6 +63,9 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
         return new JsonResult(auctioneer);
     }
     
+    /// <summary>
+    /// Delete an auctioneer by ID.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteAuctioneer(int id)
     {

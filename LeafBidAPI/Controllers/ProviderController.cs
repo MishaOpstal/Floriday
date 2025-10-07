@@ -63,6 +63,9 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
         return new JsonResult(provider);
     }
     
+    /// <summary>
+    /// Delete a provider by ID.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProvider(int id)
     {

@@ -64,6 +64,9 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
         return new JsonResult(buyer);
     }
     
+    /// <summary>
+    /// Delete a buyer by ID.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteBuyer(int id)
     {

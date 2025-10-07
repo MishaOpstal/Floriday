@@ -66,6 +66,9 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
         return new JsonResult(user);
     }
     
+    /// <summary>
+    /// Delete a user by ID.
+    /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
