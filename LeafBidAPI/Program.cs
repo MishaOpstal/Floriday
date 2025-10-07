@@ -1,5 +1,6 @@
 using System.Reflection;
 using LeafBidAPI.Data;
+using LeafBidAPI.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -29,6 +30,7 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "LeafBidAPI", Version = "v1" });
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            c.SchemaFilter<EnumSchemaFilter>();
         });
 
         var app = builder.Build();
