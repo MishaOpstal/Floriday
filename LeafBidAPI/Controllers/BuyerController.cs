@@ -52,7 +52,7 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     }
     
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteBuyer(int id)
+    public async Task<ActionResult> DeleteBuyer(int id)
     {
         var buyer = await DbContext.Buyers.FindAsync(id);
         if (buyer == null)

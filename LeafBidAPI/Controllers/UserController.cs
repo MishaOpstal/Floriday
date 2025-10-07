@@ -55,7 +55,7 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     }
     
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<ActionResult> DeleteUser(int id)
     {
         var user = await DbContext.Users.FindAsync(id);
         if (user == null)

@@ -51,7 +51,7 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     }
     
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteAuctioneer(int id)
+    public async Task<ActionResult> DeleteAuctioneer(int id)
     {
         var auctioneer = await DbContext.Auctioneers.FindAsync(id);
         if (auctioneer == null)

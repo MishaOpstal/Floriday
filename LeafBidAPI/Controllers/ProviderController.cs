@@ -52,7 +52,7 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     }
     
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteProvider(int id)
+    public async Task<ActionResult> DeleteProvider(int id)
     {
         var provider = await DbContext.Providers.FindAsync(id);
         if (provider == null)

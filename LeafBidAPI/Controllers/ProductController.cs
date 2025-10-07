@@ -67,7 +67,7 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     }
     
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteProduct(int id)
+    public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await DbContext.Products.FindAsync(id);
         if (product == null)
