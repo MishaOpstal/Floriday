@@ -9,12 +9,18 @@ namespace LeafBidAPI.Controllers;
 [ApiController]
 public class ProductController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
+    /// <summary>
+    /// Get all products
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts()
     {
         return await DbContext.Products.ToListAsync();
     }
 
+    /// <summary>
+    /// Get a product by id
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
@@ -25,6 +31,9 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
         return product;
     }
 
+    /// <summary>
+    /// Create a new product
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
@@ -34,6 +43,9 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
         return new JsonResult(product) { StatusCode = 201 };
     }
 
+    /// <summary>
+    /// Update an existing product
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
     {
