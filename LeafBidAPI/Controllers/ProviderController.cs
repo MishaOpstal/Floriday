@@ -9,12 +9,18 @@ namespace LeafBidAPI.Controllers;
 [ApiController]
 public class ProviderController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
+    /// <summary>
+    /// Get all providers.
+    /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<Provider>>> GetProviders()
     {
         return await DbContext.Providers.ToListAsync();
     }
 
+    /// <summary>
+    /// Get a provider by ID.
+    /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Provider>> GetProvider(int id)
     {
@@ -24,7 +30,10 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
 
         return provider;
     }
-
+    
+    /// <summary>
+    /// Create a new provider.
+    /// </summary>
     [HttpPost]
     public async Task<ActionResult<Provider>> CreateProvider(Provider provider)
     {
@@ -33,7 +42,10 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
 
         return new JsonResult(provider) { StatusCode = 201 };
     }
-
+    
+    /// <summary>
+    /// Update an existing provider by ID.
+    /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProvider(int id, Provider updatedProvider)
     {
