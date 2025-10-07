@@ -18,6 +18,7 @@ services:
       - mssql
 
   mssql:
+    platform: linux/amd64
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: leafbidapi-mssql
     environment:
