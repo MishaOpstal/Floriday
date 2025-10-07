@@ -49,4 +49,18 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
         await DbContext.SaveChangesAsync();
         return new JsonResult(user);
     }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var user = await DbContext.Users.FindAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        DbContext.Users.Remove(user);
+        await DbContext.SaveChangesAsync();
+        return new OkResult();
+    }
 }

@@ -45,4 +45,18 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
         await DbContext.SaveChangesAsync();
         return new JsonResult(auctioneer);
     }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteAuctioneer(int id)
+    {
+        var auctioneer = await DbContext.Auctioneers.FindAsync(id);
+        if (auctioneer == null)
+        {
+            return NotFound();
+        }
+
+        DbContext.Auctioneers.Remove(auctioneer);
+        await DbContext.SaveChangesAsync();
+        return new OkResult();
+    }
 }

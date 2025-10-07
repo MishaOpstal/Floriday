@@ -46,4 +46,18 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
         await DbContext.SaveChangesAsync();
         return new JsonResult(buyer);
     }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteBuyer(int id)
+    {
+        var buyer = await DbContext.Buyers.FindAsync(id);
+        if (buyer == null)
+        {
+            return NotFound();
+        }
+
+        DbContext.Buyers.Remove(buyer);
+        await DbContext.SaveChangesAsync();
+        return new OkResult();
+    }
 }
