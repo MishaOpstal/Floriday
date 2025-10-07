@@ -20,7 +20,9 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
     {
         var auction = await DbContext.Auctions.FindAsync(id);
         if (auction == null)
+        {
             return NotFound();
+        }
 
         return auction;
     }
@@ -39,7 +41,9 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
     {
         var auction = await DbContext.Auctions.FindAsync(id);
         if (auction == null)
+        {
             return NotFound();
+        }
 
         auction.Description = updatedAuction.Description;
         auction.StartDate = updatedAuction.StartDate;

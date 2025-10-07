@@ -20,7 +20,9 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     {
         var user = await DbContext.Users.FindAsync(id);
         if (user == null)
+        {
             return NotFound();
+        }
 
         return user;
     }
@@ -39,8 +41,10 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     {
         var user = await DbContext.Users.FindAsync(id);
         if (user == null)
+        {
             return NotFound();
-        
+        }
+
         user.Name = updatedUser.Name;
         user.Email = updatedUser.Email;
         user.PasswordHash = updatedUser.PasswordHash;

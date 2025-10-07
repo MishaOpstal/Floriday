@@ -20,7 +20,9 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
     {
         var auctionSaleProduct = await DbContext.AuctionSalesProducts.FindAsync(id);
         if (auctionSaleProduct == null)
+        {
             return NotFound();
+        }
 
         return auctionSaleProduct;
     }
@@ -40,7 +42,9 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
     {
         var auctionSaleProduct = await DbContext.AuctionSalesProducts.FindAsync(id);
         if (auctionSaleProduct == null)
+        {
             return NotFound();
+        }
 
         auctionSaleProduct.AuctionSale = updatedAuctionSaleProduct.AuctionSale;
         auctionSaleProduct.Product = updatedAuctionSaleProduct.Product;
