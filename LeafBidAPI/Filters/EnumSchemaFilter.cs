@@ -1,7 +1,7 @@
 ﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace LeafBidAPI.Enums;
+namespace LeafBidAPI.Filters;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class EnumSchemaFilter : ISchemaFilter
