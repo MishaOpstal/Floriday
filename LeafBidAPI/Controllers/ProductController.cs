@@ -65,4 +65,18 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
         await DbContext.SaveChangesAsync();
         return new JsonResult(product);
     }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var product = await DbContext.Products.FindAsync(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        DbContext.Products.Remove(product);
+        await DbContext.SaveChangesAsync();
+        return new OkResult();
+    }
 }

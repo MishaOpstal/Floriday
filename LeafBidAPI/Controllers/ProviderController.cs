@@ -50,4 +50,18 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
         await DbContext.SaveChangesAsync();
         return new JsonResult(provider);
     }
+    
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeleteProvider(int id)
+    {
+        var provider = await DbContext.Providers.FindAsync(id);
+        if (provider == null)
+        {
+            return NotFound();
+        }
+
+        DbContext.Providers.Remove(provider);
+        await DbContext.SaveChangesAsync();
+        return new OkResult();
+    }
 }
