@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class UserController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class UserController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
     /// Get all users.
@@ -15,7 +15,7 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsers()
     {
-        return await DbContext.Users.ToListAsync();
+        return await Context.Users.ToListAsync();
     }
     
     /// <summary>
@@ -24,7 +24,7 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        var user = await DbContext.Users.FindAsync(id);
+        var user = await Context.Users.FindAsync(id);
         if (user == null)
         {
             return NotFound();
@@ -39,8 +39,8 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     [HttpPost]
     public async Task<ActionResult<User>> CreateUser(User user)
     {
-        DbContext.Users.Add(user);
-        await DbContext.SaveChangesAsync();
+        Context.Users.Add(user);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(user) { StatusCode = 201 };
     }
@@ -51,7 +51,7 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateUser(int id, User updatedUser)
     {
-        var user = await DbContext.Users.FindAsync(id);
+        var user = await Context.Users.FindAsync(id);
         if (user == null)
         {
             return NotFound();
@@ -62,7 +62,7 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
         user.PasswordHash = updatedUser.PasswordHash;
         user.UserType = updatedUser.UserType;
         
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(user);
     }
     
@@ -72,14 +72,14 @@ public class UserController(ApplicationDbContext dbContext) : BaseController(dbC
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        var user = await DbContext.Users.FindAsync(id);
+        var user = await Context.Users.FindAsync(id);
         if (user == null)
         {
             return NotFound();
         }
 
-        DbContext.Users.Remove(user);
-        await DbContext.SaveChangesAsync();
+        Context.Users.Remove(user);
+        await Context.SaveChangesAsync();
         return new OkResult();
     }
 }

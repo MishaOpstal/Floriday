@@ -5,7 +5,7 @@ namespace LeafBidAPI.Controllers;
 
 public class BaseController(ApplicationDbContext dbContext)
 {
-    protected readonly ApplicationDbContext DbContext = dbContext;
+    protected readonly ApplicationDbContext Context = dbContext;
 
     protected static ActionResult NotFound()
     {

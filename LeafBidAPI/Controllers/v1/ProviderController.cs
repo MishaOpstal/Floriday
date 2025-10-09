@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class ProviderController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class ProviderController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
     /// Get all providers.
@@ -15,7 +15,7 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     [HttpGet]
     public async Task<ActionResult<List<Provider>>> GetProviders()
     {
-        return await DbContext.Providers.ToListAsync();
+        return await Context.Providers.ToListAsync();
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Provider>> GetProvider(int id)
     {
-        var provider = await DbContext.Providers.FindAsync(id);
+        var provider = await Context.Providers.FindAsync(id);
         if (provider == null)
         {
             return NotFound();
@@ -39,8 +39,8 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     [HttpPost]
     public async Task<ActionResult<Provider>> CreateProvider(Provider provider)
     {
-        DbContext.Providers.Add(provider);
-        await DbContext.SaveChangesAsync();
+        Context.Providers.Add(provider);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(provider) { StatusCode = 201 };
     }
@@ -51,7 +51,7 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProvider(int id, Provider updatedProvider)
     {
-        var provider = await DbContext.Providers.FindAsync(id);
+        var provider = await Context.Providers.FindAsync(id);
         if (provider == null)
         {
             return NotFound();
@@ -59,7 +59,7 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
 
         provider.CompanyName = updatedProvider.CompanyName;
         
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(provider);
     }
     
@@ -69,14 +69,14 @@ public class ProviderController(ApplicationDbContext dbContext) : BaseController
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProvider(int id)
     {
-        var provider = await DbContext.Providers.FindAsync(id);
+        var provider = await Context.Providers.FindAsync(id);
         if (provider == null)
         {
             return NotFound();
         }
 
-        DbContext.Providers.Remove(provider);
-        await DbContext.SaveChangesAsync();
+        Context.Providers.Remove(provider);
+        await Context.SaveChangesAsync();
         return new OkResult();
     }
 }

@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class ProductController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class ProductController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
     /// Get all products
@@ -15,7 +15,7 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts()
     {
-        return await DbContext.Products.ToListAsync();
+        return await Context.Products.ToListAsync();
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        var product = await DbContext.Products.FindAsync(id);
+        var product = await Context.Products.FindAsync(id);
         if (product == null)
         {
             return NotFound();
@@ -39,8 +39,8 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
-        DbContext.Products.Add(product);
-        await DbContext.SaveChangesAsync();
+        Context.Products.Add(product);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(product) { StatusCode = 201 };
     }
@@ -51,7 +51,7 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
     {
-        var product = await DbContext.Products.FindAsync(id);
+        var product = await Context.Products.FindAsync(id);
         if (product == null)
         {
             return NotFound();
@@ -74,7 +74,7 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
             updatedProduct.PotSize = null;       
         }
         
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(product);
     }
     
@@ -84,14 +84,14 @@ public class ProductController(ApplicationDbContext dbContext) : BaseController(
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var product = await DbContext.Products.FindAsync(id);
+        var product = await Context.Products.FindAsync(id);
         if (product == null)
         {
             return NotFound();
         }
 
-        DbContext.Products.Remove(product);
-        await DbContext.SaveChangesAsync();
+        Context.Products.Remove(product);
+        await Context.SaveChangesAsync();
         return new OkResult();
     }
 }

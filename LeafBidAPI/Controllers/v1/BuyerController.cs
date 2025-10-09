@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class BuyerController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class BuyerController(ApplicationDbContext context) : BaseController(context)
 {
     
     /// <summary>
@@ -16,7 +16,7 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     [HttpGet]
     public async Task<ActionResult<List<Buyer>>> GetBuyers()
     {
-        return await DbContext.Buyers.ToListAsync();
+        return await Context.Buyers.ToListAsync();
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Buyer>> GetBuyer(int id)
     {
-        var buyer = await DbContext.Buyers.FindAsync(id);
+        var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)
         {
             return NotFound();
@@ -40,8 +40,8 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     [HttpPost]
     public async Task<ActionResult<Buyer>> CreateBuyer(Buyer buyer)
     {
-        DbContext.Buyers.Add(buyer);
-        await DbContext.SaveChangesAsync();
+        Context.Buyers.Add(buyer);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(buyer) { StatusCode = 201 };
     }
@@ -52,7 +52,7 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateBuyer(int id, Buyer updatedBuyer)
     {
-        var buyer = await DbContext.Buyers.FindAsync(id);
+        var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)
         {
             return NotFound();
@@ -60,7 +60,7 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
 
         buyer.CompanyName = updatedBuyer.CompanyName;
         
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(buyer);
     }
     
@@ -70,14 +70,14 @@ public class BuyerController(ApplicationDbContext dbContext) : BaseController(db
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteBuyer(int id)
     {
-        var buyer = await DbContext.Buyers.FindAsync(id);
+        var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)
         {
             return NotFound();
         }
 
-        DbContext.Buyers.Remove(buyer);
-        await DbContext.SaveChangesAsync();
+        Context.Buyers.Remove(buyer);
+        await Context.SaveChangesAsync();
         return new OkResult();
     }
 }

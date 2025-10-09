@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctioneerController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class AuctioneerController(ApplicationDbContext context) : BaseController(context)
 {
     
     /// <summary>
@@ -16,7 +16,7 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     [HttpGet]
     public async Task<ActionResult<List<Auctioneer>>> GetAuctioneers()
     {
-        return await DbContext.Auctioneers.ToListAsync();
+        return await Context.Auctioneers.ToListAsync();
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Auctioneer>> GetAuctioneer(int id)
     {
-        var auctioneer = await DbContext.Auctioneers.FindAsync(id);
+        var auctioneer = await Context.Auctioneers.FindAsync(id);
         if (auctioneer == null)
         {
             return NotFound();
@@ -40,8 +40,8 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     [HttpPost]
     public async Task<ActionResult<Auctioneer>> CreateAuctioneer(Auctioneer auctioneer)
     {
-        DbContext.Auctioneers.Add(auctioneer);
-        await DbContext.SaveChangesAsync();
+        Context.Auctioneers.Add(auctioneer);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(auctioneer) { StatusCode = 201 };
     }
@@ -52,14 +52,14 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateAuctioneer(int id, Auctioneer updatedAuctioneer)
     {
-        var auctioneer = await DbContext.Auctioneers.FindAsync(id);
+        var auctioneer = await Context.Auctioneers.FindAsync(id);
         if (auctioneer == null)
         {
             return NotFound();
         }
 
         auctioneer.User = updatedAuctioneer.User;
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(auctioneer);
     }
     
@@ -69,14 +69,14 @@ public class AuctioneerController(ApplicationDbContext dbContext) : BaseControll
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteAuctioneer(int id)
     {
-        var auctioneer = await DbContext.Auctioneers.FindAsync(id);
+        var auctioneer = await Context.Auctioneers.FindAsync(id);
         if (auctioneer == null)
         {
             return NotFound();
         }
 
-        DbContext.Auctioneers.Remove(auctioneer);
-        await DbContext.SaveChangesAsync();
+        Context.Auctioneers.Remove(auctioneer);
+        await Context.SaveChangesAsync();
         return new OkResult();
     }
 }

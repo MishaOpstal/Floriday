@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionSaleProductController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class AuctionSaleProductController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
     /// Get all auction sale products
@@ -15,7 +15,7 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
     [HttpGet]
     public async Task<ActionResult<List<AuctionSalesProducts>>> GetAuctionSaleProducts()
     {
-        return await DbContext.AuctionSalesProducts.ToListAsync();
+        return await Context.AuctionSalesProducts.ToListAsync();
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AuctionSalesProducts>> GetAuctionSaleProduct(int id)
     {
-        var auctionSaleProduct = await DbContext.AuctionSalesProducts.FindAsync(id);
+        var auctionSaleProduct = await Context.AuctionSalesProducts.FindAsync(id);
         if (auctionSaleProduct == null)
         {
             return NotFound();
@@ -39,8 +39,8 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
     [HttpPost]
     public async Task<ActionResult<AuctionSalesProducts>> CreateAuctionSaleProducts(AuctionSalesProducts auctionSaleProduct)
     {
-        DbContext.AuctionSalesProducts.Add(auctionSaleProduct);
-        await DbContext.SaveChangesAsync();
+        Context.AuctionSalesProducts.Add(auctionSaleProduct);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(auctionSaleProduct) { StatusCode = 201 };
     }
@@ -52,7 +52,7 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
     public async Task<ActionResult<AuctionSalesProducts>> UpdateAuctionSaleProducts(
         int id, AuctionSalesProducts updatedAuctionSaleProduct)
     {
-        var auctionSaleProduct = await DbContext.AuctionSalesProducts.FindAsync(id);
+        var auctionSaleProduct = await Context.AuctionSalesProducts.FindAsync(id);
         if (auctionSaleProduct == null)
         {
             return NotFound();
@@ -63,7 +63,7 @@ public class AuctionSaleProductController(ApplicationDbContext dbContext) : Base
         auctionSaleProduct.Quantity = updatedAuctionSaleProduct.Quantity;
         auctionSaleProduct.Price = updatedAuctionSaleProduct.Price;
         
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(auctionSaleProduct);
     }
 }

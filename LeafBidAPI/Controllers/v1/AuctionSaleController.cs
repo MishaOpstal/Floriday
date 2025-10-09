@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionSaleController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class AuctionSaleController(ApplicationDbContext context) : BaseController(context)
 {
     
     /// <summary>
@@ -16,7 +16,7 @@ public class AuctionSaleController(ApplicationDbContext dbContext) : BaseControl
     [HttpGet]
     public async Task<ActionResult<List<AuctionSales>>> GetAuctionSales()
     {
-        return await DbContext.AuctionSales.ToListAsync();
+        return await Context.AuctionSales.ToListAsync();
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class AuctionSaleController(ApplicationDbContext dbContext) : BaseControl
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AuctionSales>> GetAuctionSale(int id)
     {
-        var auctionSale = await DbContext.AuctionSales.FindAsync(id);
+        var auctionSale = await Context.AuctionSales.FindAsync(id);
         if (auctionSale == null)
         {
             return NotFound();
@@ -40,8 +40,8 @@ public class AuctionSaleController(ApplicationDbContext dbContext) : BaseControl
     [HttpPost]
     public async Task<ActionResult<AuctionSales>> CreateAuctionSale(AuctionSales auctionSale)
     {
-        DbContext.AuctionSales.Add(auctionSale);
-        await DbContext.SaveChangesAsync();
+        Context.AuctionSales.Add(auctionSale);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(auctionSale) { StatusCode = 201 };
     }

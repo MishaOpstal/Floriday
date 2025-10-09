@@ -7,7 +7,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionController(ApplicationDbContext dbContext) : BaseController(dbContext)
+public class AuctionController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
     /// Get all auctions
@@ -15,7 +15,7 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
     [HttpGet]
     public async Task<ActionResult<List<Auction>>> GetAuctions()
     {
-        return await DbContext.Auctions.ToListAsync();
+        return await Context.Auctions.ToListAsync();
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Auction>> GetAuction(int id)
     {
-        var auction = await DbContext.Auctions.FindAsync(id);
+        var auction = await Context.Auctions.FindAsync(id);
         if (auction == null)
         {
             return NotFound();
@@ -39,8 +39,8 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
     [HttpPost]
     public async Task<ActionResult<Auction>> CreateAuction(Auction auction)
     {
-        DbContext.Auctions.Add(auction);
-        await DbContext.SaveChangesAsync();
+        Context.Auctions.Add(auction);
+        await Context.SaveChangesAsync();
 
         return new JsonResult(auction) { StatusCode = 201 };
     }
@@ -51,7 +51,7 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateAuction(int id, Auction updatedAuction)
     {
-        var auction = await DbContext.Auctions.FindAsync(id);
+        var auction = await Context.Auctions.FindAsync(id);
         if (auction == null)
         {
             return NotFound();
@@ -63,7 +63,7 @@ public class AuctionController(ApplicationDbContext dbContext) : BaseController(
         auction.MinimumPrice = updatedAuction.MinimumPrice;
         auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
         auction.Auctioneer = updatedAuction.Auctioneer;
-        await DbContext.SaveChangesAsync();
+        await Context.SaveChangesAsync();
         return new JsonResult(auction);
     }
 }
