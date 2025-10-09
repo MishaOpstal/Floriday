@@ -1,6 +1,7 @@
 using System.Reflection;
 using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -22,6 +23,21 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddRouting();
+        
+        // Set-up versioning
+        builder.Services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+        });
+
+        // Set-up versioning for Swagger
+        builder.Services.AddVersionedApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV"; // format: 'v'major[.minor][.patch]
+            options.SubstituteApiVersionInUrl = true;
+        });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
