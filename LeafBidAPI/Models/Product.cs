@@ -1,4 +1,6 @@
-﻿namespace LeafBidAPI.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace LeafBidAPI.Models;
 
 /// <summary>
 /// Represents a product in the system.
@@ -44,5 +46,12 @@ public class Product
     /// Stock quantity of the product.
     /// </summary>
     public int Stock { get; set; }
-    public Auction Auction { get; set; }
+    
+    /// <summary>
+    /// Auction id associated with the product.
+    /// </summary>
+    public required int AuctionId { get; set; }
+    
+    [JsonIgnore]
+    public Auction? Auction { get; set; }
 }

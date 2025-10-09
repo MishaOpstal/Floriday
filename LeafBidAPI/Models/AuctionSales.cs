@@ -1,4 +1,6 @@
-﻿namespace LeafBidAPI.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace LeafBidAPI.Models;
 
 /// <summary>
 /// Represents a sale made at an auction.
@@ -13,15 +15,18 @@ public class AuctionSales
     /// <summary>
     /// Identifier for the auction where the sale took place.
     /// </summary>
-    public int AuctionId { get; set; }
+    public required int AuctionId { get; set; }
     
-    public required Auction Auction { get; set; }
+    [JsonIgnore]
+    public Auction? Auction { get; set; }
     
     /// <summary>
     /// Unique identifier for the buyer who made the purchase.
     /// </summary>
-    public int BuyerId { get; set; }
-    public required Buyer Buyer { get; set; }
+    public required int BuyerId { get; set; }
+    
+    [JsonIgnore]
+    public Buyer? Buyer { get; set; }
     
     /// <summary>
     /// Date and time when the sale occurred.

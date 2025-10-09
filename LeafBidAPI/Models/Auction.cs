@@ -1,4 +1,5 @@
-﻿using LeafBidAPI.Enums;
+﻿using System.Text.Json.Serialization;
+using LeafBidAPI.Enums;
 
 namespace LeafBidAPI.Models;
 
@@ -35,5 +36,11 @@ public class Auction
     
     public ClockLocationEnum ClockLocationEnum { get; set; }
     
-    public Auctioneer Auctioneer { get; set; }
+    /// <summary>
+    /// Identifier of the auctioneer associated with the auction
+    /// </summary>
+    public required int AuctioneerId { get; set; }
+    
+    [JsonIgnore]
+    public Auctioneer? Auctioneer { get; set; }
 }

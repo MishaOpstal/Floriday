@@ -1,4 +1,6 @@
-﻿namespace LeafBidAPI.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace LeafBidAPI.Models;
 
 /// <summary>
 /// Represents a provider in the system.
@@ -10,7 +12,13 @@ public class Provider
     /// </summary>
     public int Id { get; set; }
     
-    public User User { get; set; }
+    /// <summary>
+    /// Identifier of the user associated with the provider
+    /// </summary>
+    public required int UserId { get; set; }
+    
+    [JsonIgnore]
+    public User? User { get; set; }
     
     /// <summary>
     /// Name of the provider's company.

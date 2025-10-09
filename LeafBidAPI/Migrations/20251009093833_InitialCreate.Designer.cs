@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeafBidAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251001124001_InitialCreate")]
+    [Migration("20251009093833_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
