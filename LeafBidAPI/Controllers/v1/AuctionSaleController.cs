@@ -3,9 +3,9 @@ using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeafBidAPI.Controllers;
+namespace LeafBidAPI.Controllers.v1;
 
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 public class AuctionSaleController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
