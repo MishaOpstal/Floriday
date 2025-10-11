@@ -1,6 +1,6 @@
 namespace LeafBidAPI.DTOs.Auction;
 
-public class GetAutctionIdDto
+public class GetAuctionIdDto
 {
     /// <summary>
     /// Data returned when requesting auction information by ID
