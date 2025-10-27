@@ -1,5 +1,5 @@
 ﻿using LeafBidAPI.Data;
-using LeafBidAPI.Models;
+using LeafBidAPI.Domain.User.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

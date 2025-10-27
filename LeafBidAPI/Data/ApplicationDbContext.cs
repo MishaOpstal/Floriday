@@ -1,4 +1,11 @@
-﻿using LeafBidAPI.Models;
+﻿using LeafBidAPI.Domain.Auction.Entities;
+using LeafBidAPI.Domain.Auctioneer.Entities;
+using LeafBidAPI.Domain.AuctionSale.Entities;
+using LeafBidAPI.Domain.AuctionSaleProduct.Entities;
+using LeafBidAPI.Domain.Buyer.Entities;
+using LeafBidAPI.Domain.Product.Entities;
+using LeafBidAPI.Domain.Provider.Entities;
+using LeafBidAPI.Domain.User.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.Data;
