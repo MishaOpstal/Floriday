@@ -19,7 +19,6 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsers()
     {
-        // Keeping list retrieval simple via DbContext; single-entity operations go through repository/validators.
         return await Context.Users.ToListAsync();
     }
     
