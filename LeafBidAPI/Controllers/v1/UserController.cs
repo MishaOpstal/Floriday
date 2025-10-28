@@ -1,5 +1,8 @@
-﻿using LeafBidAPI.App.Domain.User.Entities;
+﻿using LeafBidAPI.App.Domain.User.Data;
+using LeafBidAPI.App.Domain.User.Entities;
+using LeafBidAPI.App.Domain.User.Repositories;
 using LeafBidAPI.Data;
+using LeafBidAPI.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,14 +10,16 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class UserController(ApplicationDbContext context) : BaseController(context)
+public class UserController(ApplicationDbContext context, UserRepository userRepository) : BaseController(context)
 {
+
     /// <summary>
     /// Get all users.
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<List<User>>> GetUsers()
     {
+        // Keeping list retrieval simple via DbContext; single-entity operations go through repository/validators.
         return await Context.Users.ToListAsync();
     }
     
@@ -24,46 +29,43 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        var user = await Context.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
+        var result = await userRepository.GetUserAsync(new GetUserData(id));
+        if (!result.IsFailed) return new JsonResult(result.Value);
 
-        return user;
+        // Not found vs validation errors
+        bool notFound = result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase));
+        return notFound ? NotFound() : new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
     }
     
     /// <summary>
     /// Create a new user.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<User>> CreateUser(User user)
+    public async Task<ActionResult<User>> CreateUser([FromBody] CreateUserRequest request)
     {
-        Context.Users.Add(user);
-        await Context.SaveChangesAsync();
+        var data = new CreateUserData(request.Name, request.Email, request.Password, request.UserType);
+        var result = await userRepository.CreateUserAsync(data);
+        if (result.IsFailed)
+        {
+            return new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
+        }
 
-        return new JsonResult(user) { StatusCode = 201 };
+        var created = result.Value;
+        return new JsonResult(created) { StatusCode = 201 };
     }
     
     /// <summary>
     /// Update an existing user by ID.
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateUser(int id, User updatedUser)
+    public async Task<ActionResult<User>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
     {
-        var user = await Context.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
+        var data = new UpdateUserData(id, request.Name, request.Email, request.Password, request.UserType);
+        var result = await userRepository.UpdateUserAsync(data);
+        if (!result.IsFailed) return new JsonResult(result.Value);
 
-        user.Name = updatedUser.Name;
-        user.Email = updatedUser.Email;
-        user.PasswordHash = updatedUser.PasswordHash;
-        user.UserType = updatedUser.UserType;
-        
-        await Context.SaveChangesAsync();
-        return new JsonResult(user);
+        bool notFound = result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase));
+        return notFound ? NotFound() : new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
     }
     
     /// <summary>
@@ -72,14 +74,13 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        var user = await Context.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
+        var result = await userRepository.DeleteUserAsync(new DeleteUserData(id));
+        if (!result.IsFailed) return new OkResult();
 
-        Context.Users.Remove(user);
-        await Context.SaveChangesAsync();
-        return new OkResult();
+        bool notFound = result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase));
+        return notFound ? NotFound() : new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
     }
 }
+
+public record CreateUserRequest(string Name, string Email, string Password, UserTypeEnum UserType);
+public record UpdateUserRequest(string? Name, string? Email, string? Password, UserTypeEnum? UserType);
