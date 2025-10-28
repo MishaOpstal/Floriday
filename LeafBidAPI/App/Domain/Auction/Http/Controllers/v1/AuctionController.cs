@@ -1,9 +1,9 @@
-﻿using LeafBidAPI.App.Domain.Auction.Entities;
+﻿using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeafBidAPI.Controllers.v1;
+namespace LeafBidAPI.App.Domain.Auction.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -13,7 +13,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Get all auctions
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Auction>>> GetAuctions()
+    public async Task<ActionResult<List<Entities.Auction>>> GetAuctions()
     {
         return await Context.Auctions.ToListAsync();
     }
@@ -22,7 +22,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Get auction by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Auction>> GetAuction(int id)
+    public async Task<ActionResult<Entities.Auction>> GetAuction(int id)
     {
         var auction = await Context.Auctions.FindAsync(id);
         if (auction == null)
@@ -37,7 +37,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Create a new auction
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Auction>> CreateAuction(Auction auction)
+    public async Task<ActionResult<Entities.Auction>> CreateAuction(Entities.Auction auction)
     {
         Context.Auctions.Add(auction);
         await Context.SaveChangesAsync();
@@ -49,7 +49,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Update an existing auction
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuction(int id, Auction updatedAuction)
+    public async Task<ActionResult> UpdateAuction(int id, Entities.Auction updatedAuction)
     {
         var auction = await Context.Auctions.FindAsync(id);
         if (auction == null)

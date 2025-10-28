@@ -1,9 +1,10 @@
 ﻿using LeafBidAPI.App.Domain.AuctionSaleProduct.Entities;
+using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeafBidAPI.Controllers.v1;
+namespace LeafBidAPI.App.Domain.AuctionSaleProduct.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]

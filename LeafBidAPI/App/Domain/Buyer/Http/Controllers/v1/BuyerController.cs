@@ -1,9 +1,9 @@
-﻿using LeafBidAPI.App.Domain.Buyer.Entities;
+﻿using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeafBidAPI.Controllers.v1;
+namespace LeafBidAPI.App.Domain.Buyer.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -14,7 +14,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Get all buyers
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Buyer>>> GetBuyers()
+    public async Task<ActionResult<List<Entities.Buyer>>> GetBuyers()
     {
         return await Context.Buyers.ToListAsync();
     }
@@ -23,7 +23,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Get a buyer by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Buyer>> GetBuyer(int id)
+    public async Task<ActionResult<Entities.Buyer>> GetBuyer(int id)
     {
         var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)
@@ -38,7 +38,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Create a new buyer
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Buyer>> CreateBuyer(Buyer buyer)
+    public async Task<ActionResult<Entities.Buyer>> CreateBuyer(Entities.Buyer buyer)
     {
         Context.Buyers.Add(buyer);
         await Context.SaveChangesAsync();
@@ -50,7 +50,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Update an existing buyer
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateBuyer(int id, Buyer updatedBuyer)
+    public async Task<ActionResult> UpdateBuyer(int id, Entities.Buyer updatedBuyer)
     {
         var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)
