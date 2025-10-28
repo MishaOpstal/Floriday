@@ -1,5 +1,5 @@
-﻿using LeafBidAPI.Data;
-using LeafBidAPI.Domain.AuctionSaleProduct.Entities;
+﻿using LeafBidAPI.App.Domain.AuctionSaleProduct.Entities;
+using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

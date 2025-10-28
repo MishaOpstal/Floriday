@@ -1,11 +1,12 @@
-﻿using LeafBidAPI.Domain.Auction.Entities;
-using LeafBidAPI.Domain.Auctioneer.Entities;
-using LeafBidAPI.Domain.AuctionSale.Entities;
-using LeafBidAPI.Domain.AuctionSaleProduct.Entities;
-using LeafBidAPI.Domain.Buyer.Entities;
-using LeafBidAPI.Domain.Product.Entities;
-using LeafBidAPI.Domain.Provider.Entities;
-using LeafBidAPI.Domain.User.Entities;
+﻿
+using LeafBidAPI.App.Domain.Auction.Entities;
+using LeafBidAPI.App.Domain.Auctioneer.Entities;
+using LeafBidAPI.App.Domain.AuctionSale.Entities;
+using LeafBidAPI.App.Domain.AuctionSaleProduct.Entities;
+using LeafBidAPI.App.Domain.Buyer.Entities;
+using LeafBidAPI.App.Domain.Product.Entities;
+using LeafBidAPI.App.Domain.Provider.Entities;
+using LeafBidAPI.App.Domain.User.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.Data;
