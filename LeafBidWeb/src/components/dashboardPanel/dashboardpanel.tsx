@@ -5,22 +5,31 @@ import s from './dashboardPanel.module.css';
 
 type DashboardPanelProps = {
     title: string;
-    info: string;
     imageSrc?: string;
+    veilingduur: string;
+    totaalprijs: string;
+    kloklocatie: string;
     children?: React.ReactNode;
 };
 
-const DashboardPanel: React.FC<DashboardPanelProps> = ({ title, info, imageSrc, children }) => {
-
+const DashboardPanel: React.FC<DashboardPanelProps> = ({   title, imageSrc, veilingduur, totaalprijs, kloklocatie, children, }) => {
     return (
         <div className={s.panel}>
-            {imageSrc && <img src={imageSrc} alt="Afbeelding" className={s.image} />}
+            <div className={s.left}>
+                {imageSrc && <img src={imageSrc} alt="Afbeelding" className={s.image} />}
+            </div>
 
             <div className={s.middle}>
                 <div className={s.title}>{title}</div>
-                <div className={s.content}>{info}</div>
+                <div className={s.content}>
+                    <p><strong>Veilingduur:</strong> {veilingduur}</p>
+                    <p><strong>Totaalprijs:</strong> {totaalprijs}</p>
+                    <p><strong>Kloklocatie:</strong> {kloklocatie}</p>
+                </div>
+            </div>
 
-                {children && <div className={s.actions}>{children}</div>}
+            <div className={s.right}>
+                {children}
             </div>
         </div>
     );

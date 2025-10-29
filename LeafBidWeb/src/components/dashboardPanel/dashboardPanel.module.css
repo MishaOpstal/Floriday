@@ -10,30 +10,40 @@
 }
 
 .image {
-    width: 80px;
-    height: 80px;
-    margin-right: 20px;
-    object-fit: cover;
-    border-radius: 6px;
+    width: 129px;
+    height: 129px;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    border: 5px solid var(--Primary-Border, #25632C);
 }
+
+.title {
+    color: #FFF;
+    font-size: 33px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.content {
+    color: #FFF;
+    font-size: 16px;
+    font-style: normal;
+    line-height: normal;
+}
+
+.left {
+    flex-shrink: 0;
+    margin-right: 20px;
+}
+
+.right {
+    margin-left: 20px;
+}
+
 .middle {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-.title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.content {
-    font-size: 14px;
-    color: #333;
-}
-
-.right {
-    margin-left: 20px;
 }
