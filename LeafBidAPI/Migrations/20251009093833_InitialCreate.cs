@@ -111,7 +111,7 @@ namespace LeafBidAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuctionSales",
+                name: "AuctionSale",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -181,7 +181,7 @@ namespace LeafBidAPI.Migrations
                     table.ForeignKey(
                         name: "FK_AuctionSalesProducts_AuctionSales_AuctionSaleId",
                         column: x => x.AuctionSaleId,
-                        principalTable: "AuctionSales",
+                        principalTable: "AuctionSale",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -204,12 +204,12 @@ namespace LeafBidAPI.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuctionSales_AuctionId",
-                table: "AuctionSales",
+                table: "AuctionSale",
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuctionSales_BuyerId",
-                table: "AuctionSales",
+                table: "AuctionSale",
                 column: "BuyerId");
 
             migrationBuilder.CreateIndex(
@@ -248,7 +248,7 @@ namespace LeafBidAPI.Migrations
                 name: "Providers");
 
             migrationBuilder.DropTable(
-                name: "AuctionSales");
+                name: "AuctionSale");
 
             migrationBuilder.DropTable(
                 name: "Products");

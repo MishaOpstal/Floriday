@@ -5,7 +5,7 @@ namespace LeafBidAPI.App.Domain.AuctionSale.Entities;
 /// <summary>
 /// Represents a sale made at an auction.
 /// </summary>
-public class AuctionSales
+public class AuctionSale
 {
     /// <summary>
     /// Unique identifier for the auction sale.

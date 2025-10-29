@@ -1,6 +1,6 @@
 using LeafBidAPI.Enums;
 
-namespace LeafBidAPI.Application.Interfaces.Auction.Resources;
+namespace LeafBidAPI.App.Interfaces.Auction.Resources;
 
 /// <summary>
 /// Resource representing an auction.

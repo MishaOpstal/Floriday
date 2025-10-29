@@ -15,7 +15,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     /// Get all auction sales
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<AuctionSales>>> GetAuctionSales()
+    public async Task<ActionResult<List<Entities.AuctionSale>>> GetAuctionSales()
     {
         return await Context.AuctionSales.ToListAsync();
     }
@@ -24,7 +24,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     /// Get auction sale by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<AuctionSales>> GetAuctionSale(int id)
+    public async Task<ActionResult<Entities.AuctionSale>> GetAuctionSale(int id)
     {
         var auctionSale = await Context.AuctionSales.FindAsync(id);
         if (auctionSale == null)
@@ -39,7 +39,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     /// Create a new auction sale
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<AuctionSales>> CreateAuctionSale(AuctionSales auctionSale)
+    public async Task<ActionResult<Entities.AuctionSale>> CreateAuctionSale(Entities.AuctionSale auctionSale)
     {
         Context.AuctionSales.Add(auctionSale);
         await Context.SaveChangesAsync();

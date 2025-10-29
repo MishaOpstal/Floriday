@@ -1,5 +1,4 @@
-﻿using LeafBidAPI.App.Domain.AuctionSaleProduct.Entities;
-using LeafBidAPI.Controllers;
+﻿using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,18 +13,18 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Get all auction sale products
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<AuctionSalesProducts>>> GetAuctionSaleProducts()
+    public async Task<ActionResult<List<Entities.AuctionSaleProduct>>> GetAuctionSaleProducts()
     {
-        return await Context.AuctionSalesProducts.ToListAsync();
+        return await Context.AuctionSaleProducts.ToListAsync();
     }
 
     /// <summary>
     /// Get an auction sale product by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<AuctionSalesProducts>> GetAuctionSaleProduct(int id)
+    public async Task<ActionResult<Entities.AuctionSaleProduct>> GetAuctionSaleProduct(int id)
     {
-        var auctionSaleProduct = await Context.AuctionSalesProducts.FindAsync(id);
+        var auctionSaleProduct = await Context.AuctionSaleProducts.FindAsync(id);
         if (auctionSaleProduct == null)
         {
             return NotFound();
@@ -38,9 +37,9 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Create a new auction sale product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<AuctionSalesProducts>> CreateAuctionSaleProducts(AuctionSalesProducts auctionSaleProduct)
+    public async Task<ActionResult<Entities.AuctionSaleProduct>> CreateAuctionSaleProducts(Entities.AuctionSaleProduct auctionSaleProduct)
     {
-        Context.AuctionSalesProducts.Add(auctionSaleProduct);
+        Context.AuctionSaleProducts.Add(auctionSaleProduct);
         await Context.SaveChangesAsync();
 
         return new JsonResult(auctionSaleProduct) { StatusCode = 201 };
@@ -50,10 +49,10 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Update an existing auction sale product
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<AuctionSalesProducts>> UpdateAuctionSaleProducts(
-        int id, AuctionSalesProducts updatedAuctionSaleProduct)
+    public async Task<ActionResult<Entities.AuctionSaleProduct>> UpdateAuctionSaleProducts(
+        int id, Entities.AuctionSaleProduct updatedAuctionSaleProduct)
     {
-        var auctionSaleProduct = await Context.AuctionSalesProducts.FindAsync(id);
+        var auctionSaleProduct = await Context.AuctionSaleProducts.FindAsync(id);
         if (auctionSaleProduct == null)
         {
             return NotFound();

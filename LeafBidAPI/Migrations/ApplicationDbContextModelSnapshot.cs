@@ -56,7 +56,7 @@ namespace LeafBidAPI.Migrations
                     b.ToTable("Auctions");
                 });
 
-            modelBuilder.Entity("LeafBidAPI.Models.AuctionSales", b =>
+            modelBuilder.Entity("LeafBidAPI.Models.AuctionSale", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace LeafBidAPI.Migrations
 
                     b.HasIndex("BuyerId");
 
-                    b.ToTable("AuctionSales");
+                    b.ToTable("AuctionSale");
                 });
 
             modelBuilder.Entity("LeafBidAPI.Models.AuctionSalesProducts", b =>
@@ -258,7 +258,7 @@ namespace LeafBidAPI.Migrations
                     b.Navigation("Auctioneer");
                 });
 
-            modelBuilder.Entity("LeafBidAPI.Models.AuctionSales", b =>
+            modelBuilder.Entity("LeafBidAPI.Models.AuctionSale", b =>
                 {
                     b.HasOne("LeafBidAPI.Models.Auction", "Auction")
                         .WithMany()
@@ -279,7 +279,7 @@ namespace LeafBidAPI.Migrations
 
             modelBuilder.Entity("LeafBidAPI.Models.AuctionSalesProducts", b =>
                 {
-                    b.HasOne("LeafBidAPI.Models.AuctionSales", "AuctionSale")
+                    b.HasOne("LeafBidAPI.Models.AuctionSale", "AuctionSale")
                         .WithMany()
                         .HasForeignKey("AuctionSaleId")
                         .OnDelete(DeleteBehavior.Cascade)

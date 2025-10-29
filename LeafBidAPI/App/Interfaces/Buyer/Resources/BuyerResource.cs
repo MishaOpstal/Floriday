@@ -1,4 +1,4 @@
-namespace LeafBidAPI.Application.Interfaces.Buyer.Resources;
+namespace LeafBidAPI.App.Interfaces.Buyer.Resources;
 
 /// <summary>
 /// Resource representing a buyer.

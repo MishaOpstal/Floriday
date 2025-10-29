@@ -1,4 +1,4 @@
-namespace LeafBidAPI.Application.Interfaces.AuctionSaleProduct.Resources;
+namespace LeafBidAPI.App.Interfaces.AuctionSaleProduct.Resources;
 
 /// <summary>
 /// Resource representing an auction sale product entry.

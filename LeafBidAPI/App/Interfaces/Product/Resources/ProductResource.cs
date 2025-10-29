@@ -1,4 +1,4 @@
-namespace LeafBidAPI.Application.Interfaces.Product.Resources;
+namespace LeafBidAPI.App.Interfaces.Product.Resources;
 
 /// <summary>
 /// Resource representing a product.

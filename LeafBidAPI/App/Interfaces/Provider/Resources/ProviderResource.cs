@@ -1,4 +1,4 @@
-namespace LeafBidAPI.Application.Interfaces.Provider.Resources;
+namespace LeafBidAPI.App.Interfaces.Provider.Resources;
 
 /// <summary>
 /// Resource representing a provider.

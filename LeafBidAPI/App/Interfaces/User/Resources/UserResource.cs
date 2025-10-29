@@ -1,6 +1,6 @@
 using LeafBidAPI.Enums;
 
-namespace LeafBidAPI.Application.Interfaces.User.Resources;
+namespace LeafBidAPI.App.Interfaces.User.Resources;
 
 /// <summary>
 /// Resource representing a user returned by the API.

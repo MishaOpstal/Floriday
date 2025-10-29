@@ -3,9 +3,9 @@ using LeafBidAPI.App.Domain.AuctionSaleProduct.Data;
 
 namespace LeafBidAPI.App.Domain.AuctionSaleProduct.Validators;
 
-public class UpdateAuctionSalesProductValidator : AbstractValidator<UpdateAuctionSaleProductData>
+public class UpdateAuctionSaleProductValidator : AbstractValidator<UpdateAuctionSaleProductData>
 {
-    public UpdateAuctionSalesProductValidator()
+    public UpdateAuctionSaleProductValidator()
     {
         RuleFor(x => x.Id).GreaterThan(0);
         When(x => x.AuctionSaleId.HasValue, () => RuleFor(x => x.AuctionSaleId!.Value).GreaterThan(0));
