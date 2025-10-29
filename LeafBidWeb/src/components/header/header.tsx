@@ -28,7 +28,7 @@ export default function Header({ returnOption = false }: HeaderProps) {
 
             {returnOption && (
                 <Link href="/" className={s.link}>
-                Terug
+                    Terug
                 </Link>
             )}
             </nav>
