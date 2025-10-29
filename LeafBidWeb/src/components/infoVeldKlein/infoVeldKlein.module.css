@@ -1,14 +1,47 @@
-﻿.wrapper {
-    background: blue;
+﻿.help{}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+
+    border-radius: 10px;
+    border: 5px solid #25632C;
+    background-color: #5C983B;
+
+    width: 40%;
+    max-width: 100%;
 }
 
-.label {
-    font-size: 0.875rem;
-    color: red; /* Tailwind's gray-500 */
-    font-weight: 500;
+.plaatje {
+    width: 60px;
+    height: 60px;
+    border-radius: 10%; /* Make it circular */
+    object-fit: cover;
+    border: 2px solid #25632C;
+    flex-shrink: 0;
 }
 
-.value {
-    font-size: 1rem;
-    color: #111827; /* Tailwind's gray-900 */
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.naam {
+    color: #FFF;
+    font-family: Inter, sans-serif;
+    font-size: 28.8px;
+    font-weight: 400;
+    margin: 0;
+}
+
+.prijs {
+    color: #FFF;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0;
 }

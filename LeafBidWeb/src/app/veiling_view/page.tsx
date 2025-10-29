@@ -3,9 +3,8 @@
 export default function Profile() {
     return (
         <main>
-            <InfoVeld label="Naam" value="Nick poots" />
-            <InfoVeld label="E-mail" value="nick@example.com" />
-            <InfoVeld label="Locatie" value="Den Haag, Nederland" />
+            {/*<InfoVeld naam="Naam" prijs={10000} plaatje="bloem.png"/>*/}
+
         </main>
     );
 }

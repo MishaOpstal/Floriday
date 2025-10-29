@@ -1,15 +1,22 @@
 ﻿import s from './infoVeldKlein.module.css';
 
 type InfoFieldProps = {
-    label: string;
-    value: string | number;
+    naam: string;
+    prijs: number;
+    plaatje: string;
 };
 
-export default function InfoVeld({ label, value }: InfoFieldProps) {
+export default function InfoVeld({ naam, prijs, plaatje }: InfoFieldProps) {
+    // Dynamic image path from public folder
+    const imageSrc = `/${plaatje}`;
+
     return (
         <div className={s.wrapper}>
-            <span className={s.label}>{label}</span>
-            <span className={s.value}>{value}</span>
+            <img className={s.plaatje} src={imageSrc} alt={naam} />
+            <div className={s.tekstContainer}>
+                <h6 className={s.naam}>{naam}</h6>
+                <p className={s.prijs}>{prijs}</p>
+            </div>
         </div>
     );
 }
