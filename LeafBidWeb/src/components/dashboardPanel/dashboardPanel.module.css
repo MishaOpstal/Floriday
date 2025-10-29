@@ -38,7 +38,10 @@
 }
 
 .right {
-    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
 }
 
 .middle {
