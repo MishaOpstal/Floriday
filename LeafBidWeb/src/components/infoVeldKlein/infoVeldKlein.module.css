@@ -1,0 +1,14 @@
+﻿.wrapper {
+    background: blue;
+}
+
+.label {
+    font-size: 0.875rem;
+    color: red; /* Tailwind's gray-500 */
+    font-weight: 500;
+}
+
+.value {
+    font-size: 1rem;
+    color: #111827; /* Tailwind's gray-900 */
+}
