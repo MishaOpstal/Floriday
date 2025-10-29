@@ -16,11 +16,11 @@ public class UserRepository(
     DeleteUserValidator deleteUserValidator,
     PasswordHasher passwordHasher) : BaseRepository
 {
-    public async Task<Result<Entities.User>> GetUserAsync(GetUserData userData)
+    public async Task<Result<Models.User>> GetUserAsync(GetUserData userData)
     {
         var validation = await ValidateAsync(getUserValidator, userData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.User>();
+            return validation.ToResult<Models.User>();
 
         var user = await dbContext.Users.FindAsync(userData.Id);
         return user is null
@@ -28,18 +28,18 @@ public class UserRepository(
             : Result.Ok(user);
     }
     
-    public async Task<Result<Entities.User>> CreateUserAsync(CreateUserData userData)
+    public async Task<Result<Models.User>> CreateUserAsync(CreateUserData userData)
     {
         var validation = await ValidateAsync(createUserValidator, userData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.User>();
+            return validation.ToResult<Models.User>();
 
         // Prevent duplicate emails
         bool exists = await dbContext.Users.AnyAsync(u => u.Email == userData.Email);
         if (exists)
             return Result.Fail("Email is already in use.");
 
-        var user = new Entities.User
+        var user = new Models.User
         {
             Name = userData.Name,
             Email = userData.Email,
@@ -53,11 +53,11 @@ public class UserRepository(
         return Result.Ok(user);
     }
     
-    public async Task<Result<Entities.User>> UpdateUserAsync(UpdateUserData userData)
+    public async Task<Result<Models.User>> UpdateUserAsync(UpdateUserData userData)
     {
         var validation = await ValidateAsync(updateUserValidator, userData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.User>();
+            return validation.ToResult<Models.User>();
 
         var user = await dbContext.Users.FindAsync(userData.Id);
         if (user is null)

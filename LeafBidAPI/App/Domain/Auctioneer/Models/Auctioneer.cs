@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace LeafBidAPI.App.Domain.Auctioneer.Entities;
+namespace LeafBidAPI.App.Domain.Auctioneer.Models;
 
 /// <summary>
 /// Represents an auctioneer in the system
@@ -18,5 +18,5 @@ public class Auctioneer
     public int UserId { get; set; }
     
     [JsonIgnore]
-    public User.Entities.User User { get; set; }
+    public User.Models.User User { get; set; }
 }

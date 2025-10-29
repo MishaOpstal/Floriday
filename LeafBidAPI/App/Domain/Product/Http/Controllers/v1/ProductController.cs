@@ -13,7 +13,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Get all products
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.Product>>> GetProducts()
+    public async Task<ActionResult<List<Models.Product>>> GetProducts()
     {
         return await Context.Products.ToListAsync();
     }
@@ -22,7 +22,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Get a product by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.Product>> GetProduct(int id)
+    public async Task<ActionResult<Models.Product>> GetProduct(int id)
     {
         var product = await Context.Products.FindAsync(id);
         if (product == null)
@@ -37,7 +37,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Create a new product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.Product>> CreateProduct(Entities.Product product)
+    public async Task<ActionResult<Models.Product>> CreateProduct(Models.Product product)
     {
         Context.Products.Add(product);
         await Context.SaveChangesAsync();
@@ -49,7 +49,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Update an existing product
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProduct(int id, Entities.Product updatedProduct)
+    public async Task<ActionResult> UpdateProduct(int id, Models.Product updatedProduct)
     {
         var product = await Context.Products.FindAsync(id);
         if (product == null)

@@ -14,11 +14,11 @@ public class ProviderRepository(
     UpdateProviderValidator updateProviderValidator,
     DeleteProviderValidator deleteProviderValidator) : BaseRepository
 {
-    public async Task<Result<Entities.Provider>> GetProviderAsync(GetProviderData providerData)
+    public async Task<Result<Models.Provider>> GetProviderAsync(GetProviderData providerData)
     {
         var validation = await ValidateAsync(getProviderValidator, providerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Provider>();
+            return validation.ToResult<Models.Provider>();
 
         var provider = await dbContext.Providers.FindAsync(providerData.Id);
         return provider is null
@@ -26,18 +26,18 @@ public class ProviderRepository(
             : Result.Ok(provider);
     }
     
-    public async Task<Result<Entities.Provider>> CreateProviderAsync(CreateProviderData providerData)
+    public async Task<Result<Models.Provider>> CreateProviderAsync(CreateProviderData providerData)
     {
         var validation = await ValidateAsync(createProviderValidator, providerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Provider>();
+            return validation.ToResult<Models.Provider>();
 
         // Prevent duplicate provider records
         bool exists = await dbContext.Providers.AnyAsync(p => p.UserId == providerData.UserId);
         if (exists)
             return Result.Fail("User is already a provider.");
 
-        var provider = new Entities.Provider
+        var provider = new Models.Provider
         {
             UserId = providerData.UserId,
             CompanyName = providerData.CompanyName
@@ -49,11 +49,11 @@ public class ProviderRepository(
         return Result.Ok(provider);
     }
     
-    public async Task<Result<Entities.Provider>> UpdateProviderAsync(UpdateProviderData providerData)
+    public async Task<Result<Models.Provider>> UpdateProviderAsync(UpdateProviderData providerData)
     {
         var validation = await ValidateAsync(updateProviderValidator, providerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Provider>();
+            return validation.ToResult<Models.Provider>();
 
         var provider = await dbContext.Providers.FindAsync(providerData.Id);
         if (provider is null)

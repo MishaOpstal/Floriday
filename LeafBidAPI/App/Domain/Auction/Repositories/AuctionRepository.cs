@@ -13,11 +13,11 @@ public class AuctionRepository(
     UpdateAuctionValidator updateAuctionValidator,
     DeleteAuctionValidator deleteAuctionValidator) : BaseRepository
 {
-    public async Task<Result<Entities.Auction>> GetAuctionAsync(GetAuctionData auctionData)
+    public async Task<Result<Models.Auction>> GetAuctionAsync(GetAuctionData auctionData)
     {
         var validation = await ValidateAsync(getAuctionValidator, auctionData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Auction>();
+            return validation.ToResult<Models.Auction>();
 
         var auction = await dbContext.Auctions.FindAsync(auctionData.Id);
         return auction is null
@@ -25,13 +25,13 @@ public class AuctionRepository(
             : Result.Ok(auction);
     }
     
-    public async Task<Result<Entities.Auction>> CreateAuctionAsync(CreateAuctionData auctionData)
+    public async Task<Result<Models.Auction>> CreateAuctionAsync(CreateAuctionData auctionData)
     {
         var validation = await ValidateAsync(createAuctionValidator, auctionData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Auction>();
+            return validation.ToResult<Models.Auction>();
 
-        var auction = new Entities.Auction
+        var auction = new Models.Auction
         {
             Description = auctionData.Description,
             StartDate = auctionData.StartDate,
@@ -47,11 +47,11 @@ public class AuctionRepository(
         return Result.Ok(auction);
     }
     
-    public async Task<Result<Entities.Auction>> UpdateAuctionAsync(UpdateAuctionData auctionData)
+    public async Task<Result<Models.Auction>> UpdateAuctionAsync(UpdateAuctionData auctionData)
     {
         var validation = await ValidateAsync(updateAuctionValidator, auctionData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Auction>();
+            return validation.ToResult<Models.Auction>();
 
         var auction = await dbContext.Auctions.FindAsync(auctionData.Id);
         if (auction is null)

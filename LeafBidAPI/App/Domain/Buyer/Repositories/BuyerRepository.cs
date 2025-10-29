@@ -14,11 +14,11 @@ public class BuyerRepository(
     UpdateBuyerValidator updateBuyerValidator,
     DeleteBuyerValidator deleteBuyerValidator) : BaseRepository
 {
-    public async Task<Result<Entities.Buyer>> GetBuyerAsync(GetBuyerData buyerData)
+    public async Task<Result<Models.Buyer>> GetBuyerAsync(GetBuyerData buyerData)
     {
         var validation = await ValidateAsync(getBuyerValidator, buyerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Buyer>();
+            return validation.ToResult<Models.Buyer>();
 
         var buyer = await dbContext.Buyers.FindAsync(buyerData.Id);
         return buyer is null
@@ -26,18 +26,18 @@ public class BuyerRepository(
             : Result.Ok(buyer);
     }
     
-    public async Task<Result<Entities.Buyer>> CreateBuyerAsync(CreateBuyerData buyerData)
+    public async Task<Result<Models.Buyer>> CreateBuyerAsync(CreateBuyerData buyerData)
     {
         var validation = await ValidateAsync(createBuyerValidator, buyerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Buyer>();
+            return validation.ToResult<Models.Buyer>();
         
         // Prevent duplicate buyer records
         bool exists = await dbContext.Buyers.AnyAsync(b => b.UserId == buyerData.UserId);
         if (exists)
             return Result.Fail("User is already a buyer.");
 
-        var buyer = new Entities.Buyer
+        var buyer = new Models.Buyer
         {
             UserId = buyerData.UserId,
             CompanyName = buyerData.CompanyName,
@@ -49,11 +49,11 @@ public class BuyerRepository(
         return Result.Ok(buyer);
     }
     
-    public async Task<Result<Entities.Buyer>> UpdateBuyerAsync(UpdateBuyerData buyerData)
+    public async Task<Result<Models.Buyer>> UpdateBuyerAsync(UpdateBuyerData buyerData)
     {
         var validation = await ValidateAsync(updateBuyerValidator, buyerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Buyer>();
+            return validation.ToResult<Models.Buyer>();
 
         var buyer = await dbContext.Buyers.FindAsync(buyerData.Id);
         if (buyer is null)

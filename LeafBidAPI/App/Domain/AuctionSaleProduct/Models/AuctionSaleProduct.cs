@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace LeafBidAPI.App.Domain.AuctionSaleProduct.Entities;
+namespace LeafBidAPI.App.Domain.AuctionSaleProduct.Models;
 
 /// <summary>
 /// Represents the association between auction sales and products.
@@ -18,7 +18,7 @@ public class AuctionSaleProduct
     public required int AuctionSaleId { get; set; }
     
     [JsonIgnore]
-    public AuctionSale.Entities.AuctionSale? AuctionSale { get; set; }
+    public AuctionSale.Models.AuctionSale? AuctionSale { get; set; }
     
     /// <summary>
     /// Identifier of the product associated with the auction sale product
@@ -26,7 +26,7 @@ public class AuctionSaleProduct
     public required int ProductId { get; set; }
     
     [JsonIgnore]
-    public Product.Entities.Product? Product { get; set; }
+    public Product.Models.Product? Product { get; set; }
     
     /// <summary>
     /// Quantity of the product in the auction sale.

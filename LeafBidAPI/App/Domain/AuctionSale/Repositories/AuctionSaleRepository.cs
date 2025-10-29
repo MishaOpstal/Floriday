@@ -12,11 +12,11 @@ public class AuctionSaleRepository(
     GetAuctionSaleValidator getAuctionSaleValidator,
     UpdateAuctionSaleValidator updateAuctionSaleValidator) : BaseRepository
 {
-    public async Task<Result<Entities.AuctionSale>> GetAuctionSaleAsync(GetAuctionSaleData auctionSaleData)
+    public async Task<Result<Models.AuctionSale>> GetAuctionSaleAsync(GetAuctionSaleData auctionSaleData)
     {
         var validation = await ValidateAsync(getAuctionSaleValidator, auctionSaleData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.AuctionSale>();
+            return validation.ToResult<Models.AuctionSale>();
 
         var auctionSale = await dbContext.AuctionSales.FindAsync(auctionSaleData.Id);
         return auctionSale is null
@@ -24,13 +24,13 @@ public class AuctionSaleRepository(
             : Result.Ok(auctionSale);
     }
     
-    public async Task<Result<Entities.AuctionSale>> CreateAuctionSaleAsync(CreateAuctionSaleData auctionSaleData)
+    public async Task<Result<Models.AuctionSale>> CreateAuctionSaleAsync(CreateAuctionSaleData auctionSaleData)
     {
         var validation = await ValidateAsync(createAuctionSaleValidator, auctionSaleData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.AuctionSale>();
+            return validation.ToResult<Models.AuctionSale>();
 
-        var auctionSale = new Entities.AuctionSale
+        var auctionSale = new Models.AuctionSale
         {
             AuctionId = auctionSaleData.AuctionId,
             BuyerId = auctionSaleData.BuyerId,
@@ -44,11 +44,11 @@ public class AuctionSaleRepository(
         return Result.Ok(auctionSale);
     }
     
-    public async Task<Result<Entities.AuctionSale>> UpdateAuctionSaleAsync(UpdateAuctionSaleData auctionSaleData)
+    public async Task<Result<Models.AuctionSale>> UpdateAuctionSaleAsync(UpdateAuctionSaleData auctionSaleData)
     {
         var validation = await ValidateAsync(updateAuctionSaleValidator, auctionSaleData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.AuctionSale>();
+            return validation.ToResult<Models.AuctionSale>();
 
         var auctionSale = await dbContext.AuctionSales.FindAsync(auctionSaleData.Id);
         if (auctionSale is null)

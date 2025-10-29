@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using LeafBidAPI.Enums;
 
-namespace LeafBidAPI.App.Domain.Auction.Entities;
+namespace LeafBidAPI.App.Domain.Auction.Models;
 
 /// <summary>
 /// Represents an auction
@@ -42,5 +42,5 @@ public class Auction
     public required int AuctioneerId { get; set; }
     
     [JsonIgnore]
-    public Auctioneer.Entities.Auctioneer? Auctioneer { get; set; }
+    public Auctioneer.Models.Auctioneer? Auctioneer { get; set; }
 }

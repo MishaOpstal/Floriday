@@ -13,7 +13,7 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     /// Get all providers.
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.Provider>>> GetProviders()
+    public async Task<ActionResult<List<Models.Provider>>> GetProviders()
     {
         return await Context.Providers.ToListAsync();
     }
@@ -22,7 +22,7 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     /// Get a provider by ID.
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.Provider>> GetProvider(int id)
+    public async Task<ActionResult<Models.Provider>> GetProvider(int id)
     {
         var provider = await Context.Providers.FindAsync(id);
         if (provider == null)
@@ -37,7 +37,7 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     /// Create a new provider.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.Provider>> CreateProvider(Entities.Provider provider)
+    public async Task<ActionResult<Models.Provider>> CreateProvider(Models.Provider provider)
     {
         Context.Providers.Add(provider);
         await Context.SaveChangesAsync();
@@ -49,7 +49,7 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     /// Update an existing provider by ID.
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProvider(int id, Entities.Provider updatedProvider)
+    public async Task<ActionResult> UpdateProvider(int id, Models.Provider updatedProvider)
     {
         var provider = await Context.Providers.FindAsync(id);
         if (provider == null)

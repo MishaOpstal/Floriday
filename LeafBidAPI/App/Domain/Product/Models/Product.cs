@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace LeafBidAPI.App.Domain.Product.Entities;
+namespace LeafBidAPI.App.Domain.Product.Models;
 
 /// <summary>
 /// Represents a product in the system.
@@ -53,5 +53,5 @@ public class Product
     public required int AuctionId { get; set; }
     
     [JsonIgnore]
-    public Auction.Entities.Auction? Auction { get; set; }
+    public Auction.Models.Auction? Auction { get; set; }
 }

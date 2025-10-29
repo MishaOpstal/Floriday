@@ -1,27 +1,27 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace LeafBidAPI.App.Domain.Provider.Entities;
+namespace LeafBidAPI.App.Domain.Buyer.Models;
 
 /// <summary>
-/// Represents a provider in the system.
+/// Represents a buyer in the system.
 /// </summary>
-public class Provider
+public class Buyer
 {
     /// <summary>
-    /// Unique identifier for the provider.
+    /// Unique identifier for the buyer.
     /// </summary>
     public int Id { get; set; }
     
     /// <summary>
-    /// Identifier of the user associated with the provider
+    /// Identifier of the user associated with the buyer
     /// </summary>
     public required int UserId { get; set; }
     
     [JsonIgnore]
-    public User.Entities.User? User { get; set; }
+    public User.Models.User? User { get; set; }
     
     /// <summary>
-    /// Name of the provider's company.
+    /// Name of the buyer's company.
     /// </summary>
     public string CompanyName { get; set; }
 }

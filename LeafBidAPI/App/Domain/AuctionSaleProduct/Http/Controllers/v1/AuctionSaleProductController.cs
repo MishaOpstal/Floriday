@@ -13,7 +13,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Get all auction sale products
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.AuctionSaleProduct>>> GetAuctionSaleProducts()
+    public async Task<ActionResult<List<Models.AuctionSaleProduct>>> GetAuctionSaleProducts()
     {
         return await Context.AuctionSaleProducts.ToListAsync();
     }
@@ -22,7 +22,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Get an auction sale product by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.AuctionSaleProduct>> GetAuctionSaleProduct(int id)
+    public async Task<ActionResult<Models.AuctionSaleProduct>> GetAuctionSaleProduct(int id)
     {
         var auctionSaleProduct = await Context.AuctionSaleProducts.FindAsync(id);
         if (auctionSaleProduct == null)
@@ -37,7 +37,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Create a new auction sale product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.AuctionSaleProduct>> CreateAuctionSaleProducts(Entities.AuctionSaleProduct auctionSaleProduct)
+    public async Task<ActionResult<Models.AuctionSaleProduct>> CreateAuctionSaleProducts(Models.AuctionSaleProduct auctionSaleProduct)
     {
         Context.AuctionSaleProducts.Add(auctionSaleProduct);
         await Context.SaveChangesAsync();
@@ -49,8 +49,8 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Update an existing auction sale product
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Entities.AuctionSaleProduct>> UpdateAuctionSaleProducts(
-        int id, Entities.AuctionSaleProduct updatedAuctionSaleProduct)
+    public async Task<ActionResult<Models.AuctionSaleProduct>> UpdateAuctionSaleProducts(
+        int id, Models.AuctionSaleProduct updatedAuctionSaleProduct)
     {
         var auctionSaleProduct = await Context.AuctionSaleProducts.FindAsync(id);
         if (auctionSaleProduct == null)

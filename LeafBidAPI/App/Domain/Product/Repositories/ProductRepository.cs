@@ -13,11 +13,11 @@ public class ProductRepository(
     UpdateProductValidator updateProductValidator,
     DeleteProductValidator deleteProductValidator) : BaseRepository
 {
-    public async Task<Result<Entities.Product>> GetProductAsync(GetProductData productData)
+    public async Task<Result<Models.Product>> GetProductAsync(GetProductData productData)
     {
         var validation = await ValidateAsync(getProductValidator, productData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Product>();
+            return validation.ToResult<Models.Product>();
 
         var product = await dbContext.Products.FindAsync(productData.Id);
         return product is null
@@ -25,13 +25,13 @@ public class ProductRepository(
             : Result.Ok(product);
     }
     
-    public async Task<Result<Entities.Product>> CreateProductAsync(CreateProductData productData)
+    public async Task<Result<Models.Product>> CreateProductAsync(CreateProductData productData)
     {
         var validation = await ValidateAsync(createProductValidator, productData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Product>();
+            return validation.ToResult<Models.Product>();
 
-        var product = new Entities.Product
+        var product = new Models.Product
         {
             AuctionId = productData.AuctionId,
             Name = productData.Name,
@@ -49,11 +49,11 @@ public class ProductRepository(
         return Result.Ok(product);
     }
     
-    public async Task<Result<Entities.Product>> UpdateProductAsync(UpdateProductData productData)
+    public async Task<Result<Models.Product>> UpdateProductAsync(UpdateProductData productData)
     {
         var validation = await ValidateAsync(updateProductValidator, productData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Product>();
+            return validation.ToResult<Models.Product>();
 
         var product = await dbContext.Products.FindAsync(productData.Id);
         if (product is null)

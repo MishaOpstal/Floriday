@@ -1,6 +1,6 @@
 ﻿using LeafBidAPI.Enums;
 
-namespace LeafBidAPI.App.Domain.User.Entities;
+namespace LeafBidAPI.App.Domain.User.Models;
 
 /// <summary>
 /// Represents a user in the system.

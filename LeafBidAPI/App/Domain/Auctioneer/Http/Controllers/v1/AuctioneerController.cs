@@ -14,7 +14,7 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     /// Get all auctioneers
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.Auctioneer>>> GetAuctioneers()
+    public async Task<ActionResult<List<Models.Auctioneer>>> GetAuctioneers()
     {
         return await Context.Auctioneers.ToListAsync();
     }
@@ -23,7 +23,7 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     /// Get auctioneer by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.Auctioneer>> GetAuctioneer(int id)
+    public async Task<ActionResult<Models.Auctioneer>> GetAuctioneer(int id)
     {
         var auctioneer = await Context.Auctioneers.FindAsync(id);
         if (auctioneer == null)
@@ -38,7 +38,7 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     /// Create a new auctioneer
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.Auctioneer>> CreateAuctioneer(Entities.Auctioneer auctioneer)
+    public async Task<ActionResult<Models.Auctioneer>> CreateAuctioneer(Models.Auctioneer auctioneer)
     {
         Context.Auctioneers.Add(auctioneer);
         await Context.SaveChangesAsync();
@@ -50,7 +50,7 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     /// Update an existing auctioneer
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuctioneer(int id, Entities.Auctioneer updatedAuctioneer)
+    public async Task<ActionResult> UpdateAuctioneer(int id, Models.Auctioneer updatedAuctioneer)
     {
         var auctioneer = await Context.Auctioneers.FindAsync(id);
         if (auctioneer == null)

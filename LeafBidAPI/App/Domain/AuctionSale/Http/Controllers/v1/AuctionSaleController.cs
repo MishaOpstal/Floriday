@@ -1,5 +1,4 @@
-﻿using LeafBidAPI.App.Domain.AuctionSale.Entities;
-using LeafBidAPI.Controllers;
+﻿using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     /// Get all auction sales
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.AuctionSale>>> GetAuctionSales()
+    public async Task<ActionResult<List<Models.AuctionSale>>> GetAuctionSales()
     {
         return await Context.AuctionSales.ToListAsync();
     }
@@ -24,7 +23,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     /// Get auction sale by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.AuctionSale>> GetAuctionSale(int id)
+    public async Task<ActionResult<Models.AuctionSale>> GetAuctionSale(int id)
     {
         var auctionSale = await Context.AuctionSales.FindAsync(id);
         if (auctionSale == null)
@@ -39,7 +38,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     /// Create a new auction sale
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.AuctionSale>> CreateAuctionSale(Entities.AuctionSale auctionSale)
+    public async Task<ActionResult<Models.AuctionSale>> CreateAuctionSale(Models.AuctionSale auctionSale)
     {
         Context.AuctionSales.Add(auctionSale);
         await Context.SaveChangesAsync();

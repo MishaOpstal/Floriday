@@ -14,7 +14,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Get all buyers
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.Buyer>>> GetBuyers()
+    public async Task<ActionResult<List<Models.Buyer>>> GetBuyers()
     {
         return await Context.Buyers.ToListAsync();
     }
@@ -23,7 +23,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Get a buyer by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.Buyer>> GetBuyer(int id)
+    public async Task<ActionResult<Models.Buyer>> GetBuyer(int id)
     {
         var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)
@@ -38,7 +38,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Create a new buyer
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.Buyer>> CreateBuyer(Entities.Buyer buyer)
+    public async Task<ActionResult<Models.Buyer>> CreateBuyer(Models.Buyer buyer)
     {
         Context.Buyers.Add(buyer);
         await Context.SaveChangesAsync();
@@ -50,7 +50,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     /// Update an existing buyer
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateBuyer(int id, Entities.Buyer updatedBuyer)
+    public async Task<ActionResult> UpdateBuyer(int id, Models.Buyer updatedBuyer)
     {
         var buyer = await Context.Buyers.FindAsync(id);
         if (buyer == null)

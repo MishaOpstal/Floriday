@@ -17,7 +17,7 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     /// Get all users.
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Entities.User>>> GetUsers()
+    public async Task<ActionResult<List<Models.User>>> GetUsers()
     {
         return await Context.Users.ToListAsync();
     }
@@ -26,7 +26,7 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     /// Get a user by ID.
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Entities.User>> GetUser(int id)
+    public async Task<ActionResult<Models.User>> GetUser(int id)
     {
         var result = await userRepository.GetUserAsync(new GetUserData(id));
         if (!result.IsFailed) return new JsonResult(result.Value);
@@ -40,7 +40,7 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     /// Create a new user.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Entities.User>> CreateUser([FromBody] CreateUserRequest request)
+    public async Task<ActionResult<Models.User>> CreateUser([FromBody] CreateUserRequest request)
     {
         var data = new CreateUserData(request.Name, request.Email, request.Password, request.UserType);
         var result = await userRepository.CreateUserAsync(data);
@@ -57,7 +57,7 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     /// Update an existing user by ID.
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Entities.User>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
+    public async Task<ActionResult<Models.User>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
     {
         var data = new UpdateUserData(id, request.Name, request.Email, request.Password, request.UserType);
         var result = await userRepository.UpdateUserAsync(data);

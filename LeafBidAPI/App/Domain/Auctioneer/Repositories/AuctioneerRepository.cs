@@ -13,11 +13,11 @@ public class AuctioneerRepository(
     GetAuctioneerValidator getAuctioneerValidator,
     DeleteAuctioneerValidator deleteAuctioneerValidator) : BaseRepository
 {
-    public async Task<Result<Entities.Auctioneer>> GetAuctioneerAsync(GetAuctioneerData auctioneerData)
+    public async Task<Result<Models.Auctioneer>> GetAuctioneerAsync(GetAuctioneerData auctioneerData)
     {
         var validation = await ValidateAsync(getAuctioneerValidator, auctioneerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Auctioneer>();
+            return validation.ToResult<Models.Auctioneer>();
 
         var auctioneer = await dbContext.Auctioneers.FindAsync(auctioneerData.Id);
         return auctioneer is null
@@ -25,18 +25,18 @@ public class AuctioneerRepository(
             : Result.Ok(auctioneer);
     }
     
-    public async Task<Result<Entities.Auctioneer>> CreateAuctioneerAsync(CreateAuctioneerData auctioneerData)
+    public async Task<Result<Models.Auctioneer>> CreateAuctioneerAsync(CreateAuctioneerData auctioneerData)
     {
         var validation = await ValidateAsync(createAuctioneerValidator, auctioneerData);
         if (validation.IsFailed)
-            return validation.ToResult<Entities.Auctioneer>();
+            return validation.ToResult<Models.Auctioneer>();
         
         // Prevent duplicate auctioneer records
         bool exists = await dbContext.Auctioneers.AnyAsync(a => a.UserId == auctioneerData.UserId);
         if (exists)
             return Result.Fail("User is already an auctioneer.");
 
-        var auctioneer = new Entities.Auctioneer
+        var auctioneer = new Models.Auctioneer
         {
             UserId = auctioneerData.UserId,
         };
