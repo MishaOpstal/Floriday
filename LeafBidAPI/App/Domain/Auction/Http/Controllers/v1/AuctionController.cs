@@ -1,4 +1,6 @@
-﻿using LeafBidAPI.Controllers;
+﻿using LeafBidAPI.App.Domain.Auction.Data;
+using LeafBidAPI.App.Domain.Auction.Repositories;
+using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ namespace LeafBidAPI.App.Domain.Auction.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionController(ApplicationDbContext context) : BaseController(context)
+public class AuctionController(ApplicationDbContext context, AuctionRepository auctionRepository) : BaseController(context)
 {
     /// <summary>
     /// Get all auctions
@@ -24,46 +26,50 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Models.Auction>> GetAuction(int id)
     {
-        var auction = await Context.Auctions.FindAsync(id);
-        if (auction == null)
-        {
-            return NotFound();
-        }
-
-        return auction;
+        var auction = await auctionRepository.GetAuctionAsync(
+            new GetAuctionData(id)
+        );
+        
+        return auction.IsFailed ? NotFound() : new JsonResult(auction.Value) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Create a new auction
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Auction>> CreateAuction(Models.Auction auction)
+    public Task<ActionResult<Models.Auction>> CreateAuction(Models.Auction auctionData)
     {
-        Context.Auctions.Add(auction);
-        await Context.SaveChangesAsync();
+        var auction = auctionRepository.CreateAuctionAsync(
+            new CreateAuctionData(
+                auctionData.Description,
+                auctionData.StartDate,
+                auctionData.Amount,
+                auctionData.MinimumPrice,
+                auctionData.ClockLocationEnum,
+                auctionData.AuctioneerId
+            )
+        );
 
-        return new JsonResult(auction) { StatusCode = 201 };
+        return Task.FromResult<ActionResult<Models.Auction>>(new JsonResult(auction) { StatusCode = 201 });
     }
 
     /// <summary>
     /// Update an existing auction
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuction(int id, Models.Auction updatedAuction)
+    public async Task<ActionResult> UpdateAuction(int id, Models.Auction auctionData)
     {
-        var auction = await Context.Auctions.FindAsync(id);
-        if (auction == null)
-        {
-            return NotFound();
-        }
-
-        auction.Description = updatedAuction.Description;
-        auction.StartDate = updatedAuction.StartDate;
-        auction.Amount = updatedAuction.Amount;
-        auction.MinimumPrice = updatedAuction.MinimumPrice;
-        auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
-        auction.Auctioneer = updatedAuction.Auctioneer;
-        await Context.SaveChangesAsync();
-        return new JsonResult(auction);
+        var auction = await auctionRepository.UpdateAuctionAsync(
+            new UpdateAuctionData(
+                id,
+                auctionData.Description,
+                auctionData.StartDate,
+                auctionData.Amount,
+                auctionData.MinimumPrice,
+                auctionData.ClockLocationEnum
+            )
+        );
+        
+        return auction.IsFailed ? NotFound() : new JsonResult(auction.Value) { StatusCode = 200 };
     }
 }
