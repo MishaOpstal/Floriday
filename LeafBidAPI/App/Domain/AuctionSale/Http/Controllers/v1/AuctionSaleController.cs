@@ -1,7 +1,10 @@
-﻿using LeafBidAPI.App.Domain.AuctionSale.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using LeafBidAPI.App.Domain.AuctionSale.Data;
 using LeafBidAPI.App.Domain.AuctionSale.Repositories;
 using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
+using LeafBidAPI.App.Interfaces.AuctionSale.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,38 +12,48 @@ namespace LeafBidAPI.App.Domain.AuctionSale.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionSaleController(ApplicationDbContext context, AuctionSaleRepository auctionSaleRepository) : BaseController(context)
+public class AuctionSaleController(
+    ApplicationDbContext context,
+    AuctionSaleRepository auctionSaleRepository,
+    IMapper mapper
+) : BaseController(context)
 {
-    
     /// <summary>
     /// Get all auction sales
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Models.AuctionSale>>> GetAuctionSales()
+    public async Task<ActionResult<List<AuctionSaleResource>>> GetAuctionSales()
     {
-        return await Context.AuctionSales.ToListAsync();
+        var sales = await Context.AuctionSales
+            .AsNoTracking()
+            .ProjectTo<AuctionSaleResource>(mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return new JsonResult(sales) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Get auction sale by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Models.AuctionSale>> GetAuctionSale(int id)
+    public async Task<ActionResult<AuctionSaleResource>> GetAuctionSale(int id)
     {
-        var auctionSale = await auctionSaleRepository.GetAuctionSaleAsync(
-            new GetAuctionSaleData(id)
-        );
-        
-        return auctionSale.IsFailed ? NotFound() : new JsonResult(auctionSale.Value) { StatusCode = 200 };
+        var result = await auctionSaleRepository.GetAuctionSaleAsync(new GetAuctionSaleData(id));
+
+        if (result.IsFailed)
+            return NotFound();
+
+        var resource = mapper.Map<AuctionSaleResource>(result.Value);
+        return new JsonResult(resource) { StatusCode = 200 };
     }
-    
+
     /// <summary>
     /// Create a new auction sale
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.AuctionSale>> CreateAuctionSale([FromBody] CreateAuctionSaleRequest request)
+    public async Task<ActionResult<AuctionSaleResource>> CreateAuctionSale([FromBody] CreateAuctionSaleRequest request)
     {
-        var auctionSale = await auctionSaleRepository.CreateAuctionSaleAsync(
+        var result = await auctionSaleRepository.CreateAuctionSaleAsync(
             new CreateAuctionSaleData(
                 request.AuctionId,
                 request.BuyerId,
@@ -48,26 +61,29 @@ public class AuctionSaleController(ApplicationDbContext context, AuctionSaleRepo
                 request.PaymentReference
             )
         );
-        
-        return auctionSale.IsFailed ? BadRequest(auctionSale.Errors) : new JsonResult(auctionSale.Value) { StatusCode = 201 };
+
+        if (result.IsFailed)
+            return BadRequest(result.Errors);
+
+        var resource = mapper.Map<AuctionSaleResource>(result.Value);
+        return new JsonResult(resource) { StatusCode = 201 };
     }
 
     /// <summary>
     /// Update an existing auction sale
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuctionSale(int id, [FromBody] UpdateAuctionSaleRequest request)
+    public async Task<ActionResult<AuctionSaleResource>> UpdateAuctionSale(int id, [FromBody] UpdateAuctionSaleRequest request)
     {
-        var auctionSale = await auctionSaleRepository.UpdateAuctionSaleAsync(
-            new UpdateAuctionSaleData(
-                id,
-                request.PaymentReference
-            )
+        var result = await auctionSaleRepository.UpdateAuctionSaleAsync(
+            new UpdateAuctionSaleData(id, request.PaymentReference)
         );
 
-        return auctionSale.IsFailed
-            ? BadRequest(auctionSale.Errors)
-            : new JsonResult(auctionSale.Value) { StatusCode = 200 };
+        if (result.IsFailed)
+            return BadRequest(result.Errors);
+
+        var resource = mapper.Map<AuctionSaleResource>(result.Value);
+        return new JsonResult(resource) { StatusCode = 200 };
     }
 }
 

@@ -1,7 +1,10 @@
-﻿using LeafBidAPI.App.Domain.Product.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using LeafBidAPI.App.Domain.Product.Data;
 using LeafBidAPI.App.Domain.Product.Repositories;
 using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
+using LeafBidAPI.App.Interfaces.Product.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,37 +12,48 @@ namespace LeafBidAPI.App.Domain.Product.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class ProductController(ApplicationDbContext context, ProductRepository productRepository) : BaseController(context)
+public class ProductController(
+    ApplicationDbContext context,
+    ProductRepository productRepository,
+    IMapper mapper
+) : BaseController(context)
 {
     /// <summary>
     /// Get all products
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Models.Product>>> GetProducts()
+    public async Task<ActionResult<List<ProductResource>>> GetProducts()
     {
-        return await Context.Products.ToListAsync();
+        var products = await Context.Products
+            .AsNoTracking()
+            .ProjectTo<ProductResource>(mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return new JsonResult(products) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Get a product by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Models.Product>> GetProduct(int id)
+    public async Task<ActionResult<ProductResource>> GetProduct(int id)
     {
-        var product = await productRepository.GetProductAsync(
-            new GetProductData(id)
-        );
-        
-        return product.IsFailed ? NotFound() : new JsonResult(product.Value) { StatusCode = 200 };
+        var result = await productRepository.GetProductAsync(new GetProductData(id));
+
+        if (result.IsFailed)
+            return NotFound();
+
+        var resource = mapper.Map<ProductResource>(result.Value);
+        return new JsonResult(resource) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Create a new product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Product>> CreateProduct([FromBody] CreateProductRequest request)
+    public async Task<ActionResult<ProductResource>> CreateProduct([FromBody] CreateProductRequest request)
     {
-        var product = await productRepository.CreateProductAsync(
+        var result = await productRepository.CreateProductAsync(
             new CreateProductData(
                 request.Name,
                 request.Weight,
@@ -51,19 +65,21 @@ public class ProductController(ApplicationDbContext context, ProductRepository p
                 request.AuctionId
             )
         );
-        
-        return product.IsFailed
-            ? BadRequest(product.Errors)
-            : new JsonResult(product.Value) { StatusCode = 201 };
+
+        if (result.IsFailed)
+            return BadRequest(result.Errors);
+
+        var resource = mapper.Map<ProductResource>(result.Value);
+        return new JsonResult(resource) { StatusCode = 201 };
     }
 
     /// <summary>
     /// Update an existing product
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProduct(int id, [FromBody] UpdateProductRequest updatedProduct)
+    public async Task<ActionResult<ProductResource>> UpdateProduct(int id, [FromBody] UpdateProductRequest updatedProduct)
     {
-        var product = await productRepository.UpdateProductAsync(
+        var result = await productRepository.UpdateProductAsync(
             new UpdateProductData(
                 id,
                 updatedProduct.Name,
@@ -76,20 +92,22 @@ public class ProductController(ApplicationDbContext context, ProductRepository p
                 updatedProduct.AuctionId
             )
         );
-        
-        return product.IsFailed ? NotFound() : new JsonResult(product.Value) { StatusCode = 200 };
+
+        if (result.IsFailed)
+            return NotFound();
+
+        var resource = mapper.Map<ProductResource>(result.Value);
+        return new JsonResult(resource) { StatusCode = 200 };
     }
-    
+
     /// <summary>
     /// Delete a product by ID.
     /// </summary>
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var result = await productRepository.DeleteProductAsync(
-            new DeleteProductData(id)
-        );
-        
+        var result = await productRepository.DeleteProductAsync(new DeleteProductData(id));
+
         return result.IsFailed ? NotFound() : new OkResult();
     }
 }

@@ -1,6 +1,14 @@
 using System.Reflection;
 using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Interfaces.Auction.Mappings;
+using LeafBidAPI.App.Interfaces.Auctioneer.Mappings;
+using LeafBidAPI.App.Interfaces.AuctionSale.Mappings;
+using LeafBidAPI.App.Interfaces.AuctionSaleProduct.Mappings;
+using LeafBidAPI.App.Interfaces.Buyer.Mappings;
 using LeafBidAPI.App.Interfaces.Http.Filters;
+using LeafBidAPI.App.Interfaces.Product.Mappings;
+using LeafBidAPI.App.Interfaces.Provider.Mappings;
+using LeafBidAPI.App.Interfaces.User.Mappings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -23,6 +31,16 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddRouting();
+        
+        // Register AutoMappers
+        builder.Services.AddAutoMapper(typeof(AuctionProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(AuctioneerProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(AuctionSaleProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(AuctionSaleProductProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(BuyerProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(ProviderProfile).Assembly);
+        builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
         
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>

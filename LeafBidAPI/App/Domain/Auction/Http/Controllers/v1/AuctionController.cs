@@ -1,8 +1,11 @@
-﻿using LeafBidAPI.App.Domain.Auction.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using LeafBidAPI.App.Domain.Auction.Data;
 using LeafBidAPI.App.Domain.Auction.Enums;
 using LeafBidAPI.App.Domain.Auction.Repositories;
 using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
+using LeafBidAPI.App.Interfaces.Auction.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,37 +13,50 @@ namespace LeafBidAPI.App.Domain.Auction.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionController(ApplicationDbContext context, AuctionRepository auctionRepository) : BaseController(context)
+public class AuctionController(
+    ApplicationDbContext context,
+    AuctionRepository auctionRepository,
+    IMapper mapper) : BaseController(context)
 {
     /// <summary>
     /// Get all auctions
     /// </summary>
     [HttpGet]
-    public async Task<ActionResult<List<Models.Auction>>> GetAuctions()
+    public async Task<ActionResult<List<AuctionResource>>> GetAuctions()
     {
-        return await Context.Auctions.ToListAsync();
+        // Project directly using AutoMapper
+        var auctions = await Context.Auctions
+            .AsNoTracking()
+            .ProjectTo<AuctionResource>(mapper.ConfigurationProvider)
+            .ToListAsync();
+
+        return new JsonResult(auctions) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Get auction by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Models.Auction>> GetAuction(int id)
+    public async Task<ActionResult<AuctionResource>> GetAuction(int id)
     {
-        var auction = await auctionRepository.GetAuctionAsync(
-            new GetAuctionData(id)
-        );
+        var auctionResult = await auctionRepository.GetAuctionAsync(new GetAuctionData(id));
+
+        if (auctionResult.IsFailed)
+            return NotFound();
+
+        // Map entity to resource using AutoMapper
+        var resource = mapper.Map<AuctionResource>(auctionResult.Value);
         
-        return auction.IsFailed ? NotFound() : new JsonResult(auction.Value) { StatusCode = 200 };
+        return new JsonResult(resource) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Create a new auction
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Auction>> CreateAuction([FromBody] CreateAuctionRequest request)
+    public async Task<ActionResult<AuctionResource>> CreateAuction([FromBody] CreateAuctionRequest request)
     {
-        var auction = await auctionRepository.CreateAuctionAsync(
+        var auctionResult = await auctionRepository.CreateAuctionAsync(
             new CreateAuctionData(
                 request.Description,
                 request.StartDate,
@@ -50,19 +66,23 @@ public class AuctionController(ApplicationDbContext context, AuctionRepository a
                 request.AuctioneerId
             )
         );
-        
-        return auction.IsFailed
-            ? BadRequest(auction.Errors)
-            : new JsonResult(auction.Value) { StatusCode = 201 };
+
+        if (auctionResult.IsFailed)
+            return BadRequest(auctionResult.Errors);
+
+        // Map entity to resource
+        var resource = mapper.Map<AuctionResource>(auctionResult.Value);
+
+        return new JsonResult(resource) { StatusCode = 201 };
     }
 
     /// <summary>
     /// Update an existing auction
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuction(int id, [FromBody] UpdateAuctionRequest request)
+    public async Task<ActionResult<AuctionResource>> UpdateAuction(int id, [FromBody] UpdateAuctionRequest request)
     {
-        var auction = await auctionRepository.UpdateAuctionAsync(
+        var auctionResult = await auctionRepository.UpdateAuctionAsync(
             new UpdateAuctionData(
                 id,
                 request.Description,
@@ -72,8 +92,14 @@ public class AuctionController(ApplicationDbContext context, AuctionRepository a
                 request.ClockLocationEnum
             )
         );
-        
-        return auction.IsFailed ? NotFound() : new JsonResult(auction.Value) { StatusCode = 200 };
+
+        if (auctionResult.IsFailed)
+            return BadRequest(auctionResult.Errors);
+
+        // Map entity to resource
+        var resource = mapper.Map<AuctionResource>(auctionResult.Value);
+
+        return new JsonResult(resource) { StatusCode = 200 };
     }
 }
 
