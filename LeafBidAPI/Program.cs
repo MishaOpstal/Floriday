@@ -1,14 +1,6 @@
 using System.Reflection;
 using LeafBidAPI.App.Infrastructure.Common.Data;
-using LeafBidAPI.App.Interfaces.Auction.Mappings;
-using LeafBidAPI.App.Interfaces.Auctioneer.Mappings;
-using LeafBidAPI.App.Interfaces.AuctionSale.Mappings;
-using LeafBidAPI.App.Interfaces.AuctionSaleProduct.Mappings;
-using LeafBidAPI.App.Interfaces.Buyer.Mappings;
 using LeafBidAPI.App.Interfaces.Http.Filters;
-using LeafBidAPI.App.Interfaces.Product.Mappings;
-using LeafBidAPI.App.Interfaces.Provider.Mappings;
-using LeafBidAPI.App.Interfaces.User.Mappings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -32,15 +24,25 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddRouting();
         
-        // Register AutoMappers
-        builder.Services.AddAutoMapper(typeof(AuctionProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(AuctioneerProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(AuctionSaleProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(AuctionSaleProductProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(BuyerProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(ProviderProfile).Assembly);
-        builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
+        // Automatically register AutoMapper profiles across the assembly
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        // Automatically register Repositories, Validators, and other services via Scrutor
+        builder.Services.Scan(scan => scan
+            .FromApplicationDependencies(a => a.FullName != null && a.FullName.StartsWith("LeafBidAPI"))
+            // Repositories
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime()
+            // Validators
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Validator")))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime()
+            // Hashers, Filters, etc.
+            .AddClasses(c => c.Where(t => t.Name.EndsWith("Hasher") || t.Name.EndsWith("Filter")))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime()
+        );
         
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
