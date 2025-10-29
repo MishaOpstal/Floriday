@@ -15,7 +15,15 @@
     width: 100%;
 }
 
-.h1{
+.section{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+
+}
+
+.h1, .h3{
     color: var(--main-background);
     text-align: left;
     width: 100%;
