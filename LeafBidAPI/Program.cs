@@ -1,4 +1,5 @@
 using System.Reflection;
+using AutoMapper;
 using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Interfaces.Http.Filters;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +25,13 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddRouting();
         
-        // Automatically register AutoMapper profiles across the assembly
-        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-        // Automatically register Repositories, Validators, and other services via Scrutor
+        // Automatically register AutoMappers, Repositories, Validators, and other services via Scrutor
         builder.Services.Scan(scan => scan
             .FromApplicationDependencies(a => a.FullName != null && a.FullName.StartsWith("LeafBidAPI"))
+            // AutoMapper profiles (just discover them, AutoMapper handles registration below)
+            .AddClasses(c => c.AssignableTo(typeof(Profile)))
+            .AsSelfWithInterfaces()
+            .WithScopedLifetime()
             // Repositories
             .AddClasses(c => c.Where(t => t.Name.EndsWith("Repository")))
             .AsSelfWithInterfaces()
@@ -43,6 +45,12 @@ public class Program
             .AsSelfWithInterfaces()
             .WithScopedLifetime()
         );
+
+        // Register AutoMapper’s core services & profiles
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            cfg.AddMaps(AppDomain.CurrentDomain.GetAssemblies());
+        });
         
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
