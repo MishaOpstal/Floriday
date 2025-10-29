@@ -1,0 +1,11 @@
+.link{
+    font-size: 1.728rem;
+}
+
+
+.logoWrapper {
+    position: relative;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1;
+}
