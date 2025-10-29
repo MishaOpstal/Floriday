@@ -1,5 +1,6 @@
 import Header from "@/components/header/header";
 import s from './layout.module.css';
+import React from "react";
 
 export default function RootLayout({
                                        children,

@@ -4,6 +4,10 @@
     align-items: center;
     justify-content: center;
     gap: 24px;
-    background-color:red;
+    background-color: var(--primary-background);
+    border: 5px solid var(--primary-border);
+    border-radius: 10px;
     height: 100%;
+    margin: 5dvh 2dvw;
+    padding: 50px;
 }

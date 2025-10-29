@@ -1,0 +1,19 @@
+.input{
+    background-color: var(--main-background);
+    border: none;
+    padding: 15px;
+    width: 100%;
+    font-family: nunito, sans-serif;
+    font-size: 1rem;
+    color: var(--primary-text);
+}
+
+.textArea{
+    height: 100%;
+    min-width: 100%;
+}
+
+.submit{
+    width: 30%;
+    min-width: fit-content;
+}

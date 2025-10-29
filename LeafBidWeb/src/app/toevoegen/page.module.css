@@ -1,0 +1,22 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}
+
+
+.multiRow{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+.h1{
+    color: var(--main-background);
+    text-align: left;
+    width: 100%;
+}
