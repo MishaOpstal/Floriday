@@ -1,4 +1,4 @@
-using LeafBidAPI.Enums;
+using LeafBidAPI.App.Domain.User.Enums;
 
 namespace LeafBidAPI.App.Interfaces.User.Resources;
 

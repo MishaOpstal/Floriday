@@ -1,7 +1,7 @@
 ﻿using LeafBidAPI.App.Domain.AuctionSale.Data;
 using LeafBidAPI.App.Domain.AuctionSale.Repositories;
-using LeafBidAPI.Controllers;
-using LeafBidAPI.Data;
+using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

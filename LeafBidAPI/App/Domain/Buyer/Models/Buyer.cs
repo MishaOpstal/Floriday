@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace LeafBidAPI.App.Domain.Buyer.Models;
 
@@ -23,5 +24,6 @@ public class Buyer
     /// <summary>
     /// Name of the buyer's company.
     /// </summary>
-    public string CompanyName { get; set; }
+    [MaxLength(255)]
+    public required string CompanyName { get; set; }
 }

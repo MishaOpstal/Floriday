@@ -1,4 +1,4 @@
-﻿namespace LeafBidAPI.Enums;
+﻿namespace LeafBidAPI.App.Domain.User.Enums;
 
 public enum UserTypeEnum
 {

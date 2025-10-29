@@ -1,5 +1,6 @@
-﻿using System.Text.Json.Serialization;
-using LeafBidAPI.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using LeafBidAPI.App.Domain.Auction.Enums;
 
 namespace LeafBidAPI.App.Domain.Auction.Models;
 
@@ -17,7 +18,8 @@ public class Auction
     /// <summary>
     /// Description of the auction
     /// </summary>
-    public string Description { get; set; }
+    [MaxLength(1200)]
+    public required string Description { get; set; }
     
     /// <summary>
     /// Start date of the auction

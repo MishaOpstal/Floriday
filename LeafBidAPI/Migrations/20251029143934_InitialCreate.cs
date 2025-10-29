@@ -17,9 +17,9 @@ namespace LeafBidAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -53,7 +53,7 @@ namespace LeafBidAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CompanyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace LeafBidAPI.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CompanyName = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,10 +92,10 @@ namespace LeafBidAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1200)", maxLength: 1200, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Amount = table.Column<int>(type: "int", nullable: false),
-                    MinimumPrice = table.Column<int>(type: "int", nullable: false),
+                    MinimumPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ClockLocationEnum = table.Column<int>(type: "int", nullable: false),
                     AuctioneerId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -111,7 +111,7 @@ namespace LeafBidAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuctionSale",
+                name: "AuctionSales",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -119,7 +119,7 @@ namespace LeafBidAPI.Migrations
                     AuctionId = table.Column<int>(type: "int", nullable: false),
                     BuyerId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentReference = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    PaymentReference = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,10 +144,10 @@ namespace LeafBidAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Weight = table.Column<double>(type: "float", nullable: false),
-                    Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Species = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Picture = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Species = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PotSize = table.Column<double>(type: "float", nullable: true),
                     StemLength = table.Column<double>(type: "float", nullable: true),
                     Stock = table.Column<int>(type: "int", nullable: false),
@@ -165,7 +165,7 @@ namespace LeafBidAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AuctionSalesProducts",
+                name: "AuctionSaleProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -173,19 +173,19 @@ namespace LeafBidAPI.Migrations
                     AuctionSaleId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false)
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AuctionSalesProducts", x => x.Id);
+                    table.PrimaryKey("PK_AuctionSaleProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AuctionSalesProducts_AuctionSales_AuctionSaleId",
+                        name: "FK_AuctionSaleProducts_AuctionSales_AuctionSaleId",
                         column: x => x.AuctionSaleId,
-                        principalTable: "AuctionSale",
+                        principalTable: "AuctionSales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AuctionSalesProducts_Products_ProductId",
+                        name: "FK_AuctionSaleProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -203,24 +203,24 @@ namespace LeafBidAPI.Migrations
                 column: "AuctioneerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AuctionSaleProducts_AuctionSaleId",
+                table: "AuctionSaleProducts",
+                column: "AuctionSaleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuctionSaleProducts_ProductId",
+                table: "AuctionSaleProducts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AuctionSales_AuctionId",
-                table: "AuctionSale",
+                table: "AuctionSales",
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuctionSales_BuyerId",
-                table: "AuctionSale",
+                table: "AuctionSales",
                 column: "BuyerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AuctionSalesProducts_AuctionSaleId",
-                table: "AuctionSalesProducts",
-                column: "AuctionSaleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AuctionSalesProducts_ProductId",
-                table: "AuctionSalesProducts",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Buyers_UserId",
@@ -242,13 +242,13 @@ namespace LeafBidAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AuctionSalesProducts");
+                name: "AuctionSaleProducts");
 
             migrationBuilder.DropTable(
                 name: "Providers");
 
             migrationBuilder.DropTable(
-                name: "AuctionSale");
+                name: "AuctionSales");
 
             migrationBuilder.DropTable(
                 name: "Products");

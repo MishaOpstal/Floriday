@@ -18,5 +18,5 @@ public class Auctioneer
     public int UserId { get; set; }
     
     [JsonIgnore]
-    public User.Models.User User { get; set; }
+    public User.Models.User? User { get; set; }
 }

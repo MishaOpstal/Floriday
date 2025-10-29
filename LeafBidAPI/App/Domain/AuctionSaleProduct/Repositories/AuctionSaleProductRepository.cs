@@ -1,8 +1,8 @@
 using FluentResults;
 using LeafBidAPI.App.Domain.AuctionSaleProduct.Data;
 using LeafBidAPI.App.Domain.AuctionSaleProduct.Validators;
+using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Infrastructure.Common.Repositories;
-using LeafBidAPI.Data;
 
 namespace LeafBidAPI.App.Domain.AuctionSaleProduct.Repositories;
 

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace LeafBidAPI.App.Domain.AuctionSale.Models;
 
@@ -36,5 +37,6 @@ public class AuctionSale
     /// <summary>
     /// Payment reference associated with the sale.
     /// </summary>
+    [MaxLength(255)]
     public required string PaymentReference { get; set; }
 }

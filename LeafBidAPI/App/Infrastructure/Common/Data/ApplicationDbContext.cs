@@ -5,10 +5,9 @@ using LeafBidAPI.App.Domain.AuctionSaleProduct.Models;
 using LeafBidAPI.App.Domain.Buyer.Models;
 using LeafBidAPI.App.Domain.Product.Models;
 using LeafBidAPI.App.Domain.Provider.Models;
-using LeafBidAPI.App.Domain.User.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeafBidAPI.Data;
+namespace LeafBidAPI.App.Infrastructure.Common.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
@@ -19,7 +18,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Buyer> Buyers { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Provider> Providers { get; set; }
-    public DbSet<User> Users { get; set; }
+    public DbSet<Domain.User.Models.User> Users { get; set; }
         
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

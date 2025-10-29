@@ -1,7 +1,7 @@
 ﻿using LeafBidAPI.App.Domain.Provider.Data;
 using LeafBidAPI.App.Domain.Provider.Repositories;
-using LeafBidAPI.Controllers;
-using LeafBidAPI.Data;
+using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

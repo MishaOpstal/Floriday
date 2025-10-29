@@ -1,9 +1,9 @@
 using FluentResults;
 using LeafBidAPI.App.Domain.User.Data;
 using LeafBidAPI.App.Domain.User.Validators;
+using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Infrastructure.Common.Repositories;
 using LeafBidAPI.App.Infrastructure.User.Services;
-using LeafBidAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.App.Domain.User.Repositories;
@@ -69,6 +69,8 @@ public class UserRepository(
             user.Email = userData.Email;
         if (!string.IsNullOrWhiteSpace(userData.Password))
             user.PasswordHash = passwordHasher.Hash(userData.Password);
+        if (userData.UserType.HasValue)
+            user.UserType = userData.UserType.Value;
 
         dbContext.Users.Update(user);
         await dbContext.SaveChangesAsync();

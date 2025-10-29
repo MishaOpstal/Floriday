@@ -1,6 +1,6 @@
 using System.Reflection;
-using LeafBidAPI.Data;
-using LeafBidAPI.Filters;
+using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Interfaces.Http.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;

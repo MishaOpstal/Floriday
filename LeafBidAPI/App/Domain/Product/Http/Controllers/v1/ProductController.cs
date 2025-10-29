@@ -1,7 +1,7 @@
 ﻿using LeafBidAPI.App.Domain.Product.Data;
 using LeafBidAPI.App.Domain.Product.Repositories;
-using LeafBidAPI.Controllers;
-using LeafBidAPI.Data;
+using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +27,7 @@ public class ProductController(ApplicationDbContext context, ProductRepository p
     public async Task<ActionResult<Models.Product>> GetProduct(int id)
     {
         var product = await productRepository.GetProductAsync(
-            new Data.GetProductData(id)
+            new GetProductData(id)
         );
         
         return product.IsFailed ? NotFound() : new JsonResult(product.Value) { StatusCode = 200 };

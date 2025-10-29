@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace LeafBidAPI.App.Domain.Product.Models;
 
@@ -15,7 +16,8 @@ public class Product
     /// <summary>
     /// Name of the product.
     /// </summary>
-    public string Name { get; set; }
+    [MaxLength(255)]
+    public required string Name { get; set; }
     
     /// <summary>
     /// Weight of the product in kilograms.
@@ -25,12 +27,14 @@ public class Product
     /// <summary>
     /// Picture URL of the product.
     /// </summary>
-    public string Picture { get; set; }
+    [MaxLength(255)]
+    public required string Picture { get; set; }
     
     /// <summary>
     /// Species of the product.
     /// </summary>
-    public string Species { get; set; }
+    [MaxLength(255)]
+    public required string Species { get; set; }
     
     /// <summary>
     /// Pot size of the product.

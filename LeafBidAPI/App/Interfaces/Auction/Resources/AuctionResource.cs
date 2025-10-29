@@ -1,4 +1,4 @@
-using LeafBidAPI.Enums;
+using LeafBidAPI.App.Domain.Auction.Enums;
 
 namespace LeafBidAPI.App.Interfaces.Auction.Resources;
 

@@ -1,7 +1,7 @@
-﻿using LeafBidAPI.Data;
+﻿using LeafBidAPI.App.Infrastructure.Common.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LeafBidAPI.Controllers;
+namespace LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
 
 public class BaseController(ApplicationDbContext dbContext)
 {

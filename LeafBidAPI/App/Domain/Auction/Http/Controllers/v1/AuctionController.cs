@@ -1,8 +1,8 @@
 ﻿using LeafBidAPI.App.Domain.Auction.Data;
+using LeafBidAPI.App.Domain.Auction.Enums;
 using LeafBidAPI.App.Domain.Auction.Repositories;
-using LeafBidAPI.Controllers;
-using LeafBidAPI.Data;
-using LeafBidAPI.Enums;
+using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

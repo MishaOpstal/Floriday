@@ -1,8 +1,8 @@
 using FluentResults;
 using LeafBidAPI.App.Domain.Buyer.Data;
 using LeafBidAPI.App.Domain.Buyer.Validators;
+using LeafBidAPI.App.Infrastructure.Common.Data;
 using LeafBidAPI.App.Infrastructure.Common.Repositories;
-using LeafBidAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.App.Domain.Buyer.Repositories;
@@ -59,7 +59,7 @@ public class BuyerRepository(
         if (buyer is null)
             return Result.Fail("Buyer not found.");
 
-        buyer.CompanyName = buyerData.CompanyName;
+        buyer.CompanyName = buyerData.CompanyName ?? buyer.CompanyName;
 
         dbContext.Buyers.Update(buyer);
         await dbContext.SaveChangesAsync();

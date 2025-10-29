@@ -1,7 +1,7 @@
 ﻿using LeafBidAPI.App.Domain.Auctioneer.Data;
 using LeafBidAPI.App.Domain.Auctioneer.Repositories;
-using LeafBidAPI.Controllers;
-using LeafBidAPI.Data;
+using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Infrastructure.Common.Http.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,7 +65,4 @@ public class AuctioneerController(ApplicationDbContext context, AuctioneerReposi
     }
 }
 
-public record CreateAuctioneerRequest
-{
-    public int UserId { get; set; }
-}
+public record CreateAuctioneerRequest(int UserId);
