@@ -37,12 +37,12 @@ public class ProviderController(ApplicationDbContext context, ProviderRepository
     /// Create a new provider.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Provider>> CreateProvider(Models.Provider providerData)
+    public async Task<ActionResult<Models.Provider>> CreateProvider([FromBody] CreateProviderRequest request)
     {
         var provider = await providerRepository.CreateProviderAsync(
             new CreateProviderData(
-                providerData.UserId,
-                providerData.CompanyName
+                request.UserId,
+                request.CompanyName
             )
         );
         
@@ -53,7 +53,7 @@ public class ProviderController(ApplicationDbContext context, ProviderRepository
     /// Update an existing provider by ID.
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProvider(int id, Models.Provider providerData)
+    public async Task<ActionResult> UpdateProvider(int id, [FromBody] UpdateProviderRequest providerData)
     {
         var provider = await providerRepository.UpdateProviderAsync(
             new UpdateProviderData(
@@ -79,3 +79,6 @@ public class ProviderController(ApplicationDbContext context, ProviderRepository
         return result.IsFailed ? BadRequest(result.Errors) : new OkResult();
     }
 }
+
+public record CreateProviderRequest(int UserId, string CompanyName);
+public record UpdateProviderRequest(int UserId, string CompanyName);
