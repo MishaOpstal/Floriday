@@ -2,6 +2,7 @@
 using LeafBidAPI.App.Domain.Auction.Repositories;
 using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
+using LeafBidAPI.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,16 +38,16 @@ public class AuctionController(ApplicationDbContext context, AuctionRepository a
     /// Create a new auction
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Auction>> CreateAuction(Models.Auction auctionData)
+    public async Task<ActionResult<Models.Auction>> CreateAuction([FromBody] CreateAuctionRequest request)
     {
         var auction = await auctionRepository.CreateAuctionAsync(
             new CreateAuctionData(
-                auctionData.Description,
-                auctionData.StartDate,
-                auctionData.Amount,
-                auctionData.MinimumPrice,
-                auctionData.ClockLocationEnum,
-                auctionData.AuctioneerId
+                request.Description,
+                request.StartDate,
+                request.Amount,
+                request.MinimumPrice,
+                request.ClockLocationEnum,
+                request.AuctioneerId
             )
         );
         
@@ -59,19 +60,36 @@ public class AuctionController(ApplicationDbContext context, AuctionRepository a
     /// Update an existing auction
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuction(int id, Models.Auction auctionData)
+    public async Task<ActionResult> UpdateAuction(int id, [FromBody] UpdateAuctionRequest request)
     {
         var auction = await auctionRepository.UpdateAuctionAsync(
             new UpdateAuctionData(
                 id,
-                auctionData.Description,
-                auctionData.StartDate,
-                auctionData.Amount,
-                auctionData.MinimumPrice,
-                auctionData.ClockLocationEnum
+                request.Description,
+                request.StartDate,
+                request.Amount,
+                request.MinimumPrice,
+                request.ClockLocationEnum
             )
         );
         
         return auction.IsFailed ? NotFound() : new JsonResult(auction.Value) { StatusCode = 200 };
     }
 }
+
+public record CreateAuctionRequest(
+    string Description,
+    DateTime StartDate,
+    int Amount,
+    decimal MinimumPrice,
+    ClockLocationEnum ClockLocationEnum,
+    int AuctioneerId
+);
+
+public record UpdateAuctionRequest(
+    string Description,
+    DateTime StartDate,
+    int Amount,
+    decimal MinimumPrice,
+    ClockLocationEnum ClockLocationEnum
+);

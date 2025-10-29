@@ -38,11 +38,11 @@ public class AuctioneerController(ApplicationDbContext context, AuctioneerReposi
     /// Create a new auctioneer
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Auctioneer>> CreateAuctioneer(Models.Auctioneer auctioneer)
+    public async Task<ActionResult<Models.Auctioneer>> CreateAuctioneer([FromBody] CreateAuctioneerRequest request)
     {
         var createdAuctioneer = await auctioneerRepository.CreateAuctioneerAsync(
             new CreateAuctioneerData(
-                auctioneer.UserId
+                request.UserId
             )
         );
 
@@ -63,4 +63,9 @@ public class AuctioneerController(ApplicationDbContext context, AuctioneerReposi
         
         return auctioneer.IsFailed ? NotFound() : new OkResult();
     }
+}
+
+public record CreateAuctioneerRequest
+{
+    public int UserId { get; set; }
 }

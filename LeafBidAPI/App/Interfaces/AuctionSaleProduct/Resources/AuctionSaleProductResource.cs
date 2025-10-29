@@ -8,5 +8,5 @@ public record AuctionSaleProductResource(
     int AuctionSaleId,
     int ProductId,
     int Quantity,
-    int Price
+    decimal Price
 );

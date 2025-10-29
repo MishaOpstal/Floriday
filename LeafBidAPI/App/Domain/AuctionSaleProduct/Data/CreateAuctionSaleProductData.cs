@@ -7,5 +7,5 @@ public record CreateAuctionSaleProductData(
     int AuctionSaleId,
     int ProductId,
     int Quantity,
-    int Price
+    decimal Price
 );

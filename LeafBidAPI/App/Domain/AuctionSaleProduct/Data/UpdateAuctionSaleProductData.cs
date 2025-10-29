@@ -8,5 +8,5 @@ public record UpdateAuctionSaleProductData(
     int? AuctionSaleId = null,
     int? ProductId = null,
     int? Quantity = null,
-    int? Price = null
+    decimal? Price = null
 );

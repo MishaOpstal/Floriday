@@ -1,4 +1,6 @@
-﻿using LeafBidAPI.Controllers;
+﻿using LeafBidAPI.App.Domain.AuctionSaleProduct.Data;
+using LeafBidAPI.App.Domain.AuctionSaleProduct.Repositories;
+using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ namespace LeafBidAPI.App.Domain.AuctionSaleProduct.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctionSaleProductController(ApplicationDbContext context) : BaseController(context)
+public class AuctionSaleProductController(ApplicationDbContext context, AuctionSaleProductRepository auctionSaleProductRepository) : BaseController(context)
 {
     /// <summary>
     /// Get all auction sale products
@@ -24,25 +26,29 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Models.AuctionSaleProduct>> GetAuctionSaleProduct(int id)
     {
-        var auctionSaleProduct = await Context.AuctionSaleProducts.FindAsync(id);
-        if (auctionSaleProduct == null)
-        {
-            return NotFound();
-        }
-
-        return auctionSaleProduct;
+        var auctionSaleProduct = await auctionSaleProductRepository.GetAuctionSaleProductAsync(
+            new GetAuctionSaleProductData(id)
+        );
+        
+        return auctionSaleProduct.IsFailed ? NotFound() : new JsonResult(auctionSaleProduct.Value) { StatusCode = 200 };
     }
 
     /// <summary>
     /// Create a new auction sale product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.AuctionSaleProduct>> CreateAuctionSaleProducts(Models.AuctionSaleProduct auctionSaleProduct)
+    public async Task<ActionResult<Models.AuctionSaleProduct>> CreateAuctionSaleProducts([FromBody] CreateAuctionSaleProductRequest request)
     {
-        Context.AuctionSaleProducts.Add(auctionSaleProduct);
-        await Context.SaveChangesAsync();
-
-        return new JsonResult(auctionSaleProduct) { StatusCode = 201 };
+        var auctionSaleProduct = await auctionSaleProductRepository.CreateAuctionSaleProductAsync(
+            new CreateAuctionSaleProductData(
+                request.AuctionSaleId,
+                request.ProductId,
+                request.Quantity,
+                request.Price
+            )
+        );
+        
+        return auctionSaleProduct.IsFailed ? BadRequest(auctionSaleProduct.Errors) : new JsonResult(auctionSaleProduct.Value) { StatusCode = 201 };
     }
 
     /// <summary>
@@ -50,20 +56,34 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult<Models.AuctionSaleProduct>> UpdateAuctionSaleProducts(
-        int id, Models.AuctionSaleProduct updatedAuctionSaleProduct)
+        int id, [FromBody] UpdateAuctionSaleProductRequest result)
     {
-        var auctionSaleProduct = await Context.AuctionSaleProducts.FindAsync(id);
-        if (auctionSaleProduct == null)
-        {
-            return NotFound();
-        }
-
-        auctionSaleProduct.AuctionSale = updatedAuctionSaleProduct.AuctionSale;
-        auctionSaleProduct.Product = updatedAuctionSaleProduct.Product;
-        auctionSaleProduct.Quantity = updatedAuctionSaleProduct.Quantity;
-        auctionSaleProduct.Price = updatedAuctionSaleProduct.Price;
+        var auctionSaleProduct = await auctionSaleProductRepository.UpdateAuctionSaleProductAsync(
+            new UpdateAuctionSaleProductData(
+                id,
+                result.AuctionSaleId,
+                result.ProductId,
+                result.Quantity,
+                result.Price
+            )
+        );
         
-        await Context.SaveChangesAsync();
-        return new JsonResult(auctionSaleProduct);
+        return auctionSaleProduct.IsFailed ? BadRequest(auctionSaleProduct.Errors) : new JsonResult(auctionSaleProduct.Value) { StatusCode = 200 };
     }
 }
+
+public record CreateAuctionSaleProductRequest
+(
+    int AuctionSaleId,
+    int ProductId,
+    int Quantity,
+    decimal Price
+);
+
+public record UpdateAuctionSaleProductRequest
+(
+    int AuctionSaleId,
+    int ProductId,
+    int Quantity,
+    decimal Price
+);

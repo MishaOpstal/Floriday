@@ -10,7 +10,7 @@ public record UpdateAuctionData(
     string? Description = null,
     DateTime? StartDate = null,
     int? Amount = null,
-    int? MinimumPrice = null,
+    decimal? MinimumPrice = null,
     ClockLocationEnum? ClockLocationEnum = null,
     int? AuctioneerId = null
 );

@@ -32,7 +32,7 @@ public class Auction
     /// <summary>
     /// Minimum price for the auction
     /// </summary>
-    public int MinimumPrice { get; set; }
+    public decimal MinimumPrice { get; set; }
     
     public ClockLocationEnum ClockLocationEnum { get; set; }
     

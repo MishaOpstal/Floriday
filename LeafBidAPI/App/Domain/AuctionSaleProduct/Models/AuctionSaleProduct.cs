@@ -36,5 +36,5 @@ public class AuctionSaleProduct
     /// <summary>
     /// Price of the product in the auction sale.
     /// </summary>
-    public int Price { get; set; }
+    public decimal Price { get; set; }
 }

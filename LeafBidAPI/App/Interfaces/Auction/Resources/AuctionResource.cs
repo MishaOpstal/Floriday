@@ -10,7 +10,7 @@ public record AuctionResource(
     string Description,
     DateTime StartDate,
     int Amount,
-    int MinimumPrice,
+    decimal MinimumPrice,
     ClockLocationEnum ClockLocationEnum,
     int AuctioneerId
 );

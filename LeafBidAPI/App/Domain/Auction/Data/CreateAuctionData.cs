@@ -9,7 +9,7 @@ public record CreateAuctionData(
     string Description,
     DateTime StartDate,
     int Amount,
-    int MinimumPrice,
+    decimal MinimumPrice,
     ClockLocationEnum ClockLocationEnum,
     int AuctioneerId
 );
