@@ -4,12 +4,12 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import s from './knop.module.css';
 
-type BiedKnopProps = {
+type KnopProps = {
     label: string;
     to: string;
 };
 
-const BiedKnop: React.FC<BiedKnopProps> = ({ label, to }) => {
+const Knop: React.FC<KnopProps> = ({ label, to }) => {
     const router = useRouter();
 
     const handleClick = () => {
@@ -23,4 +23,4 @@ const BiedKnop: React.FC<BiedKnopProps> = ({ label, to }) => {
     );
 };
 
-export default BiedKnop;
+export default Knop;

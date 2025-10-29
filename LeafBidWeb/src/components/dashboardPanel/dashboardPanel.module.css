@@ -1,0 +1,39 @@
+.panel {
+    display: flex;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 10px;
+    border: 5px solid var(--primary-border);
+    background: var(--primary-background);
+}
+
+.image {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+.middle {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.content {
+    font-size: 14px;
+    color: #333;
+}
+
+.right {
+    margin-left: 20px;
+}
