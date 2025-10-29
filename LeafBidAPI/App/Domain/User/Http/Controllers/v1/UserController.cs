@@ -28,12 +28,11 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Models.User>> GetUser(int id)
     {
-        var result = await userRepository.GetUserAsync(new GetUserData(id));
-        if (!result.IsFailed) return new JsonResult(result.Value);
-
-        // Not found vs validation errors
-        bool notFound = result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase));
-        return notFound ? NotFound() : new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
+        var user = await userRepository.GetUserAsync(
+            new GetUserData(id)
+        );
+        
+        return user.IsFailed ? NotFound() : new JsonResult(user.Value) { StatusCode = 200 };
     }
     
     /// <summary>
@@ -42,15 +41,11 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     [HttpPost]
     public async Task<ActionResult<Models.User>> CreateUser([FromBody] CreateUserRequest request)
     {
-        var data = new CreateUserData(request.Name, request.Email, request.Password, request.UserType);
-        var result = await userRepository.CreateUserAsync(data);
-        if (result.IsFailed)
-        {
-            return new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
-        }
-
-        var created = result.Value;
-        return new JsonResult(created) { StatusCode = 201 };
+        var user = await userRepository.CreateUserAsync(
+            new CreateUserData(request.Name, request.Email, request.Password, request.UserType)
+        );
+        
+        return user.IsFailed ? BadRequest(user.Errors) : new JsonResult(user.Value) { StatusCode = 201 };
     }
     
     /// <summary>
@@ -59,12 +54,11 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     [HttpPut("{id:int}")]
     public async Task<ActionResult<Models.User>> UpdateUser(int id, [FromBody] UpdateUserRequest request)
     {
-        var data = new UpdateUserData(id, request.Name, request.Email, request.Password, request.UserType);
-        var result = await userRepository.UpdateUserAsync(data);
-        if (!result.IsFailed) return new JsonResult(result.Value);
-
-        bool notFound = result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase));
-        return notFound ? NotFound() : new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
+        var user = await userRepository.UpdateUserAsync(
+            new UpdateUserData(id, request.Name, request.Email, request.Password, request.UserType)
+        );
+        
+        return user.IsFailed ? BadRequest(user.Errors) : new JsonResult(user.Value) { StatusCode = 200 };
     }
     
     /// <summary>
@@ -73,11 +67,11 @@ public class UserController(ApplicationDbContext context, UserRepository userRep
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        var result = await userRepository.DeleteUserAsync(new DeleteUserData(id));
-        if (!result.IsFailed) return new OkResult();
-
-        bool notFound = result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase));
-        return notFound ? NotFound() : new BadRequestObjectResult(new { errors = result.Errors.Select(e => e.Message) });
+        var result = await userRepository.DeleteUserAsync(
+            new DeleteUserData(id)
+        );
+        
+        return result.IsFailed ? BadRequest(result.Errors) : new OkResult();
     }
 }
 

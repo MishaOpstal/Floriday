@@ -1,4 +1,6 @@
-﻿using LeafBidAPI.Controllers;
+﻿using LeafBidAPI.App.Domain.Auctioneer.Data;
+using LeafBidAPI.App.Domain.Auctioneer.Repositories;
+using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ namespace LeafBidAPI.App.Domain.Auctioneer.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class AuctioneerController(ApplicationDbContext context) : BaseController(context)
+public class AuctioneerController(ApplicationDbContext context, AuctioneerRepository auctioneerRepository) : BaseController(context)
 {
     
     /// <summary>
@@ -25,13 +27,11 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Models.Auctioneer>> GetAuctioneer(int id)
     {
-        var auctioneer = await Context.Auctioneers.FindAsync(id);
-        if (auctioneer == null)
-        {
-            return NotFound();
-        }
+        var auctioneer = await auctioneerRepository.GetAuctioneerAsync(
+            new GetAuctioneerData(id)
+        );
 
-        return auctioneer;
+        return auctioneer.IsFailed ? NotFound() : new JsonResult(auctioneer.Value) { StatusCode = 200 };
     }
 
     /// <summary>
@@ -40,27 +40,15 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     [HttpPost]
     public async Task<ActionResult<Models.Auctioneer>> CreateAuctioneer(Models.Auctioneer auctioneer)
     {
-        Context.Auctioneers.Add(auctioneer);
-        await Context.SaveChangesAsync();
+        var createdAuctioneer = await auctioneerRepository.CreateAuctioneerAsync(
+            new CreateAuctioneerData(
+                auctioneer.UserId
+            )
+        );
 
-        return new JsonResult(auctioneer) { StatusCode = 201 };
-    }
-
-    /// <summary>
-    /// Update an existing auctioneer
-    /// </summary>
-    [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateAuctioneer(int id, Models.Auctioneer updatedAuctioneer)
-    {
-        var auctioneer = await Context.Auctioneers.FindAsync(id);
-        if (auctioneer == null)
-        {
-            return NotFound();
-        }
-
-        auctioneer.User = updatedAuctioneer.User;
-        await Context.SaveChangesAsync();
-        return new JsonResult(auctioneer);
+        return createdAuctioneer.IsFailed
+            ? BadRequest(createdAuctioneer.Errors)
+            : new JsonResult(createdAuctioneer.Value) { StatusCode = 201 };
     }
     
     /// <summary>
@@ -69,14 +57,10 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteAuctioneer(int id)
     {
-        var auctioneer = await Context.Auctioneers.FindAsync(id);
-        if (auctioneer == null)
-        {
-            return NotFound();
-        }
-
-        Context.Auctioneers.Remove(auctioneer);
-        await Context.SaveChangesAsync();
-        return new OkResult();
+        var auctioneer = await auctioneerRepository.DeleteAuctioneerAsync(
+            new DeleteAuctioneerData(id)
+        );
+        
+        return auctioneer.IsFailed ? NotFound() : new OkResult();
     }
 }

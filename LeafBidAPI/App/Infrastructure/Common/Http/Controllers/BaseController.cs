@@ -11,4 +11,9 @@ public class BaseController(ApplicationDbContext dbContext)
     {
         return new JsonResult(new { message = "Not Found" }) { StatusCode = 404 };
     }
+    
+    protected static ActionResult BadRequest(object errors)
+    {
+        return new JsonResult(new { errors }) { StatusCode = 400 };
+    }
 }

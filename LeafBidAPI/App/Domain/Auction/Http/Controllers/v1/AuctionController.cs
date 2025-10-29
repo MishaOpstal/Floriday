@@ -37,9 +37,9 @@ public class AuctionController(ApplicationDbContext context, AuctionRepository a
     /// Create a new auction
     /// </summary>
     [HttpPost]
-    public Task<ActionResult<Models.Auction>> CreateAuction(Models.Auction auctionData)
+    public async Task<ActionResult<Models.Auction>> CreateAuction(Models.Auction auctionData)
     {
-        var auction = auctionRepository.CreateAuctionAsync(
+        var auction = await auctionRepository.CreateAuctionAsync(
             new CreateAuctionData(
                 auctionData.Description,
                 auctionData.StartDate,
@@ -49,8 +49,10 @@ public class AuctionController(ApplicationDbContext context, AuctionRepository a
                 auctionData.AuctioneerId
             )
         );
-
-        return Task.FromResult<ActionResult<Models.Auction>>(new JsonResult(auction) { StatusCode = 201 });
+        
+        return auction.IsFailed
+            ? BadRequest(auction.Errors)
+            : new JsonResult(auction.Value) { StatusCode = 201 };
     }
 
     /// <summary>

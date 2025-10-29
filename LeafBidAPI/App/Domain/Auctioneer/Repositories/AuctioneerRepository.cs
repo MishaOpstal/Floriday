@@ -47,7 +47,7 @@ public class AuctioneerRepository(
         return Result.Ok(auctioneer);
     }
     
-    public async Task<Result> DeleteBuyerAsync(DeleteAuctioneerData auctioneerData)
+    public async Task<Result> DeleteAuctioneerAsync(DeleteAuctioneerData auctioneerData)
     {
         var validation = await ValidateAsync(deleteAuctioneerValidator, auctioneerData);
         if (validation.IsFailed)

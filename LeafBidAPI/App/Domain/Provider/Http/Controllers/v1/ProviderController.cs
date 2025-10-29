@@ -1,4 +1,6 @@
-﻿using LeafBidAPI.Controllers;
+﻿using LeafBidAPI.App.Domain.Provider.Data;
+using LeafBidAPI.App.Domain.Provider.Repositories;
+using LeafBidAPI.Controllers;
 using LeafBidAPI.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ namespace LeafBidAPI.App.Domain.Provider.Http.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class ProviderController(ApplicationDbContext context) : BaseController(context)
+public class ProviderController(ApplicationDbContext context, ProviderRepository providerRepository) : BaseController(context)
 {
     /// <summary>
     /// Get all providers.
@@ -24,43 +26,44 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Models.Provider>> GetProvider(int id)
     {
-        var provider = await Context.Providers.FindAsync(id);
-        if (provider == null)
-        {
-            return NotFound();
-        }
-
-        return provider;
+        var provider = await providerRepository.GetProviderAsync(
+            new GetProviderData(id)
+        );
+        
+        return provider.IsFailed ? NotFound() : new JsonResult(provider.Value) { StatusCode = 200 };
     }
     
     /// <summary>
     /// Create a new provider.
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Models.Provider>> CreateProvider(Models.Provider provider)
+    public async Task<ActionResult<Models.Provider>> CreateProvider(Models.Provider providerData)
     {
-        Context.Providers.Add(provider);
-        await Context.SaveChangesAsync();
-
-        return new JsonResult(provider) { StatusCode = 201 };
+        var provider = await providerRepository.CreateProviderAsync(
+            new CreateProviderData(
+                providerData.UserId,
+                providerData.CompanyName
+            )
+        );
+        
+        return provider.IsFailed ? BadRequest(provider.Errors) : new JsonResult(provider.Value) { StatusCode = 201 };
     }
     
     /// <summary>
     /// Update an existing provider by ID.
     /// </summary>
     [HttpPut("{id:int}")]
-    public async Task<ActionResult> UpdateProvider(int id, Models.Provider updatedProvider)
+    public async Task<ActionResult> UpdateProvider(int id, Models.Provider providerData)
     {
-        var provider = await Context.Providers.FindAsync(id);
-        if (provider == null)
-        {
-            return NotFound();
-        }
-
-        provider.CompanyName = updatedProvider.CompanyName;
+        var provider = await providerRepository.UpdateProviderAsync(
+            new UpdateProviderData(
+                id,
+                providerData.UserId,
+                providerData.CompanyName
+            )
+        );
         
-        await Context.SaveChangesAsync();
-        return new JsonResult(provider);
+        return provider.IsFailed ? BadRequest(provider.Errors) : new JsonResult(provider.Value) { StatusCode = 200 };
     }
     
     /// <summary>
@@ -69,14 +72,10 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProvider(int id)
     {
-        var provider = await Context.Providers.FindAsync(id);
-        if (provider == null)
-        {
-            return NotFound();
-        }
-
-        Context.Providers.Remove(provider);
-        await Context.SaveChangesAsync();
-        return new OkResult();
+        var result = await providerRepository.DeleteProviderAsync(
+            new DeleteProviderData(id)
+        );
+        
+        return result.IsFailed ? BadRequest(result.Errors) : new OkResult();
     }
 }
