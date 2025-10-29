@@ -8,14 +8,16 @@ services:
     environment:
       - SQL_PORT=1433
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=LeafBidDb;User Id=sa;Password=ibUu6nv7tuwt66MJ9cVdkXJJdN;TrustServerCertificate=True;
+      - ConnectionStrings__DefaultConnection=Server=mssql,1433;Database=LeafBidDb;User Id=sa;Password=ibUu6nv7tuwt66MJ9cVdkXJJdN;TrustServerCertificate=True;Connection Timeout=60;
     build:
       context: .
       dockerfile: Dockerfile
     networks:
       - leafbidapi-network
     depends_on:
-      - mssql
+      mssql:
+        condition: service_healthy
+    restart: on-failure
 
   mssql:
     platform: linux/amd64
@@ -24,6 +26,7 @@ services:
     environment:
       ACCEPT_EULA: "Y"
       MSSQL_SA_PASSWORD: "ibUu6nv7tuwt66MJ9cVdkXJJdN"
+      MSSQL_PID: "Developer"
     ports:
       - "1430:1433"
     volumes:
@@ -31,6 +34,12 @@ services:
     restart: unless-stopped
     networks:
       - leafbidapi-network
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'ibUu6nv7tuwt66MJ9cVdkXJJdN' -C -Q 'SELECT 1' -b -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
 
 volumes:
   mssql_data:

@@ -28,7 +28,7 @@ public class Program
         // Automatically register AutoMappers, Repositories, Validators, and other services via Scrutor
         builder.Services.Scan(scan => scan
             .FromApplicationDependencies(a => a.FullName != null && a.FullName.StartsWith("LeafBidAPI"))
-            // AutoMapper profiles (just discover them, AutoMapper handles registration below)
+            // AutoMapper profiles (just discover them, AutoMapper handles the registration below)
             .AddClasses(c => c.AssignableTo(typeof(Profile)))
             .AsSelfWithInterfaces()
             .WithScopedLifetime()
@@ -78,10 +78,39 @@ public class Program
         });
 
         var app = builder.Build();
-
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            var context = services.GetRequiredService<ApplicationDbContext>();
+        
+            var maxRetries = 10;
+            var delay = TimeSpan.FromSeconds(5);
+        
+            for (int i = 0; i < maxRetries; i++)
+            {
+                try
+                {
+                    logger.LogInformation("Applying database migrations (attempt {Attempt}/{MaxRetries})...", i + 1, maxRetries);
+                    context.Database.Migrate();
+                    logger.LogInformation("Database migrations applied successfully");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (i == maxRetries - 1)
+                    {
+                        logger.LogError(ex, "Failed to apply migrations after {MaxRetries} attempts", maxRetries);
+                        throw;
+                    }
+                    logger.LogWarning(ex, "Migration attempt failed. Retrying in {Delay} seconds...", delay.TotalSeconds);
+                    Thread.Sleep(delay);
+                }
+            }
+            
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI v1"));
         }
