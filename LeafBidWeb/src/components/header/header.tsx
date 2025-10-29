@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type HeaderProps = {
-    returnOption: boolean;
+    returnOption?: boolean;
 }
 
 export default function Header({ returnOption = false }: HeaderProps) {
@@ -18,18 +18,19 @@ export default function Header({ returnOption = false }: HeaderProps) {
                 priority
             />
             </div>
-            <nav>
+            <nav aria-label="main navigation">
+                <Link
+                    href="/"
+                    className={s.link}
+                >
+                    Uitloggen
+                </Link>
+
             {returnOption && (
                 <Link href="/" className={s.link}>
-                Terug
+                    Terug
                 </Link>
             )}
-            <Link
-                href="/"
-                className={s.link}
-            >
-                Uitloggen
-            </Link>
             </nav>
         </header>
     );
