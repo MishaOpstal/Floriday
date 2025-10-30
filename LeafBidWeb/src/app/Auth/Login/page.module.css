@@ -57,6 +57,18 @@
     background: var(--secondary-background);
 }
 
+.selector{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    align-self: stretch;
+}
+
+.login{
+    color: var(--primary-text);
+    text-decoration-line: underline;
+}
+
 .logo{
     display: flex;
     padding: 0 53px;
