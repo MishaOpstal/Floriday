@@ -7,6 +7,7 @@ import s from "@/app/Auth/Login/page.module.css"
 import React from "react";
 import Image from "next/image";
 
+//TODO: fix styling of register page
 export default function Login(){
     return(
         <main className={s.main}>
