@@ -20,7 +20,7 @@ export default function Header({ returnOption = false }: HeaderProps) {
             </div>
             <nav aria-label="main navigation">
                 <Link
-                    href="/"
+                    href="/Auth/Login"
                     className={s.link}
                 >
                     Uitloggen
