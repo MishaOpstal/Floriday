@@ -38,7 +38,7 @@
     flex: 1 0 0;
     align-self: stretch;
     /* Add a 50% lightgrey overlay over the background image */
-    background-image: linear-gradient(rgba(211, 211, 211, 0.5), rgba(211, 211, 211, 0.5)), url("/LoginBackGround.jpg");
+    background-image: linear-gradient(rgba(211, 211, 211, 0.5), rgba(211, 211, 211, 0.5)), url("/LoginBackground.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
