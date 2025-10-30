@@ -31,7 +31,7 @@ body {
 body {
   color: var(--primary-text);
   background: var(--main-background);
-    font-family: Nunito, Arial, Helvetica, sans-serifn, serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
     display: flex;
@@ -41,6 +41,7 @@ body {
 
 * {
   box-sizing: border-box;
+  font-family: Nunito, Arial, Helvetica, sans-serifn, serif;
   padding: 0;
   margin: 0;
     font-size: 20px;
