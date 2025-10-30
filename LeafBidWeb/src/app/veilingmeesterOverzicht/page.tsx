@@ -73,7 +73,7 @@ export default function Home() {
                         totaalprijs=""
                         kloklocatie=""
                     >
-                        <Knop label="Veiling aanmaken" to="" />
+                        <Knop label="Veiling aanmaken" to="/toevoegen/product" />
                     </DashboardPanel>
 
 

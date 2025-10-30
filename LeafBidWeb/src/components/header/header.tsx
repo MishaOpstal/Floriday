@@ -2,7 +2,7 @@ import s from "./header.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-type HeaderProps = {
+interface HeaderProps {
     returnOption?: boolean;
 }
 
@@ -20,7 +20,7 @@ export default function Header({ returnOption = false }: HeaderProps) {
             </div>
             <nav aria-label="main navigation">
                 <Link
-                    href="/"
+                    href="/Auth/Login"
                     className={s.link}
                 >
                     Uitloggen
