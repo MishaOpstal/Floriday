@@ -1,5 +1,6 @@
 import React from 'react';
 import s from "@/components/RegisterForm/RegisterForm.module.css";
+import Link from "next/link";
 
 export default function RegisterForm() {
     return (
@@ -20,6 +21,12 @@ export default function RegisterForm() {
             <div className={s.underline}>
                 <label className={`${s.authitem} ${s.srOnly}`} htmlFor="PasswordCheck">Wachtwoord:</label>
                 <input className={s.input} type="password" id="PasswordCheck" placeholder="Wachtwoord" required />
+            </div>
+
+            <div className={s.signInButton}>
+                <Link href="/">
+                    <input className={s.buttonStyle} type="button" id="SignUpButton" value="Registreren" />
+                </Link>
             </div>
         </div>
     );
