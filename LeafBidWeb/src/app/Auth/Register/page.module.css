@@ -20,7 +20,7 @@
 
 .startFrame{
     display: flex;
-    height: 80dvh;
+    height: 90dvh;
     justify-content: center;
     align-items: center;
     flex: 1 0 0;
