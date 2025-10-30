@@ -1,6 +1,7 @@
 import s from "@/app/Auth/Login/page.module.css"
 import React from "react";
 import LoginForm from "@/components/LoginForm/LoginForm";
+import Link from "next/link";
 
 export default function Login(){
     return(
@@ -13,7 +14,11 @@ export default function Login(){
                        <div className={s.login}>
                             <h3>Login</h3>
                         </div>
-                       <div className={s.register}><h3>Register</h3></div>
+                       <Link href="/Auth/Register">
+                           <div className={s.register}>
+                               <h3>Register</h3>
+                           </div>
+                       </Link>
                    </div>
                    <div className={s.inputs}><LoginForm /></div>
                    <div className={s.logo}>
