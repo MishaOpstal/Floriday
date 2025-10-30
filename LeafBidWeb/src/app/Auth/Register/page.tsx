@@ -3,11 +3,11 @@ import Header from "@/components/header/header";
 import LoginS from "@/components/LoginForm/LoginForm.module.css";
 import RegisterS from "@/components/RegisterForm/RegisterForm.module.css";
 
-import s from "@/app/Auth/Login/page.module.css"
+import s from "@/app/Auth/register/page.module.css"
 import React from "react";
 import Image from "next/image";
+import RegisterForm from "@/components/RegisterForm/RegisterForm";
 
-//TODO: fix styling of register page
 export default function Login(){
     return(
         <main className={s.main}>
@@ -15,7 +15,15 @@ export default function Login(){
                 <div className={s.startFrame}>
                     <div className={s.image}></div>
                     <div className={s.loginRegister}>
-                        <h1>bla bla bla</h1>
+                        <div className={s.selector}>
+                            <div className={s.login}>
+                                <h3>Login</h3>
+                            </div>
+                            <div className={s.register}>
+                                <h3>Register</h3>
+                            </div>
+                        </div>
+                        <div className={s.inputs}><RegisterForm /></div>
                         <div className={s.logo}>
                             <div className={s.innerLogo}>
                                 <div className={s.logoImage}>

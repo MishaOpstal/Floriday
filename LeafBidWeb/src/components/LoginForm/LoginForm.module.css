@@ -1,0 +1,22 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    align-self: stretch;
+}
+
+.underline{
+    border-bottom: 5px solid var(--secondary-border);
+}
+
+.authitem{
+    white-space: nowrap;
+}
+
+.input{
+    color: var(--primary-text);
+    background: transparent;
+    border: none;
+}
