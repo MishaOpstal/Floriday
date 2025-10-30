@@ -43,3 +43,21 @@
     white-space: nowrap !important;
     border: 0 !important;
 }
+
+.logInButton{
+    display: flex;
+    height: 75px;
+    padding: 0 50px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 100px;
+    background: var(--primary-border);
+}
+
+.buttonStyle{
+    color: var(--main-background);
+    background: transparent;
+    border: none;
+}
