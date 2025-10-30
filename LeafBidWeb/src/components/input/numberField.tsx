@@ -7,15 +7,8 @@ interface NumberFieldProps {
     onChange?: (value: string) => void;
 }
 
-export default function NumberField({ placeholder, step = 1, value, onChange }: NumberFieldProps) {
+export default function NumberField({ placeholder, step = 1 }: NumberFieldProps) {
     return (
-            <input
-                type="number"
-                className={s.input}
-                placeholder={placeholder}
-                step={step}
-                value={value ?? ''}
-                onChange={(e) => onChange?.(e.target.value)}
-            />
+        <input type="number" className={s.input} placeholder={placeholder} step={step} />
     )
 }
