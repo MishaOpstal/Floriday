@@ -1,4 +1,4 @@
-﻿import s from '.veilinginfo.module.css';
+﻿import s from './velinginfo.module.css';
 
 type BigFieldProps = {
     naam: string;
