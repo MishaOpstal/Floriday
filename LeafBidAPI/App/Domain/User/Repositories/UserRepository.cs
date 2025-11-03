@@ -1,7 +1,11 @@
 using FluentResults;
+using FluentValidation;
+using FluentValidation.Results;
 using LeafBidAPI.App.Domain.User.Data;
+using LeafBidAPI.App.Domain.User.Exceptions;
 using LeafBidAPI.App.Domain.User.Validators;
 using LeafBidAPI.App.Infrastructure.Common.Data;
+using LeafBidAPI.App.Infrastructure.Common.Exceptions;
 using LeafBidAPI.App.Infrastructure.Common.Repositories;
 using LeafBidAPI.App.Infrastructure.User.Services;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +24,9 @@ public class UserRepository(
     {
         var validation = await ValidateAsync(getUserValidator, userData);
         if (validation.IsFailed)
-            return validation.ToResult<Models.User>();
+        {
+            throw new ValidationFailedException("GetUserData validation failed.", validation.Errors);
+        }
 
         var user = await dbContext.Users.FindAsync(userData.Id);
         return user is null

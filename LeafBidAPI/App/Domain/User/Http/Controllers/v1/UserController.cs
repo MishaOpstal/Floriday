@@ -42,7 +42,9 @@ public class UserController(
         var result = await userRepository.GetUserAsync(new GetUserData(id));
 
         if (result.IsFailed)
+        {
             return NotFound();
+        }
 
         var resource = mapper.Map<UserResource>(result.Value);
         return new JsonResult(resource) { StatusCode = 200 };
@@ -59,7 +61,9 @@ public class UserController(
         );
 
         if (result.IsFailed)
+        {
             return BadRequest(result.Errors);
+        }
 
         var resource = mapper.Map<UserResource>(result.Value);
         return new JsonResult(resource) { StatusCode = 201 };
@@ -76,7 +80,9 @@ public class UserController(
         );
 
         if (result.IsFailed)
+        {
             return BadRequest(result.Errors);
+        }
 
         var resource = mapper.Map<UserResource>(result.Value);
         return new JsonResult(resource) { StatusCode = 200 };
@@ -89,7 +95,6 @@ public class UserController(
     public async Task<ActionResult> DeleteUser(int id)
     {
         var result = await userRepository.DeleteUserAsync(new DeleteUserData(id));
-
         return result.IsFailed ? BadRequest(result.Errors) : new OkResult();
     }
 }
