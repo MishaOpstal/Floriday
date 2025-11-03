@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './page.module.css';
 import Header from "@/components/header/header";
 import Knop from "@/components/knop/knop";
@@ -10,7 +11,6 @@ export default function Home() {
           <div className={styles.page}>
 
               <div className={styles.main}>
-
                   <DashboardPanel
                       title="Tulpenmix 'Lentezon'"
                       imageSrc="/images/bloem.png"
