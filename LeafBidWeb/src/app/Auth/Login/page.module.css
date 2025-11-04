@@ -21,3 +21,27 @@
     background: #FFF;
     box-shadow: 0 0 20px 10px #C9E9B5;
 }
+
+.input{
+    display: flex;
+    padding: 9px 16px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 6px;
+    border: 1px solid #6A6A6A;
+    background: #FFF;
+}
+
+.check {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkInput{
+    accent-color: #25632C;
+    width: 16px;
+    height: 16px;
+    color-scheme: transparent;
+}
