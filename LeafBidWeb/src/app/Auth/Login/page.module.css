@@ -45,3 +45,21 @@
     height: 16px;
     color-scheme: transparent;
 }
+
+.button {
+    display: flex;
+    width: 100%;
+    padding: 16px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    border-radius: 6px;
+    background: #5C983B;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

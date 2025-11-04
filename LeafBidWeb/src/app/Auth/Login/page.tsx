@@ -1,10 +1,20 @@
+'use client'
+
 import Image from 'next/image';
 import Link from 'next/link';
 import s from './page.module.css';
 import "bootstrap/dist/css/bootstrap-grid.min.css"
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+    const router = useRouter();
+
+    const handleLoginClick = () => {
+        router.push('/');
+    };
+
     return (
         <main className={s.main}>
             <section className={s.card} aria-labelledby="loginTitle">
@@ -20,43 +30,36 @@ export default function LoginPage() {
 
                 <h1 id="loginTitle" className={s.title}>Welkom bij Leafbid</h1>
 
-                <form noValidate>
+                <Form noValidate className={s.form}>
                     {/* Email */}
-                    <div >
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label"></label>
-                            <Form.Control className={s.input} type="email" placeholder="Email"/>
-                        </div>
-                    </div>
+                            <Form.Label htmlFor="email" className="form-label">
+                                <Form.Control className={s.input} type="email" placeholder="Email"/>
+                            </Form.Label>
 
                     {/* Password */}
-                    <div>
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label"></label>
-                            <Form.Control className={s.input} type="password" placeholder="Wachtwoord"/>
-                        </div>
-                    </div>
+                            <Form.Label htmlFor="password" className="form-label">
+                                <Form.Control className={s.input} type="password" placeholder="Wachtwoord"/>
+                            </Form.Label>
 
                     {/* Remember me */}
-                    <div className={`form-check ${s.check}`}> {/* keep Bootstrap semantics, add spacing via CSS module */}
-                        <input
-                            className={`form-check-input bg-white ${s.checkInput}`}
-                            type="checkbox"
-                            id="remember"
-                            name="remember"
-                        />
-                        <label className="form-check-label" htmlFor="remember">
+                        <Form.Label className="form-check-label" htmlFor="remember">
+                            <Form.Control
+                                className={s.checkInput}
+                                type="checkbox"
+                                id="remember"
+                                name="remember"
+                            />
                             Onthoud mij?
-                        </label>
-                    </div>
+                        </Form.Label>
 
                     {/* Submit */}
-                    <button type="button" className="btn btn-success">Inloggen</button>
-                </form>
+                    <Form.Control as={Button} type="submit" value="Inloggen" onClick={handleLoginClick}>Inloggen</Form.Control>
+                    {/*<button type="button" className={`btn btnbtn-success`} onClick={handleLoginClick}>Inloggen</button>*/}
+                </Form>
 
                 <p className={s.registerLine}>
                     <Link href="/Auth/Register" className={s.registerLink}>
-                        Nog geen account? Registreer
+                        Nog geen account?
                     </Link>
                 </p>
             </section>
