@@ -1,4 +1,4 @@
-﻿import s from './velinginfo.module.css';
+﻿import 'bootstrap/dist/css/bootstrap.min.css';
 
 type BigFieldProps = {
     naam: string;
@@ -10,26 +10,55 @@ type BigFieldProps = {
     leverancier: string;
     regio: string;
     aantal: number;
-
 };
 
-export default function BigInfoVeld({ naam, prijs, plaatje, duur, info, oogst, leverancier, regio, aantal}: BigFieldProps) {
-    // Dynamic image path from public folder
+export default function BigInfoVeld({
+                                        naam,
+                                        prijs,
+                                        plaatje,
+                                        duur,
+                                        info,
+                                        oogst,
+                                        leverancier,
+                                        regio,
+                                        aantal,
+                                    }: BigFieldProps) {
     const imageSrc = `/${plaatje}`;
 
     return (
-        <div className={s.wrapper}>
-            <img className={s.plaatje} src={imageSrc} alt={naam} />
-            <div className={s.tekstContainer}>
-                <h2 className={s.naam}>{naam}</h2>
-                <p className={s.prijs}>{prijs}</p>
-                <p className={s.duur}>{duur}</p>
-                <p className={s.info}>{info}</p>
-                <p className={s.oogst}>{oogst}</p>
-                <p className={s.leverancier}>{leverancier}</p>
-                <p className={s.regio}>{regio}</p>
-                <p className={s.aantal}>{aantal}</p>
-
+        <div
+            className="d-flex flex-column p-4 w-100 h-100 text-black bg-white"
+            style={{
+                backgroundColor: 'white',
+                border: '5px solid black',
+                borderRadius: '10px',
+                gap: '10px',
+                fontFamily: 'Inter, sans-serif',
+                position: 'relative',
+            }}
+        >
+            <img
+                src={imageSrc}
+                alt={naam}
+                className="mx-auto mb-3"
+                style={{
+                    width: '60%',
+                    height: 'auto',
+                    backgroundColor: '#3A3A3A',
+                    borderRadius: '8px',
+                    objectFit: 'cover',
+                    border: '2px solid #25632C',
+                }}
+            />
+            <div className="d-flex flex-column gap-1">
+                <h2 className="m-0" style={{ fontSize: '24px', fontWeight: 600 }}>{naam}</h2>
+                <p className="m-0 text-decoration-line-through" style={{ fontSize: '20px', fontWeight: 500, opacity: 0.8 }}>{prijs}</p>
+                <p className="m-0" style={{ fontSize: '18px', fontWeight: 400 }}>{duur}</p>
+                <p className="m-0" style={{ fontSize: '16px', fontWeight: 400 }}>{info}</p>
+                <p className="m-0" style={{ fontSize: '16px', fontWeight: 400 }}>{oogst}</p>
+                <p className="m-0" style={{ fontSize: '16px', fontWeight: 400 }}>{leverancier}</p>
+                <p className="m-0" style={{ fontSize: '16px', fontWeight: 400 }}>{regio}</p>
+                <p className="m-0" style={{ fontSize: '16px', fontWeight: 400 }}>{aantal}</p>
             </div>
         </div>
     );

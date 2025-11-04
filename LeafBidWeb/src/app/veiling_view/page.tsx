@@ -10,9 +10,9 @@ export default function Profile() {
             <div className={s.links}>
                 <img className={s.plaatje} src="/bloem.png" alt="placeholder" />
                 <div className={s.tekstblokken}>
-                    <InfoVeld naam="Naam" prijs={10000} plaatje="bloem.png"/>
-                    <InfoVeld naam="Naam" prijs={10000} plaatje="bloem.png"/>
-                    <InfoVeld naam="Naam" prijs={10000} plaatje="bloem.png"/>
+                    <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>
+                    <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>
+                    <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>
                 </div>
             </div>
             <div className={s.infoblok}>

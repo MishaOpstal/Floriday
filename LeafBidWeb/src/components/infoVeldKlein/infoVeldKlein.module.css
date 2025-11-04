@@ -1,38 +1,17 @@
 ﻿.help{}
-
-.wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    align-self: stretch;
-    border-radius: 10px;
-    border: 5px solid #25632C;
-    background-color: #5C983B;
-
-    width: 100%;
-    max-width: 100%;
-}
-
-
-.plaatje {
-    width: 60px;
-    height: 60px;
-    border-radius: 10%; /* Make it circular */
-    object-fit: cover;
-    border: 2px solid #25632C;
-    flex-shrink: 0;
-}
-
 .text-container {
+
     display: flex;
+    padding: 20px;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
+    align-items: flex-start;
+    gap: 16px;
+
 }
 
 .naam {
-    color: #FFF;
+    color: black;
     font-family: Inter, sans-serif;
     font-size: 28.8px;
     font-weight: 400;
@@ -40,9 +19,10 @@
 }
 
 .prijs {
-    color: #FFF;
+    color: #6A6A6A;
     font-family: Inter, sans-serif;
     font-size: 20px;
     font-weight: 400;
     margin: 0;
+
 }
