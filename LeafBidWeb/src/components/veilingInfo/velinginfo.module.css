@@ -1,24 +1,18 @@
 ﻿.help{}
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    background-color: #5C983B;
-    border: 5px solid #25632C;
+background-color: white;
+    border: 5px solid black;
     border-radius: 10px;
-    padding: 16px;
-    width: 100%;
-    height: 100%;
     gap: 10px;
     font-family: Inter, sans-serif;
-    color: #FFF;
     position: relative;
 
 }
 
 .plaatje {
-    width: 60%;
-    height: auto;
+    width: 300px;
+    height: 300px;
     background-color: #3A3A3A; /* Placeholder background */
     border-radius: 8px;
     object-fit: cover;
@@ -46,20 +40,17 @@
     opacity: 0.8;
 }
 
-.duur {
-    font-size: 18px;
-    font-weight: 400;
-    margin: 0;
-}
-
-.info,
-.oogst,
-.leverancier,
-.regio,
-.aantal {
+.knop {
+    background-color: #5C983B;
+    color: #FFF;
+    font-family: Inter, sans-serif;
     font-size: 16px;
-    font-weight: 400;
-    margin: 0;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 6px;
+    width: 240px;
 }
-
 
