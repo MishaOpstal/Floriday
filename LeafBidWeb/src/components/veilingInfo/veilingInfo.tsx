@@ -1,5 +1,4 @@
-﻿import 'bootstrap/dist/css/bootstrap.min.css';
-import s from '@/components/veilingInfo/veilingInfo.module.css';
+﻿import s from '@/components/veilingInfo/velinginfo.module.css';
 
 type BigFieldProps = {
     naam: string;

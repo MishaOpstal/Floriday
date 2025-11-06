@@ -1,7 +1,7 @@
-﻿import 'bootstrap/dist/css/bootstrap.min.css';
-import InfoVeld from "@/components/infoVeldKlein/infoVeldKlein";
+﻿import InfoVeld from "@/components/infoVeldKlein/infoVeldKlein";
 import BigInfoVeld from "@/components/veilingInfo/veilingInfo";
 import Header from "@/components/header/header";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import s from "./page.module.css"
 
 export default function Profile() {
