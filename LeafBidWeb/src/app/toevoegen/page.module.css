@@ -1,10 +1,13 @@
 .form{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    height: 100%;
-    align-items: center;
+        display: flex;
+        padding: 3%;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        border-radius: 10px;
+        background: var(--background, #FFF);
+        box-shadow: 0 0 20px 10px var(--accent-soft);
+        width: fit-content;
 }
 
 
@@ -18,6 +21,9 @@
     .multiRow{
         flex-direction: column;
     }
+    .form{
+        padding: 10%;
+    }
 }
 .section{
     display: flex;
@@ -25,10 +31,4 @@
     gap: 10px;
     width: 100%;
 
-}
-
-.h1, .h3{
-    color: var(--main-background);
-    text-align: left;
-    width: 100%;
 }

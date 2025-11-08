@@ -1,26 +1,27 @@
-:root {
-    --main-background: #f9f4e9;
-    --secondary-background: #b594b6;
-    --primary-background: #5c983b;
-    --primary-border: #25632c;
-    --secondary-border: #935fa7;
-    --primary-text: #000000;
-    --secondary-text: #3d3d3d;
-    --contrast-1: #ffd166;
-    --contrast-2: #ef476f;
-    --contrast-3: #118ab2;
-    --error: #d62828;
-    --warning: #ffb703;
-    --succes: #40916c;
-    --divider: #e6e1d6;
-}
+@import "bootstrap/dist/css/bootstrap.min.css";
 
-/*@media (prefers-color-scheme: dark) {*/
-/*  :root {*/
-/*    --background: #0a0a0a;*/
-/*    --foreground: #ededed;*/
-/*  }*/
-/*}*/
+/* Collection name: ColorSheet 2.0 */
+/* Mode: Light Mode */
+
+:root {
+    --primary: #5c983b;
+    --primary-hover: #25632c;
+    --accent-soft: #c9e9b5;
+    --background: #ffffff;
+    --surface: rgba(255, 255, 255, 0.01);
+    --text: #1b1b1b;
+    --muted-text: #6a6a6a;
+}
+:root[data-theme="dark"] {
+        --primary: #5c983b;
+        --primary-hover: #25632c;
+        --accent-soft: #c7f5a9;
+        --background: #0f1210;
+        --surface: rgba(27, 31, 28, 0.01);
+        --text: #f4f4f4;
+        --muted-text: #a3a3a3;
+        color-scheme: dark;
+}
 
 html,
 body {
@@ -29,8 +30,8 @@ body {
 }
 
 body {
-  color: var(--primary-text);
-  background: var(--main-background);
+  color: var(--text);
+  background-color: var(--background);
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -41,10 +42,10 @@ body {
 
 * {
   box-sizing: border-box;
-  font-family: Nunito, Arial, Helvetica, sans-serifn, serif;
+  font-family: Helvetica, sans-serifn, serif;
   padding: 0;
   margin: 0;
-    font-size: 20px;
+    /*font-size: 20px;*/
 }
 
 a {
@@ -85,8 +86,8 @@ header{
     gap: 50px;
     flex-shrink: 0;
     align-self: stretch;
-    background-color: var(--secondary-background);
-    border-bottom: 5px solid var(--secondary-border);
+    background-color: var(--background);
+    border-bottom: 5px solid var(--primary);
 }
 header nav{
     flex: 1;
@@ -99,4 +100,28 @@ header nav{
   html {
     color-scheme: dark;
   }
+}
+.btn{
+    background-color: var(--primary);
+    color: var(--background);
+    border: none;
+}
+.btn:hover{
+    background-color: var(--primary-hover);
+}
+
+label{
+    width: 100%;
+}
+.form-control{
+    border: var(--primary) 1px solid;
+    color: var(--text);
+}
+.form-control[type="file"]::file-selector-button {
+    background-color: var(--primary);
+    color: white;
+}
+.form-control[type="file"]:hover::file-selector-button {
+    background-color: var(--primary-hover) !important;
+    color: white;
 }

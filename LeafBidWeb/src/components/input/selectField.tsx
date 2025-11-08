@@ -1,6 +1,7 @@
 "use client";
 
-import s from './input.module.css';
+import { Form } from "react-bootstrap";
+import s from './selectField.module.css';
 import React from "react";
 
 const DEFAULT_ORDER = 'X';
@@ -52,7 +53,7 @@ const ChangeOrder = (event: React.MouseEvent<HTMLDivElement>) => {
 export default function SelectField({jsonData}: SelectFieldProps) {
     return (
         <div className={s.selectContainer}>
-            <input
+            <Form.Control
                 type="text"
                 placeholder="Zoeken..."
                 className={s.selectField}
