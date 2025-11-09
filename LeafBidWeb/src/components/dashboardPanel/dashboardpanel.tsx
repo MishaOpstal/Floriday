@@ -13,9 +13,32 @@ type DashboardPanelProps = {
     aankomendProductNaam?: string;
     aankomendProductStartprijs?: string;
     loading?: boolean;
+    compact?: boolean;
 };
 
-const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imageSrc, resterendeTijd, huidigePrijs, aankomendProductNaam, aankomendProductStartprijs, loading = false,}) => {
+
+const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imageSrc, resterendeTijd, huidigePrijs, aankomendProductNaam, aankomendProductStartprijs, loading = false, compact = false,}) => {
+// compacte kaart
+    if (compact) {
+        return (
+            <Card className="d-flex flex-row">
+                {/* Image on the left, small width */}
+                <Card.Img
+                    src={imageSrc || "/images/PIPIPOTATO.png"}
+                    className="rounded"
+                    style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                />
+
+                {/* Text on the right */}
+                <Card.Body className="d-flex justify-content-between align-items-center py-2">
+                    <Card.Title className="mb-0">{kloklocatie}</Card.Title>
+                    <small className="text-muted">{resterendeTijd}</small>
+                </Card.Body>
+            </Card>
+        );
+    }
+
+// Standaard kaart
     return (
         <Card className="d-flex flex-row">
             <Card.Img
@@ -49,7 +72,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                         )}
                     </div>
 
-                    {/* Second block */}
+                {/*laadt kaart*/}
                     <div className="flex-fill w-25">
                         {loading ? (
                             <>
@@ -64,10 +87,8 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                             <>
                                 <Card.Title>Aankomende producten</Card.Title>
                                 <Card.Text>
-                                    <p className="mb-0">{aankomendProductNaam}</p>
-                                    <p className="mb-0" style={{ fontSize: "0.7rem" }}>
-                                        Startprijs: {aankomendProductStartprijs}
-                                    </p>
+                                    <span className="mb-0 d-block">{aankomendProductNaam}</span>
+                                    <span className="mb-0 d-block" style={{ fontSize: "0.7rem" }}>Startprijs: {aankomendProductStartprijs}</span>
                                 </Card.Text>
                             </>
                         )}

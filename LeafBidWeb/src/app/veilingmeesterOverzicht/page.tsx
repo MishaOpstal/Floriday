@@ -10,71 +10,46 @@ export default function Home() {
             <div className={styles.page}>
 
                 <div className={styles.main}>
-
+                    <h1>Alle veilingen</h1>
+                    <h2>Huidige veilingen</h2>
                     <DashboardPanel
-                        title="Tulpenmix 'Lentezon'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="2 min 15 sec"
-                        totaalprijs="€ 12,30"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 1 - Hal A"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
+                        resterendeTijd="9 nov 2025, 16:45" />
 
                     <DashboardPanel
-                        title="Rozenpakket 'Romance'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="1 min 45 sec"
-                        totaalprijs="€ 18,90"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 2 - Hal B"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
+                        resterendeTijd="9 nov 2025, 17:00" />
 
+                    <h2>Aankomende veilingen</h2>
                     <DashboardPanel
-                        title="Zomerboeket 'Veldkracht'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="3 min 00 sec"
-                        totaalprijs="€ 15,75"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 3 - Hal C"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
+                        resterendeTijd="9 nov 2025, 17:15" />
 
                     <DashboardPanel
-                        title="Orchidee 'Wit Elegance'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="2 min 30 sec"
-                        totaalprijs="€ 22,40"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 4 - Hal D"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
+                        resterendeTijd="9 nov 2025, 17:30" />
+                    <h2>Afgelopen veilingen</h2>
+                    <DashboardPanel
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 5 - Hal E"
+                        resterendeTijd="9 nov 2025, 17:45" />
 
                     <DashboardPanel
-                        title="Gerbera Regenboog"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="1 min 20 sec"
-                        totaalprijs="€ 10,50"
-                        kloklocatie="Klok 1 - Hal A"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 5 - Hal E"
+                        resterendeTijd="9 nov 2025, 17:45" />
 
-                    <DashboardPanel
-                        title=""
-                        imageSrc="/images/grey.png"
-                        veilingduur=""
-                        totaalprijs=""
-                        kloklocatie=""
-                    >
-                        <Knop label="Veiling aanmaken" to="/toevoegen/veiling" />
-                    </DashboardPanel>
+
 
 
                 </div>
