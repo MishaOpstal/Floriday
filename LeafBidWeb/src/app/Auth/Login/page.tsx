@@ -22,8 +22,8 @@ export default function LoginPage() {
                     <Image
                         src="/LeafBid.svg"
                         alt="Leafbid logo"
-                        width={64}
-                        height={64}
+                        width={100}
+                        height={100}
                         priority
                     />
                 </div>
