@@ -15,8 +15,10 @@ export default function LoginPage() {
         router.push('/');
     };
 
+
     return (
         <main className={s.main}>
+            <title>Login</title>
             <section className={s.card} aria-labelledby="loginTitle">
                 <div className={s.logoRow}>
                     <Image

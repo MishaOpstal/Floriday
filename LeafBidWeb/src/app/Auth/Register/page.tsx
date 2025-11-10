@@ -17,6 +17,7 @@ export default function LoginPage() {
 
     return (
         <main className={s.main}>
+            <title>Register</title>
             <section className={s.card} aria-labelledby="loginTitle">
                 <div className={s.logoRow}>
                     <Image
