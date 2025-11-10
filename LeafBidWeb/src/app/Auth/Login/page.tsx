@@ -54,7 +54,6 @@ export default function LoginPage() {
 
                     {/* Submit */}
                     <Form.Control as={Button} type="submit" value="Inloggen" onClick={handleLoginClick}>Inloggen</Form.Control>
-                    {/*<button type="button" className={`btn btnbtn-success`} onClick={handleLoginClick}>Inloggen</button>*/}
                 </Form>
 
                 <p className={s.registerLine}>
