@@ -1,9 +1,21 @@
+'use client';
+
 import styles from '../page.module.css';
 import Header from "@/components/header/header";
-import Knop from "@/components/knop/knop";
+import ActionButtons from "@/components/smallButton/smallButton";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 
 export default function Home() {
+
+    const handleDelete = () => {
+        // TODO : implement delete functionality
+    };
+
+    const handleUpdate = () => {
+        // TODO : implement update functionality
+    };
+
+
     return (
         <>
             <Header></Header>
@@ -12,11 +24,17 @@ export default function Home() {
                 <div className={styles.main}>
                     <h1>Alle veilingen</h1>
                     <h2>Huidige veilingen</h2>
+
                     <DashboardPanel
                         compact
                         imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 1 - Hal A"
-                        resterendeTijd="9 nov 2025, 16:45" />
+                        resterendeTijd="9 nov 2025, 16:45"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
+
+
 
                     <DashboardPanel
                         compact
@@ -48,9 +66,6 @@ export default function Home() {
                         imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 5 - Hal E"
                         resterendeTijd="9 nov 2025, 17:45" />
-
-
-
 
                 </div>
 

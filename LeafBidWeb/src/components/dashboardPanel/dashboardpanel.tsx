@@ -14,14 +14,15 @@ type DashboardPanelProps = {
     aankomendProductStartprijs?: string;
     loading?: boolean;
     compact?: boolean;
+    children?: React.ReactNode;
 };
 
 
-const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imageSrc, resterendeTijd, huidigePrijs, aankomendProductNaam, aankomendProductStartprijs, loading = false, compact = false,}) => {
+const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imageSrc, resterendeTijd, huidigePrijs, aankomendProductNaam, aankomendProductStartprijs, children, loading = false, compact = false,}) => {
 // compacte kaart
     if (compact) {
         return (
-            <Card className="d-flex flex-row">
+            <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
                 {/* Image on the left, small width */}
                 <Card.Img
                     src={imageSrc || "/images/PIPIPOTATO.png"}
@@ -33,6 +34,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                 <Card.Body className="d-flex justify-content-between align-items-center py-2">
                     <Card.Title className="mb-0">{kloklocatie}</Card.Title>
                     <small className="text-muted">{resterendeTijd}</small>
+                    <div className="d-flex gap-2">{children}</div>
                 </Card.Body>
             </Card>
         );
@@ -40,7 +42,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
 
 // Standaard kaart
     return (
-        <Card className="d-flex flex-row">
+        <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
             <Card.Img
                 className="w-25 rounded"
                 variant="left"
