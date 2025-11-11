@@ -39,33 +39,48 @@ export default function Home() {
                     <DashboardPanel
                         compact
                         imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 2 - Hal B"
-                        resterendeTijd="9 nov 2025, 17:00" />
+                        kloklocatie="Klok 2 - Kantine"
+                        resterendeTijd="10 nov 2025, 08:30"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
 
                     <h2>Aankomende veilingen</h2>
                     <DashboardPanel
                         compact
                         imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 3 - Hal C"
-                        resterendeTijd="9 nov 2025, 17:15" />
+                        kloklocatie="Klok 3 - Vergaderzaal B"
+                        resterendeTijd="11 nov 2025, 12:00"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
 
                     <DashboardPanel
                         compact
                         imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 4 - Hal D"
-                        resterendeTijd="9 nov 2025, 17:30" />
+                        kloklocatie="Klok 4 - Receptie"
+                        resterendeTijd="12 nov 2025, 17:15"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
                     <h2>Afgelopen veilingen</h2>
                     <DashboardPanel
                         compact
                         imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 5 - Hal E"
-                        resterendeTijd="9 nov 2025, 17:45" />
+                        kloklocatie="Klok 5 - Werkplaats"
+                        resterendeTijd="13 nov 2025, 09:45"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
 
                     <DashboardPanel
                         compact
                         imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 5 - Hal E"
-                        resterendeTijd="9 nov 2025, 17:45" />
+                        kloklocatie="Klok 4 - Receptie"
+                        resterendeTijd="12 nov 2025, 17:15"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
 
                 </div>
 

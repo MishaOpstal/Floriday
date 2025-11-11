@@ -30,12 +30,20 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                     style={{ width: "60px", height: "60px", objectFit: "cover" }}
                 />
 
-                {/* Text on the right */}
                 <Card.Body className="d-flex justify-content-between align-items-center py-2">
-                    <Card.Title className="mb-0">{kloklocatie}</Card.Title>
-                    <small className="text-muted">{resterendeTijd}</small>
-                    <div className="d-flex gap-2">{children}</div>
+                    {/* Left side: title + time inline */}
+                    <div className="d-flex align-items-center gap-2">
+                        <Card.Title className="mb-0">{kloklocatie}</Card.Title>
+                        <small className="text-muted">{resterendeTijd}</small>
+                    </div>
+
+                    {/* Right side: children */}
+                    <div className="d-flex gap-2">
+                        {children}
+                    </div>
                 </Card.Body>
+
+
             </Card>
         );
     }

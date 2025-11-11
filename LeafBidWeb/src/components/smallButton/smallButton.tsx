@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import styles from "./SmallButton.module.css";
 
 type ActionButtonsProps = {
     onDelete?: () => void;
@@ -14,19 +15,26 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onDelete, onUpdate }) => 
 
     return (
         <div className="d-flex gap-2">
-            <Button
-                variant="danger"
+            <Button className={styles.transparentButton}
+                variant="light"
                 size="sm"
                 onClick={onDelete}
             >
-                <i className="bi bi-trash"></i> Delete
+                <i
+                    style={{ color: "var(--primary-background)" }}
+                    className="bi bi-trash"
+                ></i>
             </Button>
-            <Button
-                variant="primary"
+            <Button  className={styles.transparentButton}
+                variant="light"
                 size="sm"
                 onClick={onUpdate}
             >
-                <i className="bi bi-pencil"></i> Update
+                <i
+                    style={{ color: "var(--primary-background)" }}
+                    className="bi bi-pencil"
+                ></i>
+
             </Button>
         </div>
     );
