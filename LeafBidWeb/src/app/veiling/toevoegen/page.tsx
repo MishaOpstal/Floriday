@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import DateSelect from "@/components/input/DateSelect";
 import SearchableDropdown from "@/components/input/SearchableDropdown";
 import Button from "@/components/input/Button";
-import SelectedBadgeList from "@/components/input/SelectedBadgeList";
+import ProductPriceTable from "@/components/input/ProductPriceTable";
 
 // Dummy data
 const products: Product[] = [
@@ -58,6 +58,11 @@ export default function Home() {
         });
     };
 
+    const handlePriceUpdate = (updated: Product[]) => {
+        setSelectedProducts(updated);
+        console.log("Updated prices:", updated);
+    };
+
     return (
         <ToevoegenLayout>
             <Form className={s.form} onSubmit={handleSubmit}>
@@ -88,18 +93,11 @@ export default function Home() {
                             />
                         </div>
 
-                        {/* Badge component */}
-                        <div className="mb-3">
-                            <Form.Label>Geselecteerde Producten</Form.Label>
-                            <SelectedBadgeList
-                                items={selectedProducts}
-                                onRemove={(prod) =>
-                                    setSelectedProducts((prev) =>
-                                        prev.filter((p) => p.productId !== prod.productId)
-                                    )
-                                }
-                            />
-                        </div>
+                        <ProductPriceTable
+                            products={selectedProducts}
+                            onChange={handlePriceUpdate}
+                            height={300}
+                        />
                     </section>
 
                     <section className={s.section}>

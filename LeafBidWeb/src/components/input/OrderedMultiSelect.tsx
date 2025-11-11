@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { ListGroup, Form, Badge, Button, Spinner } from "react-bootstrap";
 import SearchBar from "./SearchBar";
 import SelectedBadgeList from "./SelectedBadgeList";
@@ -7,47 +7,42 @@ import s from "./OrderedMultiSelect.module.css";
 
 interface OrderedMultiSelectProps {
     items?: Product[];
-    value?: Product[];
+    value?: Product[]; // controlled selection
     onChange?: (selected: Product[]) => void;
     pageSize?: number;
     endpoint?: string;
     showBadges?: boolean;
 }
 
+/**
+ * A stable, fully controlled, paginated and searchable multi-select list.
+ * Works with both local (dummy) data and remote API data.
+ */
 const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
                                                                    items = [],
-                                                                   value,
+                                                                   value = [],
                                                                    onChange,
                                                                    pageSize = 10,
                                                                    endpoint,
                                                                    showBadges = true,
                                                                }) => {
-    const [selected, setSelected] = useState<Product[]>(value ?? []);
-    const [query, setQuery] = useState<string>("");
-    const [page, setPage] = useState<number>(1);
+    const [query, setQuery] = useState("");
+    const [page, setPage] = useState(1);
     const [remoteItems, setRemoteItems] = useState<Product[]>([]);
-    const [totalPages, setTotalPages] = useState<number>(1);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Keep external state in sync
-    useEffect(() => {
-        if (value) setSelected(value);
-    }, [value]);
-
-    // Notify parent on selection change
-    useEffect(() => {
-        onChange?.(selected);
-    }, [selected, onChange]);
-
-    // Fetch from endpoint if provided
+    // ✅ Fetch remote data if endpoint is provided
     useEffect(() => {
         if (!endpoint) return;
 
         const controller = new AbortController();
+
         const fetchData = async () => {
             setLoading(true);
             setError(null);
+
             try {
                 const url = new URL(endpoint);
                 url.searchParams.set("page", String(page));
@@ -72,7 +67,7 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
         return () => controller.abort();
     }, [endpoint, page, query, pageSize]);
 
-    // Filter locally if no endpoint is used
+    // ✅ Compute displayed items
     const filteredItems = useMemo(() => {
         if (endpoint) return remoteItems;
 
@@ -81,45 +76,45 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
             ? items.filter((p) => p.productName.toLowerCase().includes(q))
             : items;
 
-        setTotalPages(Math.ceil(filtered.length / pageSize));
+        setTotalPages(Math.max(1, Math.ceil(filtered.length / pageSize)));
         const start = (page - 1) * pageSize;
         return filtered.slice(start, start + pageSize);
     }, [items, query, page, pageSize, endpoint, remoteItems]);
 
+    // ✅ Always render exactly `pageSize` rows (fill with placeholders)
+    const displayItems = useMemo(() => {
+        const filled = [...filteredItems];
+        const remaining = pageSize - filled.length;
+        for (let i = 0; i < remaining; i++) filled.push(null as never);
+        return filled;
+    }, [filteredItems, pageSize]);
+
     const handleToggle = (product: Product) => {
-        setSelected((prev) => {
-            const exists = prev.some((p) => p.productId === product.productId);
-            return exists
-                ? prev.filter((p) => p.productId !== product.productId)
-                : [...prev, product];
-        });
+        if (!onChange) return;
+        const exists = value.some((p) => p.productId === product.productId);
+        const updated = exists
+            ? value.filter((p) => p.productId !== product.productId)
+            : [...value, product];
+        onChange(updated);
     };
 
     const nextPage = () => setPage((p) => Math.min(p + 1, totalPages));
     const prevPage = () => setPage((p) => Math.max(p - 1, 1));
 
+    // Reset to first page when query changes
     useEffect(() => setPage(1), [query]);
-
-    // Always render 10 rows, filling missing with placeholders
-    const displayItems = useMemo(() => {
-        const filled = [...filteredItems];
-        const remaining = pageSize - filled.length;
-        if (remaining > 0) {
-            for (let i = 0; i < remaining; i++) {
-                filled.push(null as never);
-            }
-        }
-        return filled;
-    }, [filteredItems, pageSize]);
 
     return (
         <div className="p-3 border rounded bg-light">
+            {/* Search bar */}
             <SearchBar placeholder="Search products..." onSearch={setQuery} delay={300} />
 
-            {showBadges && (
-                <SelectedBadgeList items={selected} onRemove={handleToggle} />
+            {/* Optional badges */}
+            {showBadges && value.length > 0 && (
+                <SelectedBadgeList items={value} onRemove={handleToggle} />
             )}
 
+            {/* Product list */}
             <ListGroup className={s.listGroup}>
                 {loading ? (
                     <div className="text-center py-4">
@@ -128,24 +123,8 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
                 ) : error ? (
                     <ListGroup.Item className="text-danger text-center">{error}</ListGroup.Item>
                 ) : (
-                    displayItems.map((product, idx) => {
-                        if (!product) {
-                            return (
-                                <ListGroup.Item
-                                    key={`placeholder-${idx}`}
-                                    className={`text-muted ${s.placeholderItem}`}
-                                >
-                                    &nbsp;
-                                </ListGroup.Item>
-                            );
-                        }
-
-                        const index = selected.findIndex(
-                            (p) => p.productId === product.productId
-                        );
-                        const isSelected = index !== -1;
-
-                        return (
+                    displayItems.map((product, idx) =>
+                        product ? (
                             <ListGroup.Item
                                 key={product.productId}
                                 action
@@ -154,7 +133,9 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
                                     handleToggle(product);
                                 }}
                                 className={`d-flex align-items-center justify-content-between ${
-                                    isSelected ? "active" : ""
+                                    value.some((p) => p.productId === product.productId)
+                                        ? "active"
+                                        : ""
                                 } ${s.listItem}`}
                             >
                                 <div className={s.productRow}>
@@ -164,38 +145,50 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
                                     </span>
                                 </div>
 
-                                {isSelected && (
+                                {value.some((p) => p.productId === product.productId) && (
                                     <Badge bg="secondary" pill className={s.badge}>
-                                        {index + 1}
+                                        {value.findIndex(
+                                            (p) => p.productId === product.productId
+                                        ) + 1}
                                     </Badge>
                                 )}
                             </ListGroup.Item>
-                        );
-                    })
+                        ) : (
+                            <ListGroup.Item
+                                key={`placeholder-${idx}`}
+                                className={`text-muted ${s.placeholderItem}`}
+                            >
+                                &nbsp;
+                            </ListGroup.Item>
+                        )
+                    )
                 )}
             </ListGroup>
 
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={prevPage}
-                    disabled={page === 1 || loading}
-                >
-                    ← Previous
-                </Button>
-                <span className="text-muted small">
-                    Page {page} of {totalPages}
-                </span>
-                <Button
-                    variant="outline-secondary"
-                    size="sm"
-                    onClick={nextPage}
-                    disabled={page === totalPages || loading}
-                >
-                    Next →
-                </Button>
-            </div>
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                    <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={prevPage}
+                        disabled={page === 1 || loading}
+                    >
+                        ← Previous
+                    </Button>
+                    <span className="text-muted small">
+                        Page {page} of {totalPages}
+                    </span>
+                    <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={nextPage}
+                        disabled={page === totalPages || loading}
+                    >
+                        Next →
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
