@@ -1,15 +1,17 @@
 ﻿import InfoVeld from "@/components/infoVeldKlein/infoVeldKlein";
 import BigInfoVeld from "@/components/veilingInfo/veilingInfo";
 import Header from "@/components/header/header";
+import VeilingKlok from "@/components/veilingKlok/veilingKlok";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import s from "./page.module.css"
+
 
 export default function Profile() {
     return (
         <> <Header returnOption={true} />
         <main className={s.main}>
             <div className={s.links}>
-                <img className={s.plaatje} src="/bloem.png" alt="placeholder" />
+                <VeilingKlok bedrag={"$5000"} locatie={"Zuid Holland"} tijd={"1:10"}/>
                 <div className={s.tekstblokken}>
                     <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>
                     <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>

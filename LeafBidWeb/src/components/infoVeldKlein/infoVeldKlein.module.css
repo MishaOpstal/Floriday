@@ -1,15 +1,15 @@
 ﻿.help{}
-.text-container {
-
-    display: flex;
-    padding: 20px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 16px;
-
+.textContainer {
+    border: 1px solid #5C983B;
+    border-radius: 10px;
+    /*Background-color: background;*/
 }
-
+.plaatje{
+    width: 154px;
+    height: 154px;
+    object-fit: 'cover';
+    border-radius: 9px;
+}
 .naam {
     color: black;
     font-family: Inter, sans-serif;

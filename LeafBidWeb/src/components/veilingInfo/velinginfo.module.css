@@ -1,8 +1,8 @@
 ﻿.help{}
 
 .wrapper{
-background-color: white;
-    border: 5px solid black;
+    Background-color: background;
+    border: 1px solid #5C983B;
     border-radius: 10px;
     gap: 10px;
     font-family: Inter, sans-serif;
