@@ -1,20 +1,20 @@
 "use client";
 
-// Import styling from the toevoegen layout
-import s from '@/app/layouts/toevoegen/page.module.css'
-import ToevoegenLayout from "@/app/layouts/toevoegen/layout"
+import s from "@/app/layouts/toevoegen/page.module.css";
+import ToevoegenLayout from "@/app/layouts/toevoegen/layout";
 
-import Form from "react-bootstrap/Form"
+import Form from "react-bootstrap/Form";
 import OrderedMultiSelect from "@/components/input/OrderedMultiSelect";
-import {Product} from "@/types/Product";
-import {Locatie} from "@/types/Locatie";
-import React, {useState} from "react";
+import { Product } from "@/types/Product";
+import { Locatie } from "@/types/Locatie";
+import React, { useState } from "react";
 import DateSelect from "@/components/input/DateSelect";
 import SearchableDropdown from "@/components/input/SearchableDropdown";
 import Button from "@/components/input/Button";
+import SelectedBadgeList from "@/components/input/SelectedBadgeList";
 
 // Dummy data
-const products: Product []= [
+const products: Product[] = [
     { productId: 1, productName: "Rose", productQuantity: 12 },
     { productId: 2, productName: "Tulip", productQuantity: 8 },
     { productId: 3, productName: "Daisy", productQuantity: 15 },
@@ -36,15 +36,14 @@ const products: Product []= [
     { productId: 19, productName: "Zomergeur", productQuantity: 13 },
 ];
 
-const locaties: Locatie [] = [
+const locaties: Locatie[] = [
     { locatieId: 1, locatieNaam: "Aalsmeer" },
     { locatieId: 2, locatieNaam: "Rijnsburg" },
     { locatieId: 3, locatieNaam: "Naaldwijk" },
     { locatieId: 4, locatieNaam: "Eelde" },
 ];
 
-
-export default function Home(){
+export default function Home() {
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedLocatie, setSelectedLocatie] = useState<string | null>(null);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
@@ -61,7 +60,7 @@ export default function Home(){
 
     return (
         <ToevoegenLayout>
-            <Form className={s.form}>
+            <Form className={s.form} onSubmit={handleSubmit}>
                 <div className={s.multiRow}>
                     <section className={s.section}>
                         <h1 className={s.h1}>Veiling Aanmaken</h1>
@@ -88,17 +87,38 @@ export default function Home(){
                                 placeholder="Zoek locatie..."
                             />
                         </div>
+
+                        {/* Badge component */}
+                        <div className="mb-3">
+                            <Form.Label>Geselecteerde Producten</Form.Label>
+                            <SelectedBadgeList
+                                items={selectedProducts}
+                                onRemove={(prod) =>
+                                    setSelectedProducts((prev) =>
+                                        prev.filter((p) => p.productId !== prod.productId)
+                                    )
+                                }
+                            />
+                        </div>
                     </section>
+
                     <section className={s.section}>
                         <h3 className={s.h3}>Gekoppelde Producten</h3>
                         <OrderedMultiSelect
-                            items={products} // dummy data
-                            // endpoint="https://api.example.com/products" // uncomment when ready
+                            items={products}
+                            value={selectedProducts} // ✅ keep in sync with parent
                             onChange={setSelectedProducts}
+                            showBadges={false}
                         />
                     </section>
                 </div>
-                <Button variant="primary" type="button" label={"Aanmaken"} onClick={handleSubmit} />
+
+                <Button
+                    variant="primary"
+                    type="button"
+                    label="Aanmaken"
+                    onClick={handleSubmit}
+                />
             </Form>
         </ToevoegenLayout>
     );
