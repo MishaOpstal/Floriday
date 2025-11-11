@@ -104,7 +104,7 @@ export default function Home() {
                         <h3 className={s.h3}>Gekoppelde Producten</h3>
                         <OrderedMultiSelect
                             items={products}
-                            value={selectedProducts} // ✅ keep in sync with parent
+                            value={selectedProducts} // keeps it in sync with parent
                             onChange={setSelectedProducts}
                             showBadges={false}
                         />

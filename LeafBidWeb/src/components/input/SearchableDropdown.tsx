@@ -41,7 +41,7 @@ function SearchableDropdown<T>({
         onSelect(item);
     };
 
-    // 🎯 Focus search when dropdown opens
+    // Focus search when dropdown opens
     useEffect(() => {
         if (show && searchRef.current) {
             searchRef.current.focus();
@@ -59,7 +59,7 @@ function SearchableDropdown<T>({
             </Dropdown.Toggle>
 
             <Dropdown.Menu className={s.menu}>
-                {/* 🔍 Search input */}
+                {/* Search input */}
                 <div className={s.searchContainer}>
                     <SearchBar
                         ref={searchRef}
@@ -71,7 +71,7 @@ function SearchableDropdown<T>({
                     />
                 </div>
 
-                {/* 📋 Filtered results */}
+                {/* Filtered results */}
                 <div className={s.results}>
                     {filteredItems.length > 0 ? (
                         filteredItems.map((item) => (

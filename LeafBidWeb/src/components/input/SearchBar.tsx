@@ -11,7 +11,7 @@ interface SearchBarProps {
     clearOnChange?: boolean;
 }
 
-// ⏩ ForwardRef allows parent to focus the input
+// ForwardRef allows parent to focus the input
 const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     (
         {
@@ -40,7 +40,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
             return () => clearTimeout(handler);
         }, [value, delay, onSearch]);
 
-        // 🧹 clear function
+        // clear function
         const handleClear = () => {
             setValue("");
             onSearch("");

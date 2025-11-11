@@ -17,7 +17,7 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = ({
                                            label,
                                            variant = "primary",
-                                           type = "button", // 🧱 default = normal button
+                                           type = "button",
                                            disabled = false,
                                            className = "",
                                            onClick,

@@ -8,10 +8,9 @@
 .formControl {
     border-radius: 0.375rem !important;
     font-size: 0.9rem;
-    padding-right: 2.25rem; /* extra space for clear icon */
+    padding-right: 2.25rem;
 }
 
-/* ✕ Clear button styling */
 .clearButton {
     cursor: pointer;
     background: transparent;
@@ -21,5 +20,5 @@
 }
 
 .clearButton:hover {
-    color: #dc3545; /* red hover */
+    color: #dc3545;
 }

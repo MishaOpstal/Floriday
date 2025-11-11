@@ -33,7 +33,7 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // ✅ Fetch remote data if endpoint is provided
+    // Fetch remote data if endpoint is provided
     useEffect(() => {
         if (!endpoint) return;
 
@@ -67,7 +67,7 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
         return () => controller.abort();
     }, [endpoint, page, query, pageSize]);
 
-    // ✅ Compute displayed items
+    // Compute displayed items
     const filteredItems = useMemo(() => {
         if (endpoint) return remoteItems;
 
@@ -81,7 +81,7 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
         return filtered.slice(start, start + pageSize);
     }, [items, query, page, pageSize, endpoint, remoteItems]);
 
-    // ✅ Always render exactly `pageSize` rows (fill with placeholders)
+    // Always render exactly `pageSize` rows (fill with placeholders)
     const displayItems = useMemo(() => {
         const filled = [...filteredItems];
         const remaining = pageSize - filled.length;
