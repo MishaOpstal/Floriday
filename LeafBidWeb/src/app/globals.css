@@ -1,7 +1,5 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
-
-/* Collection name: ColorSheet 2.0 */
-/* Mode: Light Mode */
+@import "react-bootstrap-icons";
 
 :root {
     --primary: #5c983b;
