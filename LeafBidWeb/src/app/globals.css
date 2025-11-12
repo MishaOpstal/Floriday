@@ -128,3 +128,11 @@ label{
     background-color: var(--primary-hover) !important;
     color: white;
 }
+
+.btn.active {
+    background-color: var(--primary-hover) !important;
+}
+
+.btn-check:checked + .btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check) + .btn:active {
+    background-color: var(--primary-hover) !important;
+}

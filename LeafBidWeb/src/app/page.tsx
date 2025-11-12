@@ -2,6 +2,9 @@ import styles from './page.module.css';
 import Header from "@/components/header/header";
 import Knop from "@/components/knop/knop";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
+import Button from "@/components/input/Button";
+import {ButtonGroup} from "react-bootstrap";
+import React from "react";
 
 
 export default function Home() {
