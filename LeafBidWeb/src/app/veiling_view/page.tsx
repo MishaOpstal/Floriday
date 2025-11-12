@@ -11,7 +11,7 @@ export default function Profile() {
         <> <Header returnOption={true} />
         <main className={s.main}>
             <div className={s.links}>
-                <VeilingKlok bedrag={"$5000"} locatie={"Zuid Holland"} tijd={"1:10"}/>
+                {/*<VeilingKlok bedrag={"$5000"} locatie={"Zuid Holland"} tijd={"1:10"}/>*/}
                 <div className={s.tekstblokken}>
                     <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>
                     <InfoVeld naam="Roos" prijs={"$10000"} plaatje="bloem.png"/>

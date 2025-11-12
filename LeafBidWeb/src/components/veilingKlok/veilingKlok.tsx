@@ -1,4 +1,5 @@
-﻿import s from "@/components/veilingKlok/veilingKlok.module.css";
+﻿import s from "./veilingKlok.module.css";
+
 
 type VeilingKlok = {
 locatie: string;
