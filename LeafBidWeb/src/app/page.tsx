@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './page.module.css';
 import Header from "@/components/header/header";
 import Knop from "@/components/knop/knop";

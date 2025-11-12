@@ -1,0 +1,29 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+
+.badgeContainer {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)); /* Exactly 4 columns */
+    gap: 0.5rem;
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+}
+
+.selectedBadge {
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.8rem;
+    text-align: center;
+    white-space: nowrap; /* keep on one line */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.4rem 0.75rem;
+    min-width: 70px; /* 🔹 allows small names to stay readable */
+    max-width: 100%; /* 🔹 ensures badge can grow but not overflow grid cell */
+}
+
+.selectedBadge:hover {
+    background-color: #6c757d !important;
+    position: relative;
+}
