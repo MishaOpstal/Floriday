@@ -73,7 +73,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                             </>
                         ) : (
                             <>
-                                <Card.Title>{kloklocatie}</Card.Title>
+                                <Card.Title>Kloklocatie: {kloklocatie}</Card.Title>
                                 <Card.Text>
                                     <span>Huidig product: {title}</span><br />
                                     <span>Resterende tijd: {resterendeTijd}</span><br />
