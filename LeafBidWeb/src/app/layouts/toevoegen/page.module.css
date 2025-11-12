@@ -8,7 +8,7 @@
     background: var(--background, #FFF);
     box-shadow: 0 0 20px 10px var(--accent-soft);
     width: fit-content;
-    min-width: 1040px;
+    min-width: 80%;
 }
 
 

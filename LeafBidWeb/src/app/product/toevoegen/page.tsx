@@ -20,7 +20,7 @@ export default function ProductForm() {
 
                 <TextInput label="Product Naam" name="productnaam" placeholder="naam" />
                 <NumberInput label="Aantal" name="aantal" placeholder="aantal" step={1} />
-                <FileInput label="Plaatje" name="plaatje" />
+                <FileInput label="afbeelding" name="afbeelding" />
                 <NumberInput label="Minimale Prijs" name="minprijs" placeholder="min. prijs" step={0.01} />
                 <TextAreaInput label="Product Informatie" name="productinformatie" placeholder="product informatie" />
                 <Button variant="primary" type="button" label={"Aanmaken"} />
