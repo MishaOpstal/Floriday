@@ -14,6 +14,11 @@
     font-size: 0.95rem;
     padding: 0.45rem 0.75rem;
     transition: border-color 0.2s ease;
+
+    /* Icon appearance */
+    appearance: auto;
+    -webkit-appearance: auto; /* Chrome / Edge */
+    -moz-appearance: auto;    /* Firefox */
 }
 
 .formControl:focus {
