@@ -1,90 +1,74 @@
+'use client';
+
 import styles from './page.module.css';
 import Header from "@/components/header/header";
-import Knop from "@/components/knop/knop";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
+import { useState, useEffect } from "react";
 
+// Define User type
+type User = {
+    id: number;
+    name: string;
+    email: string;
+    passwordHash: string;
+    userType: number;
+};
 
 export default function Home() {
-  return (
-      <>
-          <Header></Header>
-          <main className={styles.main}>
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState(true);
 
-              <div className={styles.page}>
-                  <h1 className={styles.huidigeVeilingen}>Huidige Veilingen</h1>
-                  <div className={styles.panels}>
-                      <DashboardPanel
-                          loading={false}
-                          title="Tulpenmix 'Lentezon'"
-                          kloklocatie="Klok 1 - Hal A"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="2 min 15 sec"
-                          huidigePrijs="€ 12,30"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 213"
-                      />
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const res = await fetch("http://localhost:5001/api/v1/User"); // adjust port if needed
+                if (!res.ok) throw new Error("Failed to fetch users");
+                const data = await res.json();
+                setUsers(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-                      <DashboardPanel
-                          loading={false}
-                          title="Rozenpakket 'Romance'"
-                          kloklocatie="Klok 2 - Hal B"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="1 min 45 sec"
-                          huidigePrijs="€ 18,90"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 1050"
-                      />
+        fetchUsers();
+    }, []);
 
-                      <DashboardPanel
-                          loading={false}
-                          title="Zomerboeket 'Veldkracht'"
-                          kloklocatie="Klok 3 - Hal C"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="3 min 00 sec"
-                          huidigePrijs="€ 15,75"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 100"
-                      />
-
-                      <DashboardPanel
-                          loading={false}
-                          title="Orchidee 'Wit Elegance'"
-                          kloklocatie="Klok 4 - Hal D"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="2 min 30 sec"
-                          huidigePrijs="€ 22,40"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 200"
-                      />
-
-                      <DashboardPanel
-                          loading={false}
-                          title="Gerbera Regenboog"
-                          kloklocatie="Klok 1 - Hal A"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="1 min 20 sec"
-                          huidigePrijs="€ 10,50"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 214"
-                      />
-
-                      <DashboardPanel
-                          loading={true}
-                          title="Lelies 'Zomergeur'"
-                          kloklocatie="Klok 2 - Hal B"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="2 min 05 sec"
-                          huidigePrijs="€ 16,80"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 500"
-                      />
-                  </div>
-
-              </div>
-
-          </main>
-
-      </>
-
+    return (
+        <>
+            <Header />
+            <main className={styles.main}>
+                <div className={styles.page}>
+                    <h1 className={styles.huidigeVeilingen}>Gebruikers Dashboard</h1>
+                    <div className={styles.panels}>
+                        {loading ? (
+                            // CASE 1: Loading
+                            <DashboardPanel loading={true} title="Laden..." />
+                        ) : users.length === 0 ? (
+                            // CASE 2: No data
+                            <DashboardPanel loading={true} title="Geen gebruikers beschikbaar" />
+                        ) : (
+                            // CASE 3: Show user data
+                            users.map((user) => (
+                                <DashboardPanel
+                                    key={user.id}
+                                    loading={false}
+                                    title={`Gebruiker: ${user.name}`}
+                                    kloklocatie={`User ID: ${user.id}`}
+                                    imageSrc="/images/PIPIPOTATO.png"
+                                    resterendeTijd="—"
+                                    huidigePrijs={`Type: ${user.userType}`}
+                                    aankomendProductNaam={user.email}
+                                    aankomendProductStartprijs={user.passwordHash}
+                                />
+                            ))
+                        )}
+                    </div>
+                </div>
+            </main>
+        </>
     );
 }
+
+
