@@ -37,7 +37,7 @@ docker compose up --build -d
 #### 3.5. Install dotnet-ef
 Run the following command to install dotnet-ef for use in the next steps:
 ```bash
-dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-ef --version 8.0.22
 ```
 
 #### 4. Apply Database Migrations
