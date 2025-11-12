@@ -17,6 +17,14 @@ type DashboardPanelProps = {
     children?: React.ReactNode;
 };
 
+const enum Kloklocaties {
+    Naaldwijk,   // = 0
+    Aalsmeer,    // = 1
+    Rijnsburg,   // = 2
+    Eelde        // = 3
+}
+
+
 
 const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imageSrc, resterendeTijd, huidigePrijs, aankomendProductNaam, aankomendProductStartprijs, children, loading = false, compact = false,}) => {
 // compacte kaart
