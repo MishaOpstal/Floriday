@@ -78,8 +78,26 @@ export default function Home() {
             <main className={styles.main}>
                 <div className={styles.page}>
                     <h1>Alle veilingen</h1>
-                    <h2>Huidige veilingen</h2>
+                    <h2 className={styles.padding}>Huidige veilingen</h2>
 
+                    <div className={styles.panels}>
+
+                    </div>
+
+
+
+                    <h2 className={styles.padding}>Aankomende veilingen</h2>
+
+                    <div className={styles.panels}>
+
+                    </div>
+
+                    <h2 className={styles.padding}>Afgelopen veilingen</h2>
+
+                    <div className={styles.panels}>
+
+
+                    </div>
                     {auctions.map((auction) => {
                         const product = auction.products[0];
                         return (
