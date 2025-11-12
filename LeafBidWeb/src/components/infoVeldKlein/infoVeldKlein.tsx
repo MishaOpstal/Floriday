@@ -1,24 +1,20 @@
-﻿import s from '@/components/infoVeldKlein/infoVeldKlein.module.css';
+﻿import s from './infoVeldKlein.module.css';
+import {parsePrice, Product} from "@/types/Product";
+import {Image} from "react-bootstrap";
 
-type InfoFieldProps = {
-    naam: string;
-    prijs: string;
-    plaatje: string;
-};
-
-export default function InfoVeld({ naam, prijs, plaatje }: InfoFieldProps) {
-    const imageSrc = `/${plaatje}`;
+export default function InfoVeld({ product }: { product: Product }) {
+    const imageSrc = `/${product.picture}`;
 
     return (
         <div className={`d-flex align-items-center gap-3 ${s.textContainer}`}>
-            <img
+            <Image
                 src={imageSrc}
-                alt={naam}
-                className={`img-fluid ${s.plaatje}`}
+                alt={product.name}
+                className={`img-fluid ${s.image}`}
             />
             <div className="d-flex flex-column justify-content-center ps-3 gap-2">
-                <h6 className="m-0" style={{ fontSize: '28.8px', fontWeight: 400 }}>{naam}</h6>
-                <p className="text-muted m-0" style={{ fontSize: '20px', fontWeight: 400 }}>{prijs}</p>
+                <h4 className="fw-bold">{product.name}</h4>
+                <p className="text-muted">{parsePrice(product.minPrice ?? 0)}</p>
             </div>
         </div>
     );

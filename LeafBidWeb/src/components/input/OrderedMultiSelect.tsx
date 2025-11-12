@@ -73,7 +73,7 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
 
         const q = query.toLowerCase();
         const filtered = q
-            ? items.filter((p) => p.productName.toLowerCase().includes(q))
+            ? items.filter((p) => p.name.toLowerCase().includes(q))
             : items;
 
         setTotalPages(Math.max(1, Math.ceil(filtered.length / pageSize)));
@@ -91,9 +91,9 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
 
     const handleToggle = (product: Product) => {
         if (!onChange) return;
-        const exists = value.some((p) => p.productId === product.productId);
+        const exists = value.some((p) => p.id === product.id);
         const updated = exists
-            ? value.filter((p) => p.productId !== product.productId)
+            ? value.filter((p) => p.id !== product.id)
             : [...value, product];
         onChange(updated);
     };
@@ -126,29 +126,29 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
                     displayItems.map((product, idx) =>
                         product ? (
                             <ListGroup.Item
-                                key={product.productId}
+                                key={product.id}
                                 action
                                 onClick={(e) => {
                                     e.preventDefault();
                                     handleToggle(product);
                                 }}
                                 className={`d-flex align-items-center justify-content-between ${
-                                    value.some((p) => p.productId === product.productId)
+                                    value.some((p) => p.id === product.id)
                                         ? "active"
                                         : ""
                                 } ${s.listItem}`}
                             >
                                 <div className={s.productRow}>
-                                    <strong className={s.productName}>{product.productName}</strong>
+                                    <strong className={s.productName}>{product.name}</strong>
                                     <span className={s.quantity}>
-                                        Qty: {product.productQuantity ?? "N/A"}
+                                        Qty: {product.stock ?? "N/A"}
                                     </span>
                                 </div>
 
-                                {value.some((p) => p.productId === product.productId) && (
+                                {value.some((p) => p.id === product.id) && (
                                     <Badge bg="secondary" pill className={s.badge}>
                                         {value.findIndex(
-                                            (p) => p.productId === product.productId
+                                            (p) => p.id === product.id
                                         ) + 1}
                                     </Badge>
                                 )}

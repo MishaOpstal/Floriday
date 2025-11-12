@@ -17,7 +17,7 @@ export default function VeilingKlok({
             <h2 className={`{s.locatie}`}>{locatie}</h2>
             <h1 className={`{s.bedrag}`}>{bedrag}</h1>
             <div className={`d-flex flex-column gap-2 {s.klokcontainer}`}>
-                <div className={`w-100 h-100{s.balk}`}></div>
+                <div className={`{s.balk}`}></div>
                 <p className={`{s.tijd}`}>{tijd}</p>
             </div>
         </div>
