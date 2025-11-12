@@ -166,7 +166,7 @@ const OrderedMultiSelect: React.FC<OrderedMultiSelectProps> = ({
             </ListGroup>
 
             {/* Pagination */}
-            {totalPages > 1 && (
+            {(
                 <div className="d-flex justify-content-between align-items-center mt-3">
                     <Button
                         variant="outline-secondary"
