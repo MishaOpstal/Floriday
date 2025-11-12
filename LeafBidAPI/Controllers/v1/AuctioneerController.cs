@@ -25,7 +25,7 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Auctioneer>> GetAuctioneer(int id)
     {
-        var auctioneer = await Context.Auctioneers.FindAsync(id);
+        var auctioneer = await Context.Auctioneers.Where(a => a.Id == id).FirstOrDefaultAsync();
         if (auctioneer == null)
         {
             return NotFound();
@@ -52,15 +52,15 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateAuctioneer(int id, Auctioneer updatedAuctioneer)
     {
-        var auctioneer = await Context.Auctioneers.FindAsync(id);
-        if (auctioneer == null)
+        var auctioneer = await GetAuctioneer(id);
+        if (auctioneer.Value == null)
         {
             return NotFound();
         }
 
-        auctioneer.User = updatedAuctioneer.User;
+        auctioneer.Value.User = updatedAuctioneer.User;
         await Context.SaveChangesAsync();
-        return new JsonResult(auctioneer);
+        return new JsonResult(auctioneer.Value);
     }
     
     /// <summary>
@@ -69,13 +69,13 @@ public class AuctioneerController(ApplicationDbContext context) : BaseController
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteAuctioneer(int id)
     {
-        var auctioneer = await Context.Auctioneers.FindAsync(id);
-        if (auctioneer == null)
+        var auctioneer = await GetAuctioneer(id);
+        if (auctioneer.Value == null)
         {
             return NotFound();
         }
 
-        Context.Auctioneers.Remove(auctioneer);
+        Context.Auctioneers.Remove(auctioneer.Value);
         await Context.SaveChangesAsync();
         return new OkResult();
     }

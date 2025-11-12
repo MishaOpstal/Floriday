@@ -25,7 +25,7 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Buyer>> GetBuyer(int id)
     {
-        var buyer = await Context.Buyers.FindAsync(id);
+        var buyer = await Context.Buyers.Where(b => b.Id == id).FirstOrDefaultAsync();
         if (buyer == null)
         {
             return NotFound();
@@ -52,16 +52,16 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateBuyer(int id, Buyer updatedBuyer)
     {
-        var buyer = await Context.Buyers.FindAsync(id);
-        if (buyer == null)
+        var buyer = await GetBuyer(id);
+        if (buyer.Value == null)
         {
             return NotFound();
         }
 
-        buyer.CompanyName = updatedBuyer.CompanyName;
+        buyer.Value.CompanyName = updatedBuyer.CompanyName;
         
         await Context.SaveChangesAsync();
-        return new JsonResult(buyer);
+        return new JsonResult(buyer.Value);
     }
     
     /// <summary>
@@ -70,13 +70,13 @@ public class BuyerController(ApplicationDbContext context) : BaseController(cont
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteBuyer(int id)
     {
-        var buyer = await Context.Buyers.FindAsync(id);
-        if (buyer == null)
+        var buyer = await GetBuyer(id);
+        if (buyer.Value == null)
         {
             return NotFound();
         }
 
-        Context.Buyers.Remove(buyer);
+        Context.Buyers.Remove(buyer.Value);
         await Context.SaveChangesAsync();
         return new OkResult();
     }

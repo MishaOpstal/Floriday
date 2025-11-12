@@ -24,7 +24,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Auction>> GetAuction(int id)
     {
-        var auction = await Context.Auctions.FindAsync(id);
+        var auction = await Context.Auctions.Where(a => a.Id == id).FirstOrDefaultAsync();
         if (auction == null)
         {
             return NotFound();
@@ -51,16 +51,16 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateAuction(int id, Auction updatedAuction)
     {
-        var auction = await Context.Auctions.FindAsync(id);
-        if (auction == null)
+        var auction = await GetAuction(id);
+        if (auction.Value == null)
         {
             return NotFound();
         }
 
-        auction.StartDate = updatedAuction.StartDate;
-        auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
-        auction.Auctioneer = updatedAuction.Auctioneer;
+        auction.Value.StartDate = updatedAuction.StartDate;
+        auction.Value.ClockLocationEnum = updatedAuction.ClockLocationEnum;
+        auction.Value.Auctioneer = updatedAuction.Auctioneer;
         await Context.SaveChangesAsync();
-        return new JsonResult(auction);
+        return new JsonResult(auction.Value);
     }
 }

@@ -75,7 +75,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         }
         
         await Context.SaveChangesAsync();
-        return new JsonResult(product);
+        return new JsonResult(product.Value);
     }
     
     /// <summary>

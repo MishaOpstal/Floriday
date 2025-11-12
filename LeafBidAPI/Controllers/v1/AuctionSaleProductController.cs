@@ -24,7 +24,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AuctionSalesProducts>> GetAuctionSaleProduct(int id)
     {
-        var auctionSaleProduct = await Context.AuctionSalesProducts.FindAsync(id);
+        var auctionSaleProduct = await Context.AuctionSalesProducts.Where(asp => asp.Id == id).FirstOrDefaultAsync();
         if (auctionSaleProduct == null)
         {
             return NotFound();
@@ -52,18 +52,18 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     public async Task<ActionResult<AuctionSalesProducts>> UpdateAuctionSaleProducts(
         int id, AuctionSalesProducts updatedAuctionSaleProduct)
     {
-        var auctionSaleProduct = await Context.AuctionSalesProducts.FindAsync(id);
-        if (auctionSaleProduct == null)
+        var auctionSaleProduct = await GetAuctionSaleProduct(id);
+        if (auctionSaleProduct.Value == null)
         {
             return NotFound();
         }
 
-        auctionSaleProduct.AuctionSale = updatedAuctionSaleProduct.AuctionSale;
-        auctionSaleProduct.Product = updatedAuctionSaleProduct.Product;
-        auctionSaleProduct.Quantity = updatedAuctionSaleProduct.Quantity;
-        auctionSaleProduct.Price = updatedAuctionSaleProduct.Price;
+        auctionSaleProduct.Value.AuctionSale = updatedAuctionSaleProduct.AuctionSale;
+        auctionSaleProduct.Value.Product = updatedAuctionSaleProduct.Product;
+        auctionSaleProduct.Value.Quantity = updatedAuctionSaleProduct.Quantity;
+        auctionSaleProduct.Value.Price = updatedAuctionSaleProduct.Price;
         
         await Context.SaveChangesAsync();
-        return new JsonResult(auctionSaleProduct);
+        return new JsonResult(auctionSaleProduct.Value);
     }
 }

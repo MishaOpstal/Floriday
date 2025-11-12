@@ -24,7 +24,7 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        var user = await Context.Users.FindAsync(id);
+        var user = await Context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         if (user == null)
         {
             return NotFound();
@@ -51,19 +51,19 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateUser(int id, User updatedUser)
     {
-        var user = await Context.Users.FindAsync(id);
-        if (user == null)
+        var user = await GetUser(id);
+        if (user.Value == null)
         {
             return NotFound();
         }
 
-        user.Name = updatedUser.Name;
-        user.Email = updatedUser.Email;
-        user.PasswordHash = updatedUser.PasswordHash;
-        user.UserType = updatedUser.UserType;
+        user.Value.Name = updatedUser.Name;
+        user.Value.Email = updatedUser.Email;
+        user.Value.PasswordHash = updatedUser.PasswordHash;
+        user.Value.UserType = updatedUser.UserType;
         
         await Context.SaveChangesAsync();
-        return new JsonResult(user);
+        return new JsonResult(user.Value);
     }
     
     /// <summary>
@@ -72,13 +72,13 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        var user = await Context.Users.FindAsync(id);
-        if (user == null)
+        var user = await GetUser(id);
+        if (user.Value == null)
         {
             return NotFound();
         }
 
-        Context.Users.Remove(user);
+        Context.Users.Remove(user.Value);
         await Context.SaveChangesAsync();
         return new OkResult();
     }

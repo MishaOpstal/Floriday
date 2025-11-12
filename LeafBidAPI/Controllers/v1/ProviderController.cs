@@ -24,7 +24,7 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Provider>> GetProvider(int id)
     {
-        var provider = await Context.Providers.FindAsync(id);
+        var provider = await Context.Providers.Where(p => p.Id == id).FirstOrDefaultAsync();
         if (provider == null)
         {
             return NotFound();
@@ -51,16 +51,16 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProvider(int id, Provider updatedProvider)
     {
-        var provider = await Context.Providers.FindAsync(id);
-        if (provider == null)
+        var provider = await GetProvider(id);
+        if (provider.Value == null)
         {
             return NotFound();
         }
 
-        provider.CompanyName = updatedProvider.CompanyName;
+        provider.Value.CompanyName = updatedProvider.CompanyName;
         
         await Context.SaveChangesAsync();
-        return new JsonResult(provider);
+        return new JsonResult(provider.Value);
     }
     
     /// <summary>
@@ -69,13 +69,13 @@ public class ProviderController(ApplicationDbContext context) : BaseController(c
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProvider(int id)
     {
-        var provider = await Context.Providers.FindAsync(id);
-        if (provider == null)
+        var provider = await GetProvider(id);
+        if (provider.Value == null)
         {
             return NotFound();
         }
 
-        Context.Providers.Remove(provider);
+        Context.Providers.Remove(provider.Value);
         await Context.SaveChangesAsync();
         return new OkResult();
     }
