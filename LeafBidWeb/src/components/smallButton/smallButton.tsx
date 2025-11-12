@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { useRouter } from "next/navigation";
+import { Trash, Pencil } from "react-bootstrap-icons"; // ✅ import correct icons
 import styles from "./SmallButton.module.css";
 
 type ActionButtonsProps = {
@@ -15,26 +16,21 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({ onDelete, onUpdate }) => 
 
     return (
         <div className="d-flex gap-2">
-            <Button className={styles.transparentButton}
+            <Button
+                className={styles.transparentButton}
                 variant="light"
                 size="sm"
                 onClick={onDelete}
             >
-                <i
-                    style={{ color: "var(--primary-background)" }}
-                    className="bi bi-trash"
-                ></i>
+                <Trash style={{ color: "var(--primary-background)" }} />
             </Button>
-            <Button  className={styles.transparentButton}
+            <Button
+                className={styles.transparentButton}
                 variant="light"
                 size="sm"
                 onClick={onUpdate}
             >
-                <i
-                    style={{ color: "var(--primary-background)" }}
-                    className="bi bi-pencil"
-                ></i>
-
+                <Pencil style={{ color: "var(--primary-background)" }} />
             </Button>
         </div>
     );
