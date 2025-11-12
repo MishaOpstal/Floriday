@@ -34,6 +34,7 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddRouting();
+        builder.Services.AddHttpClient();
 
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
