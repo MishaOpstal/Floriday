@@ -19,72 +19,84 @@ export default function Home() {
     return (
         <>
             <Header></Header>
-            <div className={styles.page}>
+            <main className={styles.main}>
 
-                <div className={styles.main}>
+                <div className={styles.page}>
                     <h1>Alle veilingen</h1>
-                    <h2>Huidige veilingen</h2>
+                    <h2 className={styles.padding}>Huidige veilingen</h2>
 
-                    <DashboardPanel
-                        compact
-                        imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 1 - Hal A"
-                        resterendeTijd="9 nov 2025, 16:45"
-                    >
-                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                    </DashboardPanel>
+                    <div className={styles.panels}>
+                        <DashboardPanel
+                            compact
+                            imageSrc="/images/PIPIPOTATO.png"
+                            kloklocatie="Klok 1 - Hal A"
+                            resterendeTijd="9 nov 2025, 16:45"
+                        >
+                            <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                        </DashboardPanel>
 
 
 
-                    <DashboardPanel
-                        compact
-                        imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 2 - Kantine"
-                        resterendeTijd="10 nov 2025, 08:30"
-                    >
-                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                    </DashboardPanel>
+                        <DashboardPanel
+                            compact
+                            imageSrc="/images/PIPIPOTATO.png"
+                            kloklocatie="Klok 2 - Kantine"
+                            resterendeTijd="10 nov 2025, 08:30"
+                        >
+                            <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                        </DashboardPanel>
+                    </div>
 
-                    <h2>Aankomende veilingen</h2>
-                    <DashboardPanel
-                        compact
-                        imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 3 - Vergaderzaal B"
-                        resterendeTijd="11 nov 2025, 12:00"
-                    >
-                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                    </DashboardPanel>
 
-                    <DashboardPanel
-                        compact
-                        imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 4 - Receptie"
-                        resterendeTijd="12 nov 2025, 17:15"
-                    >
-                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                    </DashboardPanel>
-                    <h2>Afgelopen veilingen</h2>
-                    <DashboardPanel
-                        compact
-                        imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 5 - Werkplaats"
-                        resterendeTijd="13 nov 2025, 09:45"
-                    >
-                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                    </DashboardPanel>
 
-                    <DashboardPanel
-                        compact
-                        imageSrc="/images/PIPIPOTATO.png"
-                        kloklocatie="Klok 4 - Receptie"
-                        resterendeTijd="12 nov 2025, 17:15"
-                    >
-                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                    </DashboardPanel>
+                    <h2 className={styles.padding}>Aankomende veilingen</h2>
+
+                    <div className={styles.panels}>
+                        <DashboardPanel
+                            compact
+                            imageSrc="/images/PIPIPOTATO.png"
+                            kloklocatie="Klok 3 - Vergaderzaal B"
+                            resterendeTijd="11 nov 2025, 12:00"
+                        >
+                            <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                        </DashboardPanel>
+
+                        <DashboardPanel
+                            compact
+                            imageSrc="/images/PIPIPOTATO.png"
+                            kloklocatie="Klok 4 - Receptie"
+                            resterendeTijd="12 nov 2025, 17:15"
+                        >
+                            <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                        </DashboardPanel>
+                    </div>
+
+                    <h2 className={styles.padding}>Afgelopen veilingen</h2>
+
+                    <div className={styles.panels}>
+                        <DashboardPanel
+                            compact
+                            imageSrc="/images/PIPIPOTATO.png"
+                            kloklocatie="Klok 5 - Werkplaats"
+                            resterendeTijd="13 nov 2025, 09:45"
+                        >
+                            <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                        </DashboardPanel>
+
+                        <DashboardPanel
+                            compact
+                            imageSrc="/images/PIPIPOTATO.png"
+                            kloklocatie="Klok 4 - Receptie"
+                            resterendeTijd="12 nov 2025, 17:15"
+                        >
+                            <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                        </DashboardPanel>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </main>
 
         </>
 
