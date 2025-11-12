@@ -1,0 +1,50 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+.listGroup {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.listItem {
+    transition: background-color 0.15s ease, color 0.15s ease;
+    cursor: pointer;
+}
+
+.listItem.active {
+    background-color: #f8f9fa !important;
+    color: #343a40 !important;
+}
+
+.checkbox {
+}
+
+.badge {
+}
+
+.noResults {
+    font-style: italic;
+    background-color: #fafafa;
+}
+
+.loading {
+    text-align: center;
+    padding: 1rem;
+}
+
+.noResults {
+    font-style: italic;
+}
+
+.productRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.quantity {
+    color: #6c757d;
+    font-size: 0.875rem;
+    min-width: 70px;
+    text-align: right;
+}

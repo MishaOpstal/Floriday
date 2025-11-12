@@ -1,38 +1,69 @@
-import s from "@/app/Auth/Login/page.module.css"
-import React from "react";
-import LoginForm from "@/components/LoginForm/LoginForm";
-import Link from "next/link";
+'use client'
 
-export default function Login(){
-    return(
-    <main className={s.main}>
-        <div className={s.startScreen}>
-           <div className={s.startFrame}>
-               <div className={s.image}></div>
-               <div className={s.loginRegister}>
-                   <div className={s.selector}>
-                       <div className={s.login}>
-                            <h3>Login</h3>
-                        </div>
-                       <Link href="/Auth/Register">
-                           <div className={s.register}>
-                               <h3>Register</h3>
-                           </div>
-                       </Link>
-                   </div>
-                   <div className={s.inputs}><LoginForm /></div>
-                   <div className={s.logo}>
-                       <div className={s.innerLogo}>
-                           <div className={s.logoImage}>
-                           </div>
-                           <div className={s.logoText}>
-                               <h1>LeafBid</h1>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-            </div>
-        </div>
-    </main>
+import Image from 'next/image';
+import Link from 'next/link';
+import s from './page.module.css';
+import "bootstrap/dist/css/bootstrap-grid.min.css"
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { useRouter } from 'next/navigation';
+
+export default function LoginPage() {
+    const router = useRouter();
+
+    const handleLoginClick = () => {
+        router.push('/');
+    };
+
+
+    return (
+        <main className={s.main}>
+            <title>Login</title>
+            <section className={s.card} aria-labelledby="loginTitle">
+                <div className={s.logoRow}>
+                    <Image
+                        src="/LeafBid.svg"
+                        alt="Leafbid logo"
+                        width={100}
+                        height={100}
+                        priority
+                    />
+                </div>
+
+                <h1 id="loginTitle" className={s.title}>Welkom bij Leafbid</h1>
+
+                <Form noValidate className={s.form}>
+                    {/* Email */}
+                            <Form.Label htmlFor="email" className="form-label">
+                                <Form.Control className={s.input} type="email" placeholder="Email"/>
+                            </Form.Label>
+
+                    {/* Password */}
+                            <Form.Label htmlFor="password" className="form-label">
+                                <Form.Control className={s.input} type="password" placeholder="Wachtwoord"/>
+                            </Form.Label>
+
+                    {/* Remember me */}
+                        <Form.Label className="form-check-label" htmlFor="remember">
+                            <Form.Control
+                                className={s.checkInput}
+                                type="checkbox"
+                                id="remember"
+                                name="remember"
+                            />
+                            Onthoud mij?
+                        </Form.Label>
+
+                    {/* Submit */}
+                    <Form.Control as={Button} type="submit" value="Inloggen" onClick={handleLoginClick}>Inloggen</Form.Control>
+                </Form>
+
+                <p className={s.registerLine}>
+                    <Link href="/Auth/Register" className={s.registerLink}>
+                        Nog geen account?
+                    </Link>
+                </p>
+            </section>
+        </main>
     );
 }

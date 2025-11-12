@@ -1,81 +1,86 @@
+'use client';
+
 import styles from '../page.module.css';
 import Header from "@/components/header/header";
-import Knop from "@/components/knop/knop";
+import ActionButtons from "@/components/smallButton/smallButton";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 
 export default function Home() {
+
+    const handleDelete = () => {
+        // TODO : implement delete functionality
+    };
+
+    const handleUpdate = () => {
+        // TODO : implement update functionality
+    };
+
+
     return (
         <>
             <Header></Header>
             <div className={styles.page}>
 
                 <div className={styles.main}>
+                    <h1>Alle veilingen</h1>
+                    <h2>Huidige veilingen</h2>
 
                     <DashboardPanel
-                        title="Tulpenmix 'Lentezon'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="2 min 15 sec"
-                        totaalprijs="€ 12,30"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
                         kloklocatie="Klok 1 - Hal A"
+                        resterendeTijd="9 nov 2025, 16:45"
                     >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
+
+
+
+                    <DashboardPanel
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 2 - Kantine"
+                        resterendeTijd="10 nov 2025, 08:30"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
+
+                    <h2>Aankomende veilingen</h2>
+                    <DashboardPanel
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 3 - Vergaderzaal B"
+                        resterendeTijd="11 nov 2025, 12:00"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
                     </DashboardPanel>
 
                     <DashboardPanel
-                        title="Rozenpakket 'Romance'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="1 min 45 sec"
-                        totaalprijs="€ 18,90"
-                        kloklocatie="Klok 2 - Hal B"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 4 - Receptie"
+                        resterendeTijd="12 nov 2025, 17:15"
                     >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                    </DashboardPanel>
+                    <h2>Afgelopen veilingen</h2>
+                    <DashboardPanel
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 5 - Werkplaats"
+                        resterendeTijd="13 nov 2025, 09:45"
+                    >
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
                     </DashboardPanel>
 
                     <DashboardPanel
-                        title="Zomerboeket 'Veldkracht'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="3 min 00 sec"
-                        totaalprijs="€ 15,75"
-                        kloklocatie="Klok 3 - Hal C"
+                        compact
+                        imageSrc="/images/PIPIPOTATO.png"
+                        kloklocatie="Klok 4 - Receptie"
+                        resterendeTijd="12 nov 2025, 17:15"
                     >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
+                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
                     </DashboardPanel>
-
-                    <DashboardPanel
-                        title="Orchidee 'Wit Elegance'"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="2 min 30 sec"
-                        totaalprijs="€ 22,40"
-                        kloklocatie="Klok 4 - Hal D"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
-
-                    <DashboardPanel
-                        title="Gerbera Regenboog"
-                        imageSrc="/images/bloem.png"
-                        veilingduur="1 min 20 sec"
-                        totaalprijs="€ 10,50"
-                        kloklocatie="Klok 1 - Hal A"
-                    >
-                        <Knop label="Aanpassen✏️" to="" />
-                        <Knop label="Verwijderen🗑️" to="" />
-                    </DashboardPanel>
-
-                    <DashboardPanel
-                        title=""
-                        imageSrc="/images/grey.png"
-                        veilingduur=""
-                        totaalprijs=""
-                        kloklocatie=""
-                    >
-                        <Knop label="Veiling aanmaken" to="/toevoegen/veiling" />
-                    </DashboardPanel>
-
 
                 </div>
 

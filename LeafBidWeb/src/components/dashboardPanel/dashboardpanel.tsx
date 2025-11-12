@@ -1,38 +1,113 @@
 'use client';
 
 import React from 'react';
-import s from './dashboardPanel.module.css';
+import { Card, Row, Col, Image, Button } from 'react-bootstrap';
+import Placeholder from "react-bootstrap/Placeholder";
 
 type DashboardPanelProps = {
-    title: string;
+    title?: string;
+    kloklocatie?: string;
     imageSrc?: string;
-    veilingduur: string;
-    totaalprijs: string;
-    kloklocatie: string;
+    resterendeTijd?: string;
+    huidigePrijs?: string;
+    aankomendProductNaam?: string;
+    aankomendProductStartprijs?: string;
+    loading?: boolean;
+    compact?: boolean;
     children?: React.ReactNode;
 };
 
-const DashboardPanel: React.FC<DashboardPanelProps> = ({   title, imageSrc, veilingduur, totaalprijs, kloklocatie, children, }) => {
+
+const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imageSrc, resterendeTijd, huidigePrijs, aankomendProductNaam, aankomendProductStartprijs, children, loading = false, compact = false,}) => {
+// compacte kaart
+    if (compact) {
+        return (
+            <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
+                {/* Image on the left, small width */}
+                <Card.Img
+                    src={imageSrc || "/images/PIPIPOTATO.png"}
+                    className="rounded"
+                    style={{ width: "60px", height: "60px", objectFit: "cover" }}
+                />
+
+                <Card.Body className="d-flex justify-content-between align-items-center py-2">
+                    {/* Left side: title + time inline */}
+                    <div className="d-flex align-items-center gap-2">
+                        <Card.Title className="mb-0">{kloklocatie}</Card.Title>
+                        <small className="text-muted">{resterendeTijd}</small>
+                    </div>
+
+                    {/* Right side: children */}
+                    <div className="d-flex gap-2">
+                        {children}
+                    </div>
+                </Card.Body>
+
+
+            </Card>
+        );
+    }
+
+// Standaard kaart
     return (
-        <div className={s.panel}>
-            <div className={s.left}>
-                {imageSrc && <img src={imageSrc} alt="Afbeelding" className={s.image} />}
-            </div>
+        <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
+            <Card.Img
+                className="w-25 rounded"
+                variant="left"
+                src={imageSrc || "/images/PIPIPOTATO.png"}
+            />
+            <Card.Body className="w-100">
+                <div className="d-flex gap-3">
+                    {/* First block */}
+                    <div className="flex-fill w-75">
+                        {loading ? (
+                            <>
+                                <Placeholder as={Card.Title} animation="glow">
+                                    <Placeholder xs={6} />
+                                </Placeholder>
+                                <Placeholder as={Card.Text} animation="glow">
+                                    <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={5} />
+                                </Placeholder>
+                            </>
+                        ) : (
+                            <>
+                                <Card.Title>{kloklocatie}</Card.Title>
+                                <Card.Text>
+                                    <span>Huidig product: {title}</span><br />
+                                    <span>Resterende tijd: {resterendeTijd}</span><br />
+                                    <span>Huidige prijs: {huidigePrijs}</span>
+                                </Card.Text>
 
-            <div className={s.middle}>
-                <div className={s.title}>{title}</div>
-                <div className={s.content}>
-                    <p><strong>Veilingduur:</strong> {veilingduur}</p>
-                    <p><strong>Totaalprijs:</strong> {totaalprijs}</p>
-                    <p><strong>Kloklocatie:</strong> {kloklocatie}</p>
+                            </>
+                        )}
+                    </div>
+
+                {/*laadt kaart*/}
+                    <div className="flex-fill w-25">
+                        {loading ? (
+                            <>
+                                <Placeholder as={Card.Title} animation="glow">
+                                    <Placeholder xs={5} />
+                                </Placeholder>
+                                <Placeholder as={Card.Text} animation="glow">
+                                    <Placeholder xs={6} /> <Placeholder xs={3} />
+                                </Placeholder>
+                            </>
+                        ) : (
+                            <>
+                                <Card.Title>Aankomende producten</Card.Title>
+                                <Card.Text>
+                                    <span className="mb-0 d-block">{aankomendProductNaam}</span>
+                                    <span className="mb-0 d-block" style={{ fontSize: "0.7rem" }}>Startprijs: {aankomendProductStartprijs}</span>
+                                </Card.Text>
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
-
-            <div className={s.right}>
-                {children}
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     );
 };
+
 
 export default DashboardPanel;

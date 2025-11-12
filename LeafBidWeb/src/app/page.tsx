@@ -1,8 +1,8 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from './page.module.css';
 import Header from "@/components/header/header";
 import Knop from "@/components/knop/knop";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
+
 
 export default function Home() {
   return (
@@ -12,64 +12,73 @@ export default function Home() {
 
               <div className={styles.main}>
                   <DashboardPanel
+                      loading={false}
                       title="Tulpenmix 'Lentezon'"
-                      imageSrc="/images/bloem.png"
-                      veilingduur="2 min 15 sec"
-                      totaalprijs="€ 12,30"
                       kloklocatie="Klok 1 - Hal A"
-                  >
-                      <Knop label="Bied hier" to="/veiling_view" />
-                  </DashboardPanel>
+                      imageSrc="/images/PIPIPOTATO.png"
+                      resterendeTijd="2 min 15 sec"
+                      huidigePrijs="€ 12,30"
+                      aankomendProductNaam="random product"
+                      aankomendProductStartprijs="€ 213"
+                  />
 
                   <DashboardPanel
+                      loading={false}
                       title="Rozenpakket 'Romance'"
-                      imageSrc="/images/bloem.png"
-                      veilingduur="1 min 45 sec"
-                      totaalprijs="€ 18,90"
                       kloklocatie="Klok 2 - Hal B"
-                  >
-                      <Knop label="Bied hier" to="/veiling_view" />
-                  </DashboardPanel>
+                      imageSrc="/images/PIPIPOTATO.png"
+                      resterendeTijd="1 min 45 sec"
+                      huidigePrijs="€ 18,90"
+                      aankomendProductNaam="random product"
+                      aankomendProductStartprijs="€ 1050"
+                  />
 
                   <DashboardPanel
+                      loading={false}
                       title="Zomerboeket 'Veldkracht'"
-                      imageSrc="/images/bloem.png"
-                      veilingduur="3 min 00 sec"
-                      totaalprijs="€ 15,75"
                       kloklocatie="Klok 3 - Hal C"
-                  >
-                      <Knop label="Bied hier" to="/veiling_view" />
-                  </DashboardPanel>
+                      imageSrc="/images/PIPIPOTATO.png"
+                      resterendeTijd="3 min 00 sec"
+                      huidigePrijs="€ 15,75"
+                      aankomendProductNaam="random product"
+                      aankomendProductStartprijs="€ 100"
+                  />
 
                   <DashboardPanel
+                      loading={false}
                       title="Orchidee 'Wit Elegance'"
-                      imageSrc="/images/bloem.png"
-                      veilingduur="2 min 30 sec"
-                      totaalprijs="€ 22,40"
                       kloklocatie="Klok 4 - Hal D"
-                  >
-                      <Knop label="Bied hier" to="/veiling_view" />
-                  </DashboardPanel>
+                      imageSrc="/images/PIPIPOTATO.png"
+                      resterendeTijd="2 min 30 sec"
+                      huidigePrijs="€ 22,40"
+                      aankomendProductNaam="random product"
+                      aankomendProductStartprijs="€ 200"
+                  />
 
                   <DashboardPanel
+                      loading={false}
                       title="Gerbera Regenboog"
-                      imageSrc="/images/bloem.png"
-                      veilingduur="1 min 20 sec"
-                      totaalprijs="€ 10,50"
                       kloklocatie="Klok 1 - Hal A"
-                  >
-                      <Knop label="Bied hier" to="/veiling_view" />
-                  </DashboardPanel>
+                      imageSrc="/images/PIPIPOTATO.png"
+                      resterendeTijd="1 min 20 sec"
+                      huidigePrijs="€ 10,50"
+                      aankomendProductNaam="random product"
+                      aankomendProductStartprijs="€ 214"
+                  />
 
                   <DashboardPanel
+                      loading={true}
                       title="Lelies 'Zomergeur'"
-                      imageSrc="/images/bloem.png"
-                      veilingduur="2 min 05 sec"
-                      totaalprijs="€ 16,80"
                       kloklocatie="Klok 2 - Hal B"
-                  >
-                      <Knop label="Bied hier" to="/veiling_view" />
-                  </DashboardPanel>
+                      imageSrc="/images/PIPIPOTATO.png"
+                      resterendeTijd="2 min 05 sec"
+                      huidigePrijs="€ 16,80"
+                      aankomendProductNaam="random product"
+                      aankomendProductStartprijs="€ 500"
+                  />
+
+
+
 
 
               </div>
