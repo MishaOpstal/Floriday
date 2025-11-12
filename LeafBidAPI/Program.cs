@@ -11,6 +11,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var allowedOrigins = "_allowedOrigins";
         var builder = WebApplication.CreateBuilder(args);
         builder.WebHost.ConfigureKestrel(options =>
         {
@@ -18,12 +19,22 @@ public class Program
         });
 
         // Add services to the container.
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: allowedOrigins,
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddRouting();
-        
+
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
         {
@@ -39,7 +50,7 @@ public class Program
             options.SubstituteApiVersionInUrl = true;
         });
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
@@ -57,7 +68,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI v1"));
         }
-        
+
         // Configure HTTPS if not in development
         if (!app.Environment.IsDevelopment())
         {
@@ -67,6 +78,7 @@ public class Program
         app.UseAuthorization();
         app.UseRouting();
         app.MapControllers();
+        app.UseCors(allowedOrigins);
 
         app.Run();
     }
