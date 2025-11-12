@@ -25,7 +25,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
             <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
                 {/* Image on the left, small width */}
                 <Card.Img
-                    alt="Image of a hamster potato"
+                    alt={`Foto van ${title}`}
                     src={imageSrc || "/images/PIPIPOTATO.png"}
                     className="rounded"
                     style={{ width: "60px", height: "60px", objectFit: "cover" }}
