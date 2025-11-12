@@ -18,14 +18,14 @@ const SelectedBadgeList: React.FC<SelectedBadgeListProps> = ({ items, onRemove }
         <div className={`mb-3 d-flex flex-wrap gap-2 ${s.badgeContainer}`}>
             {items.map((p, i) => (
                 <Badge
-                    key={p.productId}
+                    key={p.id}
                     bg="secondary"
                     pill
                     className={s.selectedBadge}
-                    title={`Click to remove ${p.productName}`}
+                    title={`Click to remove ${p.name}`}
                     onClick={() => onRemove(p)}
                 >
-                    {i + 1}. {p.productName}
+                    {i + 1}. {p.name}
                 </Badge>
             ))}
         </div>

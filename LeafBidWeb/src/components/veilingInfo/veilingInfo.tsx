@@ -1,36 +1,34 @@
-﻿import s from './velinginfo.module.css';
+﻿import s from '@/components/veilingInfo/velinginfo.module.css';
+import {parseDate, Product} from "@/types/Product";
+import {Image} from "react-bootstrap";
+import Button from "@/components/input/Button";
 
-type BigFieldProps = {
-    naam: string;
-    prijs: number;
-    plaatje: string;
-    duur: string;
-    info: string;
-    oogst: string;
-    leverancier: string;
-    regio: string;
-    aantal: number;
-
-};
-
-export default function BigInfoVeld({ naam, prijs, plaatje, duur, info, oogst, leverancier, regio, aantal}: BigFieldProps) {
-    // Dynamic image path from public folder
-    const imageSrc = `/${plaatje}`;
+export default function BigInfoVeld({product}: { product: Product }) {
+    const imageSrc = `/${product.picture}`;
 
     return (
-        <div className={s.wrapper}>
-            <img className={s.plaatje} src={imageSrc} alt={naam} />
-            <div className={s.tekstContainer}>
-                <h2 className={s.naam}>{naam}</h2>
-                <p className={s.prijs}>{prijs}</p>
-                <p className={s.duur}>{duur}</p>
-                <p className={s.info}>{info}</p>
-                <p className={s.oogst}>{oogst}</p>
-                <p className={s.leverancier}>{leverancier}</p>
-                <p className={s.regio}>{regio}</p>
-                <p className={s.aantal}>{aantal}</p>
-
+        <div
+            className={`d-flex flex-column text-black bg-white ${s.wrapper}`}>
+            <div className="d-flex flex-row gap-4">
+                <Image
+                    src={imageSrc}
+                    alt={product.name}
+                    className={`mb-3 ${s.plaatje}`}
+                />
+                <div className={`d-flex flex-row gap-1 ${s.infoBox}`}>
+                    <p>{product.description}</p></div>
             </div>
+            <div className={`d-flex flex-column gap-3 p-3 ${s.tekstcontainer}`}>
+                <h2>{product.name}</h2>
+                <p className="text-muted">Aantal: {product.stock}</p>
+                <p className="text-muted">Start prijs: <span
+                    className="text-decoration-line-through">{product.minPrice}</span>
+                </p>
+                <p className="text-muted">Geoogst: {parseDate(product.harvestedAt ?? "")}</p>
+                <p className="text-muted">Leverancier: {product.providerId}</p>
+                <p className="text-muted">Regio Oorsprong: {product.region}</p>
+            </div>
+            <Button label="Koop Product" variant="primary" type="button" className={s.knop}/>
         </div>
     );
 }

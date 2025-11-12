@@ -26,7 +26,7 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
             const price = isNaN(parsed) || parsed < 0 ? 0 : parsed;
 
             const updated = products.map((p) =>
-                p.productId === productId ? { ...p, productPrice: price } : p
+                p.id === productId ? { ...p, productPrice: price } : p
             );
 
             onChange?.(updated);
@@ -46,27 +46,27 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
                 <tbody>
                 {products.length > 0 ? (
                     products.map((product) => (
-                        <tr key={product.productId}>
+                        <tr key={product.id}>
                             <td className={s.productName}>
-                                {product.productName}
+                                {product.name}
                             </td>
                             <td className={s.priceCell}>
                                 <Form.Control
                                     type="number"
                                     step="0.01"
                                     min="0"
-                                    value={product.productPrice?.toString() ?? ""}
+                                    value={product.minPrice?.toString() ?? ""}
                                     placeholder="0.00"
                                     onChange={(e) => {
                                         // Allow typing any valid number (still sends numeric to parent)
                                         const val = parseFloat(e.target.value);
-                                        handlePriceChange(product.productId, parseFloat(val.toFixed(2)) || 0);
+                                        handlePriceChange(product.id, parseFloat(val.toFixed(2)) || 0);
                                     }}
                                     onBlur={(e) => {
                                         // Format to 2 decimals only when leaving the field
                                         const val = parseFloat(e.target.value);
                                         if (!isNaN(val)) {
-                                            handlePriceChange(product.productId, parseFloat(val.toFixed(2)));
+                                            handlePriceChange(product.id, parseFloat(val.toFixed(2)));
                                         }
                                     }}
                                     className={s.priceInput}
