@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.Data;
 
+// EF-Core exposes collections as DbSet<T>, which implements IQueryable<T> and thus can utilize LINQ.
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<Auction> Auctions { get; set; }

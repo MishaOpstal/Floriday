@@ -24,7 +24,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        var product = await Context.Products.FindAsync(id);
+        var product = await Context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
         if (product == null)
         {
             return NotFound();
@@ -51,26 +51,26 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
     {
-        var product = await Context.Products.FindAsync(id);
-        if (product == null)
+        var product = await GetProduct(id);
+        if (product.Value == null) 
         {
             return NotFound();
         }
 
-        product.Name = updatedProduct.Name;
-        product.Weight = updatedProduct.Weight;
-        product.Picture = updatedProduct.Picture;
-        product.Species = updatedProduct.Species;
-        product.Stock = updatedProduct.Stock;
-        product.Auction = updatedProduct.Auction;
+        product.Value.Name = updatedProduct.Name;
+        product.Value.Weight = updatedProduct.Weight;
+        product.Value.Picture = updatedProduct.Picture;
+        product.Value.Species = updatedProduct.Species;
+        product.Value.Stock = updatedProduct.Stock;
+        product.Value.Auction = updatedProduct.Auction;
 
         if (updatedProduct.PotSize.HasValue)
         {
-            product.PotSize = updatedProduct.PotSize;
+            product.Value.PotSize = updatedProduct.PotSize;
             updatedProduct.StemLength = null;
         } else if (updatedProduct.StemLength.HasValue)
         {
-            product.StemLength = updatedProduct.StemLength;
+            product.Value.StemLength = updatedProduct.StemLength;
             updatedProduct.PotSize = null;       
         }
         
@@ -84,13 +84,13 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var product = await Context.Products.FindAsync(id);
-        if (product == null)
+        var product = await GetProduct(id);
+        if (product.Value == null)
         {
             return NotFound();
         }
 
-        Context.Products.Remove(product);
+        Context.Products.Remove(product.Value);
         await Context.SaveChangesAsync();
         return new OkResult();
     }

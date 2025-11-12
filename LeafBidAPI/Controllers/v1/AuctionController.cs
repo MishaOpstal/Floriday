@@ -57,10 +57,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
             return NotFound();
         }
 
-        auction.Description = updatedAuction.Description;
         auction.StartDate = updatedAuction.StartDate;
-        auction.Amount = updatedAuction.Amount;
-        auction.MinimumPrice = updatedAuction.MinimumPrice;
         auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
         auction.Auctioneer = updatedAuction.Auctioneer;
         await Context.SaveChangesAsync();
