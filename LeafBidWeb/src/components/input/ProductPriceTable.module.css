@@ -1,0 +1,21 @@
+.wrapper {
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    scrollbar-gutter: stable;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.productName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.priceInput {
+    width: 100%;
+    text-align: right;
+}
