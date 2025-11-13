@@ -1,7 +1,11 @@
-﻿using LeafBidAPI.Data;
+﻿using System.Drawing;
+using System.Net;
+using LeafBidAPI.Data;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace LeafBidAPI.Controllers.v1;
 
@@ -52,8 +56,46 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Create a new product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
     {
+        // Handle Base64 image upload if present
+        if (!string.IsNullOrEmpty(product.Picture) && product.Picture.StartsWith("data:image"))
+        {
+            try
+            {
+                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                Directory.CreateDirectory(uploadsDir);
+
+                // Strip prefix "data:image/...;base64," if present
+                var base64Data = product.Picture.Contains(',')
+                    ? product.Picture[(product.Picture.IndexOf(',') + 1)..]
+                    : product.Picture;
+
+                var bytes = Convert.FromBase64String(base64Data);
+                var fileName = $"{Guid.NewGuid()}.png";
+                var filePath = Path.Combine(uploadsDir, fileName);
+
+                // Decode and save using ImageSharp
+                using (var image = SixLabors.ImageSharp.Image.Load(bytes))
+                {
+                    const int maxWidth = 800;
+                    if (image.Width > maxWidth)
+                    {
+                        var ratio = (double)maxWidth / image.Width;
+                        image.Mutate(x => x.Resize(maxWidth, (int)(image.Height * ratio)));
+                    }
+
+                    await image.SaveAsPngAsync(filePath);
+                }
+
+                product.Picture = $"/uploads/{fileName}";
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         Context.Products.Add(product);
         await Context.SaveChangesAsync();
 
