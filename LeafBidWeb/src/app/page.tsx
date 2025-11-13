@@ -75,17 +75,22 @@ export default function Home() {
                                 const nextProduct = auction.products?.[1];
 
                                 return (
-                                    <DashboardPanel
-                                        key={auction.id}
-                                        loading={false}
-                                        title={product ? product.name : `Auction #${auction.id}`}
-                                        kloklocatie={parseClockLocation(auction.clockLocationEnum)}
-                                        imageSrc={product?.picture ? `http://localhost:5001${product.picture}` : undefined}
-                                        resterendeTijd={new Date(auction.startDate).toLocaleString()}
-                                        huidigePrijs={product?.minPrice}
-                                        aankomendProductNaam={nextProduct?.name || "Geen product"}
-                                        aankomendProductStartprijs={nextProduct?.minPrice}
-                                    />
+                                    <>
+                                        <a key={`auction-${auction.id}`} href={`/veiling/${auction.id}`}>
+                                            <DashboardPanel
+                                                key={auction.id}
+                                                loading={false}
+                                                title={product ? product.name : `Auction #${auction.id}`}
+                                                kloklocatie={parseClockLocation(auction.clockLocationEnum)}
+                                                imageSrc={product?.picture ? `http://localhost:5001${product.picture}` : undefined}
+                                                resterendeTijd={new Date(auction.startDate).toLocaleString()}
+                                                huidigePrijs={product?.minPrice}
+                                                aankomendProductNaam={nextProduct?.name || "Geen product"}
+                                                aankomendProductStartprijs={nextProduct?.minPrice}
+                                            />
+                                        </a>
+
+                                    </>
                                 );
                             })
                         )}

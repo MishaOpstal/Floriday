@@ -4,7 +4,7 @@ import {Image} from "react-bootstrap";
 import Button from "@/components/input/Button";
 
 export default function BigInfoVeld({product}: { product: Product }) {
-    const imageSrc = `/${product.picture}`;
+    const imageSrc = `http://localhost:5001${product.picture}`;
 
     return (
         <div

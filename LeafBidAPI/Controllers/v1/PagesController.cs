@@ -14,7 +14,7 @@ namespace LeafBidAPI.Controllers.v1;
 /// </summary>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory httpClientFactory) : BaseController(dbContext)
+public class PagesController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
 
     /// <summary>
