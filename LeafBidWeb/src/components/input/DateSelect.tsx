@@ -3,6 +3,7 @@ import { InputGroup, Form, Row, Col } from "react-bootstrap";
 import s from "./DateSelect.module.css";
 
 interface DateSelectProps {
+    label: string;
     placeholder?: string;
     onSelect: (date: string | null) => void;
     delay?: number;
@@ -14,6 +15,7 @@ interface DateSelectProps {
  * A reusable Bootstrap date (+time) selector with debounced change events.
  */
 const DateSelect: React.FC<DateSelectProps> = ({
+                                                   label,
                                                    placeholder = "Select date...",
                                                    onSelect,
                                                    delay = 300,
@@ -47,6 +49,8 @@ const DateSelect: React.FC<DateSelectProps> = ({
 
     return (
         <div className={`mb-3 ${s.inputGroup}`}>
+            <Form.Label>
+                {label}
             <Row className="g-2">
                 <Col xs={useTime ? 7 : 12}>
                     <Form.Control
@@ -68,6 +72,7 @@ const DateSelect: React.FC<DateSelectProps> = ({
                     </Col>
                 )}
             </Row>
+            </Form.Label>
         </div>
     );
 };

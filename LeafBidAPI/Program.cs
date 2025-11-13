@@ -11,6 +11,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var allowedOrigins = "_allowedOrigins";
         var builder = WebApplication.CreateBuilder(args);
         builder.WebHost.ConfigureKestrel(options =>
         {
@@ -18,6 +19,16 @@ public class Program
         });
 
         // Add services to the container.
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: allowedOrigins,
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+        });
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddAuthorization();
@@ -67,7 +78,9 @@ public class Program
         app.UseAuthorization();
         app.UseRouting();
         app.MapControllers();
-
+        app.UseStaticFiles();
+        app.UseCors(allowedOrigins);
+        
         app.Run();
     }
 }

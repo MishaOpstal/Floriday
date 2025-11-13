@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeafBidAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251009093833_InitialCreate")]
+    [Migration("20251112215629_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,20 +33,10 @@ namespace LeafBidAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
                     b.Property<int>("AuctioneerId")
                         .HasColumnType("int");
 
                     b.Property<int>("ClockLocationEnum")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MinimumPrice")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -166,19 +156,38 @@ namespace LeafBidAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AuctionId")
+                    b.Property<int?>("AuctionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("HarvestedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("MaxPrice")
+                        .HasColumnType("decimal(10, 2)");
+
+                    b.Property<decimal>("MinPrice")
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Picture")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("PotSize")
                         .HasColumnType("float");
+
+                    b.Property<int>("ProviderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Species")
                         .IsRequired()
@@ -196,6 +205,8 @@ namespace LeafBidAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuctionId");
+
+                    b.HasIndex("ProviderId");
 
                     b.ToTable("Products");
                 });
@@ -325,11 +336,17 @@ namespace LeafBidAPI.Migrations
                 {
                     b.HasOne("LeafBidAPI.Models.Auction", "Auction")
                         .WithMany()
-                        .HasForeignKey("AuctionId")
+                        .HasForeignKey("AuctionId");
+
+                    b.HasOne("LeafBidAPI.Models.Provider", "Provider")
+                        .WithMany()
+                        .HasForeignKey("ProviderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Auction");
+
+                    b.Navigation("Provider");
                 });
 
             modelBuilder.Entity("LeafBidAPI.Models.Provider", b =>
