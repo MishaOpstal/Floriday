@@ -76,8 +76,7 @@ export default function Home() {
                             <DateSelect
                                 placeholder="Selecteer startdatum"
                                 onSelect={setSelectedDate}
-                                useTime={true}
-                            />
+                                useTime={true} label={""}                            />
                         </div>
 
                         {/* Location dropdown */}
