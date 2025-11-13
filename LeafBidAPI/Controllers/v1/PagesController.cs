@@ -20,7 +20,7 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
     /// get auction and product by the same ID
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<GetPageDto>> GetAuctionWithProducts(int id)
+    public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(int id)
     { 
         // roep alle endpoints aan tegelijkertijd
         var auction = await dbContext.Auctions.FindAsync(id);
@@ -31,7 +31,7 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
             return NotFound();
         }
 
-        var result = new GetPageDto
+        var result = new GetAuctionWithProductsDto
         {
             auction = auction,
             product = product
