@@ -1,93 +1,99 @@
+'use client';
 import styles from './page.module.css';
 import Header from "@/components/header/header";
-import Knop from "@/components/knop/knop";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
-import Button from "@/components/input/Button";
-import {ButtonGroup} from "react-bootstrap";
-import React from "react";
+import { useState, useEffect } from "react";
 
+// Types
+type Auction = {
+    id: number;
+    startDate: string;
+    clockLocationEnum: number;
+    auctioneerId: number;
+    products: Product[]; // product(s) zitten hier in
+};
+
+type Product = {
+    id: number;
+    name: string;
+    description: string;
+    minPrice: string;
+    maxPrice: string;
+    weight: number;
+    picture: string;
+    species: string;
+    region: string;
+    potSize: number;
+    stemLength: number;
+    stock: number;
+    harvestedAt: string;
+    providerId: number;
+    auctionId: number;
+};
 
 export default function Home() {
-  return (
-      <>
-          <Header></Header>
-          <main className={styles.main}>
+    const [auctions, setAuctions] = useState<Auction[]>([]);
+    const [loading, setLoading] = useState(true);
 
-              <div className={styles.page}>
-                  <h1 className={styles.huidigeVeilingen}>Huidige Veilingen</h1>
-                  <div className={styles.panels}>
-                      <DashboardPanel
-                          loading={false}
-                          title="Tulpenmix 'Lentezon'"
-                          kloklocatie="Klok 1 - Hal A"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="2 min 15 sec"
-                          huidigePrijs="€ 12,30"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 213"
-                      />
+    const id = 7;
 
-                      <DashboardPanel
-                          loading={false}
-                          title="Rozenpakket 'Romance'"
-                          kloklocatie="Klok 2 - Hal B"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="1 min 45 sec"
-                          huidigePrijs="€ 18,90"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 1050"
-                      />
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
+                if (!res.ok) throw new Error("Failed to fetch auction+product");
+                const data = await res.json();
 
-                      <DashboardPanel
-                          loading={false}
-                          title="Zomerboeket 'Veldkracht'"
-                          kloklocatie="Klok 3 - Hal C"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="3 min 00 sec"
-                          huidigePrijs="€ 15,75"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 100"
-                      />
 
-                      <DashboardPanel
-                          loading={false}
-                          title="Orchidee 'Wit Elegance'"
-                          kloklocatie="Klok 4 - Hal D"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="2 min 30 sec"
-                          huidigePrijs="€ 22,40"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 200"
-                      />
+                const auctionWithProducts: Auction = {
+                    ...data.auction,
+                    products: [data.product],
+                };
 
-                      <DashboardPanel
-                          loading={false}
-                          title="Gerbera Regenboog"
-                          kloklocatie="Klok 1 - Hal A"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="1 min 20 sec"
-                          huidigePrijs="€ 10,50"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 214"
-                      />
+                setAuctions([auctionWithProducts]);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-                      <DashboardPanel
-                          loading={true}
-                          title="Lelies 'Zomergeur'"
-                          kloklocatie="Klok 2 - Hal B"
-                          imageSrc="/images/PIPIPOTATO.png"
-                          resterendeTijd="2 min 05 sec"
-                          huidigePrijs="€ 16,80"
-                          aankomendProductNaam="random product"
-                          aankomendProductStartprijs="€ 500"
-                      />
-                  </div>
+        fetchData();
+    }, [id]);
 
-              </div>
+    return (
+        <>
+            <Header />
+            <main className={styles.main}>
+                <div className={styles.page}>
+                    <h1 className={styles.huidigeVeilingen}>Veilingen Dashboard</h1>
+                    <div className={styles.panels}>
+                        {loading ? (
+                            <DashboardPanel loading={true} title="Laden..." />
+                        ) : auctions.length === 0 ? (
+                            <DashboardPanel loading={true} title="Geen veilingen beschikbaar" />
+                        ) : (
+                            auctions.map((auction) => {
+                                const product = auction.products[0];
 
-          </main>
-
-      </>
-
+                                return (
+                                    <DashboardPanel
+                                        key={auction.id}
+                                        loading={false}
+                                        title={product ? product.name : `Auction #${auction.id}`}
+                                        kloklocatie={`Clock: ${auction.clockLocationEnum}`}
+                                        imageSrc={"/images/PIPIPOTATO.png"}
+                                        resterendeTijd={new Date(auction.startDate).toLocaleString()}
+                                        huidigePrijs={product?.minPrice || "—"}
+                                        aankomendProductNaam={product?.name || "Geen product"}
+                                        aankomendProductStartprijs={product?.maxPrice || "—"}
+                                    />
+                                );
+                            })
+                        )}
+                    </div>
+                </div>
+            </main>
+        </>
     );
 }

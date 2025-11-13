@@ -34,7 +34,8 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddRouting();
-        
+        builder.Services.AddHttpClient();
+
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
         {
@@ -50,7 +51,7 @@ public class Program
             options.SubstituteApiVersionInUrl = true;
         });
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
@@ -68,7 +69,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI v1"));
         }
-        
+
         // Configure HTTPS if not in development
         if (!app.Environment.IsDevelopment())
         {

@@ -36,6 +36,21 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
 
         return product;
     }
+    
+    /// <summary>
+    /// get a product by AuctionId
+    /// </summary>
+    [HttpGet("by-auctionId/{auctionId:int}")]
+    public async Task<ActionResult<Product>> GetProductByAuctionId(int auctionId)
+    {
+        var product = await Context.Products.FirstOrDefaultAsync(p => p.AuctionId == auctionId);
+        if (product ==  null)
+        {
+            return NotFound();
+        }
+
+        return product;
+    }
 
     /// <summary>
     /// Create a new product
