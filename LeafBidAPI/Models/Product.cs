@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Toolbelt.ComponentModel.DataAnnotations.Schema.V5;
 
 namespace LeafBidAPI.Models;
 
@@ -25,12 +26,14 @@ public class Product
     /// <summary>
     /// Minimum Price of the product.
     /// </summary>
-    public string MinPrice { get; set; }
+    [Decimal(10,2)]
+    public decimal MinPrice { get; set; }
 
     /// <summary>
     /// Max Price of the product.
     /// </summary>
-    public string MaxPrice { get; set; }
+    [Decimal(10,2)]
+    public decimal MaxPrice { get; set; }
 
     /// <summary>
     /// Weight of the product in kilograms.
@@ -40,7 +43,7 @@ public class Product
     /// <summary>
     /// Picture URL of the product.
     /// </summary>
-    public string Picture { get; set; }
+    public string? Picture { get; set; }
 
     /// <summary>
     /// Species of the product.
@@ -83,7 +86,7 @@ public class Product
     /// <summary>
     /// Auction id associated with the product.
     /// </summary>
-    public required int AuctionId { get; set; }
+    public int? AuctionId { get; set; }
     
     [JsonIgnore]
     public Auction? Auction { get; set; }

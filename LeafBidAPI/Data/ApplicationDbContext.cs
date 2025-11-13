@@ -1,5 +1,6 @@
 ﻿using LeafBidAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Toolbelt.ComponentModel.DataAnnotations;
 
 namespace LeafBidAPI.Data;
 
@@ -18,6 +19,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.BuildDecimalColumnTypeFromAnnotations();
 
         modelBuilder.Entity<AuctionSales>()
             .HasOne(s => s.Auction)

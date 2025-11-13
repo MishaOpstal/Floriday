@@ -79,8 +79,9 @@ public class Program
         app.UseAuthorization();
         app.UseRouting();
         app.MapControllers();
+        app.UseStaticFiles();
         app.UseCors(allowedOrigins);
-
+        
         app.Run();
     }
 }
