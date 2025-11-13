@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using Image = SixLabors.ImageSharp.Image;
+using Rectangle = SixLabors.ImageSharp.Rectangle;
 
 namespace LeafBidAPI.Controllers.v1;
 
@@ -58,33 +60,46 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
     {
-        // Handle Base64 image upload if present
         if (!string.IsNullOrEmpty(product.Picture) && product.Picture.StartsWith("data:image"))
         {
             try
             {
-                var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                string uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
                 Directory.CreateDirectory(uploadsDir);
 
-                // Strip prefix "data:image/...;base64," if present
-                var base64Data = product.Picture.Contains(',')
+                // Strip prefix "data:image/...;base64,"
+                string? base64Data = product.Picture.Contains(',')
                     ? product.Picture[(product.Picture.IndexOf(',') + 1)..]
                     : product.Picture;
 
-                var bytes = Convert.FromBase64String(base64Data);
-                var fileName = $"{Guid.NewGuid()}.png";
-                var filePath = Path.Combine(uploadsDir, fileName);
+                byte[] bytes = Convert.FromBase64String(base64Data);
+                string fileName = $"{Guid.NewGuid()}.png";
+                string filePath = Path.Combine(uploadsDir, fileName);
 
-                // Decode and save using ImageSharp
-                using (var image = SixLabors.ImageSharp.Image.Load(bytes))
+                using (Image image = Image.Load(bytes))
                 {
-                    const int maxWidth = 800;
-                    if (image.Width > maxWidth)
-                    {
-                        var ratio = (double)maxWidth / image.Width;
-                        image.Mutate(x => x.Resize(maxWidth, (int)(image.Height * ratio)));
-                    }
+                    const int targetSize = 800;
 
+                    // --- Step 1: compute zoom scaling ---
+                    double scale = Math.Max(
+                        (double)targetSize / image.Width,
+                        (double)targetSize / image.Height
+                    );
+
+                    int resizedWidth = (int)(image.Width * scale);
+                    int resizedHeight = (int)(image.Height * scale);
+
+                    image.Mutate(x => x.Resize(resizedWidth, resizedHeight));
+
+                    // --- Step 2: center-crop to 800x800 ---
+                    int cropX = (resizedWidth - targetSize) / 2;
+                    int cropY = (resizedHeight - targetSize) / 2;
+
+                    Rectangle cropRect = new(cropX, cropY, targetSize, targetSize);
+
+                    image.Mutate(x => x.Crop(cropRect));
+
+                    // Save as PNG
                     await image.SaveAsPngAsync(filePath);
                 }
 
@@ -92,7 +107,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
             }
             catch (Exception ex)
             {
-                return null;
+                return BadRequest(ex.Message);
             }
         }
 

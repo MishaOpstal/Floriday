@@ -171,15 +171,17 @@ export default function ProductForm() {
                     step={0.01}
                     value={formData.minPrice}
                     onChange={handleChange}
+                    prefix="€"
                 />
 
                 <NumberInput
-                    label="Gewicht (kg)"
+                    label="Gewicht"
                     name="weight"
                     placeholder="gewicht"
                     step={0.01}
                     value={formData.weight}
                     onChange={handleChange}
+                    postfix="kg"
                 />
 
                 <TextInput
@@ -221,6 +223,7 @@ export default function ProductForm() {
                         step={0.1}
                         value={formData.potSize}
                         onChange={handleChange}
+                        postfix="cm"
                     />
                 )}
 
@@ -232,6 +235,7 @@ export default function ProductForm() {
                         step={0.1}
                         value={formData.stemLength}
                         onChange={handleChange}
+                        postfix="cm"
                     />
                 )}
 

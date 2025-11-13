@@ -2,66 +2,89 @@
 import styles from './page.module.css';
 import Header from "@/components/header/header";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import {Auction} from "@/types/Auction";
+import {parseClockLocation} from "@/enums/ClockLocation";
 
+
+const auctionIdList = [2, 3, 4, 5, 6];
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const id = 1;
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchAuctions = async () => {
+            setLoading(true);
+
             try {
-                const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
-                if (!res.ok) throw new Error("Failed to fetch auction+product");
-                const data = await res.json();
+                // Fetch all auctions in parallel
+                const results = await Promise.all(
+                    auctionIdList.map(async (id) => {
+                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
+                        if (!res.ok) return null;
 
+                        const data = await res.json();
 
-                const auctionWithProducts: Auction = {
-                    ...data.auction,
-                    products: [data.product],
-                };
+                        // Normalize product+auction into your Auction type
+                        const auction: Auction = {
+                            ...data.auction,
+                            products: data.products
+                        };
 
-                setAuctions([auctionWithProducts]);
+                        return auction;
+                    })
+                );
+
+                // Filter out null responses (failed fetches)
+                const filtered = results.filter((a): a is Auction => a !== null);
+
+                setAuctions(filtered);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to load auctions:", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchData();
-    }, [id]);
+        fetchAuctions();
+    }, [auctionIdList]);
 
     return (
         <>
-            <Header />
+            <Header/>
             <main className={styles.main}>
                 <div className={styles.page}>
                     <h1 className={styles.huidigeVeilingen}>Veilingen Dashboard</h1>
+
                     <div className={styles.panels}>
                         {loading ? (
-                            <DashboardPanel loading={true} title="Laden..." />
+                            <>
+                                <DashboardPanel loading={true} title="Laden..."/>
+                                <DashboardPanel loading={true}
+                                                title="Laden..."/>
+                                <DashboardPanel
+                                    loading={true} title="Laden..."/>
+                                <DashboardPanel loading={true} title="Laden..."/></>
                         ) : auctions.length === 0 ? (
-                            <DashboardPanel loading={true} title="Geen veilingen beschikbaar" />
+                            <DashboardPanel loading={true} title="Geen veilingen beschikbaar"/>
                         ) : (
                             auctions.map((auction) => {
-                                const product = auction.products[0];
+                                const product = auction.products?.[0];
+                                const nextProduct = auction.products?.[1];
 
                                 return (
                                     <DashboardPanel
                                         key={auction.id}
                                         loading={false}
                                         title={product ? product.name : `Auction #${auction.id}`}
-                                        kloklocatie={`Clock: ${auction.clockLocationEnum}`}
-                                        imageSrc={"http://localhost:5001" + product?.picture}
+                                        kloklocatie={parseClockLocation(auction.clockLocationEnum)}
+                                        imageSrc={product?.picture ? `http://localhost:5001${product.picture}` : undefined}
                                         resterendeTijd={new Date(auction.startDate).toLocaleString()}
                                         huidigePrijs={product?.minPrice}
-                                        aankomendProductNaam={product?.name || "Geen product"}
-                                        aankomendProductStartprijs={product?.maxPrice}
+                                        aankomendProductNaam={nextProduct?.name || "Geen product"}
+                                        aankomendProductStartprijs={nextProduct?.minPrice}
                                     />
                                 );
                             })

@@ -3,6 +3,7 @@ using LeafBidAPI.DTOs.Page;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace LeafBidAPI.Controllers.v1;
@@ -17,24 +18,26 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
 {
 
     /// <summary>
-    /// get auction and product by the same ID
+    /// get auction and product by AuctionId
     /// </summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(int id)
     { 
         // roep alle endpoints aan tegelijkertijd
         Auction? auction = await dbContext.Auctions.FindAsync(id);
-        Product? product = await dbContext.Products.FirstOrDefaultAsync(p => p.AuctionId == id);
+        List<Product> products = await dbContext.Products
+            .Where(p => p.AuctionId == id)
+            .ToListAsync();
 
-        if (auction == null || product == null)
+        if (auction == null || products.IsNullOrEmpty())
         {
-            return BadRequest("Auction or product not found. Auction data: " + auction + ", Product data: " + product);
+            return BadRequest("Auction or product not found. Auction data: " + auction + ", Product data: " + products);
         }
 
         var result = new GetAuctionWithProductsDto
         {
             auction = auction,
-            product = product
+            products = products
         };
 
         return new JsonResult(result);
