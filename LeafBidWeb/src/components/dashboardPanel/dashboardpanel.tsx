@@ -3,15 +3,17 @@
 import React from 'react';
 import { Card, Row, Col, Image, Button } from 'react-bootstrap';
 import Placeholder from "react-bootstrap/Placeholder";
+import {parsePrice} from "@/types/Product";
+import s from "./dashboardPanel.module.css";
 
 type DashboardPanelProps = {
     title?: string;
     kloklocatie?: string;
     imageSrc?: string;
     resterendeTijd?: string;
-    huidigePrijs?: string;
+    huidigePrijs?: number;
     aankomendProductNaam?: string;
-    aankomendProductStartprijs?: string;
+    aankomendProductStartprijs?: number;
     loading?: boolean;
     compact?: boolean;
     children?: React.ReactNode;
@@ -59,10 +61,10 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
 
 // Standaard kaart
     return (
-        <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
+        <Card className={`d-flex flex-row ${s.card}`}  style={{ borderColor: "var(--primary-background)" }}>
             <Card.Img
                 alt={`Foto van ${title}`}
-                className="w-25 rounded"
+                className={`w-25 ${s.image}`}
                 variant="left"
                 src={imageSrc || "/images/PIPIPOTATO.png"}
             />
@@ -85,7 +87,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                                 <Card.Text>
                                     <span>Huidig product: {title}</span><br />
                                     <span>Resterende tijd: {resterendeTijd}</span><br />
-                                    <span>Huidige prijs: {huidigePrijs}</span>
+                                    <span>Huidige prijs: {parsePrice(huidigePrijs ?? 0)}</span>
                                 </Card.Text>
 
                             </>
@@ -108,7 +110,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                                 <Card.Title>Aankomende producten</Card.Title>
                                 <Card.Text>
                                     <span className="mb-0 d-block">{aankomendProductNaam}</span>
-                                    <span className="mb-0 d-block" style={{ fontSize: "0.7rem" }}>Startprijs: {aankomendProductStartprijs}</span>
+                                    <span className="mb-0 d-block" style={{ fontSize: "0.7rem" }}>Startprijs: {parsePrice(aankomendProductStartprijs ?? 0)}</span>
                                 </Card.Text>
                             </>
                         )}

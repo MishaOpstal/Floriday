@@ -3,39 +3,14 @@ import styles from './page.module.css';
 import Header from "@/components/header/header";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import { useState, useEffect } from "react";
+import {Auction} from "@/types/Auction";
 
-// Types
-type Auction = {
-    id: number;
-    startDate: string;
-    clockLocationEnum: number;
-    auctioneerId: number;
-    products: Product[]; // product(s) zitten hier in
-};
-
-type Product = {
-    id: number;
-    name: string;
-    description: string;
-    minPrice: string;
-    maxPrice: string;
-    weight: number;
-    picture: string;
-    species: string;
-    region: string;
-    potSize: number;
-    stemLength: number;
-    stock: number;
-    harvestedAt: string;
-    providerId: number;
-    auctionId: number;
-};
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const id = 7;
+    const id = 1;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,11 +57,11 @@ export default function Home() {
                                         loading={false}
                                         title={product ? product.name : `Auction #${auction.id}`}
                                         kloklocatie={`Clock: ${auction.clockLocationEnum}`}
-                                        imageSrc={"/images/PIPIPOTATO.png"}
+                                        imageSrc={"http://localhost:5001" + product?.picture}
                                         resterendeTijd={new Date(auction.startDate).toLocaleString()}
-                                        huidigePrijs={product?.minPrice || "—"}
+                                        huidigePrijs={product?.minPrice}
                                         aankomendProductNaam={product?.name || "Geen product"}
-                                        aankomendProductStartprijs={product?.maxPrice || "—"}
+                                        aankomendProductStartprijs={product?.maxPrice}
                                     />
                                 );
                             })

@@ -23,12 +23,12 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
     public async Task<ActionResult<GetPageDto>> GetAuctionWithProducts(int id)
     { 
         // roep alle endpoints aan tegelijkertijd
-        var auction = await dbContext.Auctions.FindAsync(id);
-        var product = await dbContext.Products.FirstOrDefaultAsync(p => p.AuctionId == id);
+        Auction? auction = await dbContext.Auctions.FindAsync(id);
+        Product? product = await dbContext.Products.FirstOrDefaultAsync(p => p.AuctionId == id);
 
         if (auction == null || product == null)
         {
-            return NotFound();
+            return BadRequest("Auction or product not found. Auction data: " + auction + ", Product data: " + product);
         }
 
         var result = new GetPageDto

@@ -119,7 +119,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         product.Value.Picture = updatedProduct.Picture;
         product.Value.Species = updatedProduct.Species;
         product.Value.Stock = updatedProduct.Stock;
-        product.Value.Auction = updatedProduct.Auction;
+        product.Value.AuctionId = updatedProduct.AuctionId;
 
         if (updatedProduct.PotSize.HasValue)
         {

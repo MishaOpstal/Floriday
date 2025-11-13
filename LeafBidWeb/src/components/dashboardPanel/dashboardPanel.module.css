@@ -1,9 +1,11 @@
 .card {
-    border-radius: 12px;
-    border: 1px solid var(--primary-background);
+    border-radius: 10px;
+    border: 1px solid var(--background);
 }
 
-
+.image {
+    border-radius: 9px 0 0 9px;
+}
 
 
 

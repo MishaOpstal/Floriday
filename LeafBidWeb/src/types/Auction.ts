@@ -1,0 +1,22 @@
+import {Product} from "@/types/Product";
+
+export interface Auction {
+    id: number;
+    startDate: string;
+    clockLocationEnum: number;
+    auctioneerId: number;
+    products: Product[]; // product(s) zitten hier in
+}
+
+export function parseDate(date: Date|string): string {
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+    };
+
+    const formatter = new Intl.DateTimeFormat('nl-NL', options);
+    return formatter.format(new Date(date));
+}
