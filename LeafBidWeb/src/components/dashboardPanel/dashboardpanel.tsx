@@ -32,7 +32,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
 // compacte kaart
     if (compact) {
         return (
-            <Card className="d-flex flex-row"  style={{ borderColor: "var(--primary-background)" }}>
+            <Card className={`d-flex flex-row ${s.card}`}>
                 {/* Image on the left, small width */}
                 <Card.Img
                     alt={`Foto van ${title}`}
@@ -61,7 +61,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
 
 // Standaard kaart
     return (
-        <Card className={`d-flex flex-row ${s.card}`}  style={{ borderColor: "var(--primary-background)" }}>
+        <Card className={`d-flex flex-row ${s.card}`}>
             <Card.Img
                 alt={`Foto van ${title}`}
                 className={`w-25 ${s.image}`}
