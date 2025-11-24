@@ -25,7 +25,9 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
     { 
         // roep alle endpoints aan tegelijkertijd
         var auction = await dbContext.Auctions.FindAsync(id);
-        var product = await dbContext.Products.FirstOrDefaultAsync(p => p.AuctionId == id);
+        var product = await dbContext.Products
+            .Where(p => p.AuctionId == id)
+            .ToListAsync();
 
         if (auction == null || product == null)
         {
@@ -43,26 +45,27 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
 
     /// <summary>
     /// Get 4 ongoing auctions
-    /// <summary>
+    /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetPageDto>>> GetAuctions()
+    public async Task<ActionResult<IEnumerable<GetAuctionByClockEnumDto>>> GetAuctions()
     {
-        List<GetAuctionByClockEnumDto> AuctionList = new List<GetAuctionByClockEnumDto>();
+        var auctions = await dbContext.Auctions.ToListAsync();
 
-        // verkrijg dynamisch het aantal clocklocation enums
-        foreach (ClockLocationEnum clock in Enum.GetValues(typeof(ClockLocationEnum)))
-        {
-            var result = await dbContext.Auctions
-                .Where(a =>
-                    a.ClockLocationEnum == clock)
-                .ToListAsync();
+        var products =  await dbContext.Products.ToListAsync();
 
-            foreach (var a in result)
+        var productLookup = products
+            .GroupBy(p=> p.AuctionId)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
+        var result = auctions
+            .OrderBy(a => a.ClockLocationEnum) // optioneel: houdt dezelfde volgorde als enum
+            .Select(a => new GetAuctionByClockEnumDto
             {
-                Res
-            }
-        }
+                auction = a,
+                product = productLookup.ContainsKey(a.Id) ? productLookup[a.Id] : new List<Product>()
+            })
+            .ToList();
 
-        return new JsonResult(resultList);
+        return new JsonResult(result);
     }
 }

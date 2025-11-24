@@ -5,6 +5,6 @@ public class GetPageDto
 {
     public required Auction auction { get; set; }
 
-    public required Product product { get; set; }
+    public required List<Product> product { get; set; }
 
 }
