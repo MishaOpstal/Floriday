@@ -1,5 +1,7 @@
 ﻿using LeafBidAPI.Data;
+using LeafBidAPI.DTOs.Auction;
 using LeafBidAPI.DTOs.Page;
+using LeafBidAPI.Enums;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +17,6 @@ namespace LeafBidAPI.Controllers.v1;
 [ApiController]
 public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory httpClientFactory) : BaseController(dbContext)
 {
-
     /// <summary>
     /// get auction and product by the same ID
     /// </summary>
@@ -38,5 +39,30 @@ public class PagesController(ApplicationDbContext dbContext, IHttpClientFactory 
         };
 
         return new JsonResult(result);
+    }
+
+    /// <summary>
+    /// Get 4 ongoing auctions
+    /// <summary>
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<GetPageDto>>> GetAuctions()
+    {
+        List<GetAuctionByClockEnumDto> AuctionList = new List<GetAuctionByClockEnumDto>();
+
+        // verkrijg dynamisch het aantal clocklocation enums
+        foreach (ClockLocationEnum clock in Enum.GetValues(typeof(ClockLocationEnum)))
+        {
+            var result = await dbContext.Auctions
+                .Where(a =>
+                    a.ClockLocationEnum == clock)
+                .ToListAsync();
+
+            foreach (var a in result)
+            {
+                Res
+            }
+        }
+
+        return new JsonResult(resultList);
     }
 }
