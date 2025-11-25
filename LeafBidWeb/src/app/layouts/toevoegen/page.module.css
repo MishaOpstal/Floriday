@@ -6,11 +6,9 @@
     border-radius: 10px;
     background: var(--background, #FFF);
     box-shadow: 0 0 20px 10px var(--accent-soft);
-    width: fit-content;
-    min-width: 500px;
+    width: 1000px;
     max-width: 100%;
 }
-
 
 .multiRow {
     display: flex;
