@@ -13,12 +13,12 @@ export default function VeilingKlok({
     tijd,
                                     }: VeilingKlok) {
     return (
-        <div className={`d-flex flex-column p-4 w-100 h-100 text-black{s.container}`}>
-            <h2 className={`{s.locatie}`}>{locatie}</h2>
-            <h1 className={`{s.bedrag}`}>{bedrag}</h1>
-            <div className={`d-flex flex-column gap-2 {s.klokcontainer}`}>
-                <div className={`{s.balk}`}></div>
-                <p className={`{s.tijd}`}>{tijd}</p>
+        <div className={`d-flex flex-column p-4 w-100 h-100 text-black ${s.container}`}>
+            <h2 className={`${s.locatie}`}>{locatie}</h2>
+            <h1 className={`${s.bedrag}`}>{bedrag}</h1>
+            <div className={`d-flex flex-column gap-2 ${s.klokcontainer}`}>
+                <div className={`${s.balk}`}></div>
+                <p className={`${s.tijd}`}>{tijd}</p>
             </div>
         </div>
 
