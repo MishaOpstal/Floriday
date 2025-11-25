@@ -3,7 +3,7 @@ import {parsePrice, Product} from "@/types/Product";
 import {Image} from "react-bootstrap";
 
 export default function InfoVeld({ product }: { product: Product }) {
-    const imageSrc = `http://localhost:5001${product.picture}`;
+    const imageSrc = `http://localhost:5001/uploads/${product.picture}`;
 
     return (
         <div className={`d-flex align-items-center gap-3 ${s.textContainer}`}>

@@ -31,7 +31,7 @@ public class PagesController(ApplicationDbContext dbContext) : BaseController(db
 
         if (auction == null || products.IsNullOrEmpty())
         {
-            return BadRequest("Auction or product not found. Auction data: " + auction + ", Product data: " + products);
+            return NotFound("Auction or product not found. Auction data: " + auction + ", Product data: " + products);
         }
 
         var result = new GetAuctionWithProductsDto

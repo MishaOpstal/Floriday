@@ -35,6 +35,16 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddRouting();
         builder.Services.AddHttpClient();
+        
+        //TODO: Misha uncomment dit als jij het goed vindt, deze code is direct overgenomen vanuit Brightspace
+        /*
+         builder.Services.AddIdendity<User, IdentityRole>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+            
+        builder.Services.AddScoped<RoleManager<IdentityRole>>();
+        builder.services.AddTransient<IEmailSender<User>, DummyEmailSender>();
+         */
 
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
@@ -59,6 +69,41 @@ public class Program
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             c.SchemaFilter<EnumSchemaFilter>();
+            
+            //TODO: Misha, dit is ook wel belangrijk eigenlijk, dit is de auth
+            /*
+            //security definitie toevoegen
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "Please enter a valid token",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+            
+            // security requierment toevoegen
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Name = "Authorization",
+                        In = ParameterLocation.Header,
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "Bearer",
+                        Reference = new OpenApiReference
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    },
+                new List<string>()
+                }
+
+            });
+            */
+            
         });
 
         var app = builder.Build();
@@ -75,8 +120,10 @@ public class Program
         {
             app.UseHttpsRedirection();
         }
-
+        
+        //app.UseAuthentication();
         app.UseAuthorization();
+        //app.MapIdentityApi<[NaamVanIdentityKlasse]>();
         app.UseRouting();
         app.MapControllers();
         app.UseStaticFiles();

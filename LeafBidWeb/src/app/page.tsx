@@ -82,7 +82,7 @@ export default function Home() {
                                                 loading={false}
                                                 title={product ? product.name : `Auction #${auction.id}`}
                                                 kloklocatie={parseClockLocation(auction.clockLocationEnum)}
-                                                imageSrc={product?.picture ? `http://localhost:5001${product.picture}` : undefined}
+                                                imageSrc={product?.picture ? `http://localhost:5001/uploads/${product.picture}` : undefined}
                                                 resterendeTijd={new Date(auction.startDate).toLocaleString()}
                                                 huidigePrijs={product?.minPrice}
                                                 aankomendProductNaam={nextProduct?.name || "Geen product"}
