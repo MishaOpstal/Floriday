@@ -7,7 +7,7 @@ import {Auction} from "@/types/Auction";
 import {parseClockLocation} from "@/enums/ClockLocation";
 
 
-const auctionIdList = [2, 3, 4, 5, 6];
+const auctionIdList = [1, 2, 3, 4];
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
