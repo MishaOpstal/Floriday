@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '../page.module.css';
+import styles from '../../page.module.css';
 import Header from "@/components/header/header";
 import ActionButtons from "@/components/smallButton/smallButton";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";

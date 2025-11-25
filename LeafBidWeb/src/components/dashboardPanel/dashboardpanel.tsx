@@ -61,17 +61,17 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
 
 // Standaard kaart
     return (
-        <Card className={`d-flex flex-row ${s.card}`}>
+        <Card className={`d-flex flex-column flex-md-row ${s.card}`}>
             <Card.Img
                 alt={`Foto van ${title}`}
-                className={`w-25 ${s.image}`}
+                className={`${s.image}`}
                 variant="left"
                 src={imageSrc || "/images/PIPIPOTATO.png"}
             />
             <Card.Body className="w-100">
-                <div className="d-flex gap-3">
+                <div className="d-flex flex-column flex-md-row gap-3">
                     {/* First block */}
-                    <div className="flex-fill w-75">
+                    <div className="flex-fill w-100 w-md-75">
                         {loading ? (
                             <>
                                 <Placeholder as={Card.Title} animation="glow">
@@ -95,7 +95,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                     </div>
 
                 {/*laadt kaart*/}
-                    <div className="flex-fill w-25">
+                    <div className="flex-fill w-100 w-md-25">
                         {loading ? (
                             <>
                                 <Placeholder as={Card.Title} animation="glow">
