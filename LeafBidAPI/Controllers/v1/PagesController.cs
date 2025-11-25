@@ -1,6 +1,7 @@
 ﻿using LeafBidAPI.Data;
 using LeafBidAPI.DTOs.Page;
 using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ namespace LeafBidAPI.Controllers.v1;
 /// </summary>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Identity.Bearer")]
 public class PagesController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
 

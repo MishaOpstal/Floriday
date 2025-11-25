@@ -1,5 +1,6 @@
 ﻿using LeafBidAPI.Data;
 using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Identity.Bearer")]
 public class AuctionController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -37,6 +39,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Create a new auction
     /// </summary>
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Auctioneer")]
     public async Task<ActionResult<Auction>> CreateAuction(Auction auction)
     {
         Context.Auctions.Add(auction);
@@ -49,6 +52,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Update an existing auction
     /// </summary>
     [HttpPut("{id:int}")]
+    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Auctioneer")]
     public async Task<ActionResult> UpdateAuction(int id, Auction updatedAuction)
     {
         var auction = await GetAuction(id);

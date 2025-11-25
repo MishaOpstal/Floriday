@@ -1,6 +1,8 @@
 using System.Reflection;
 using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
+using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -37,14 +39,12 @@ public class Program
         builder.Services.AddHttpClient();
         
         //TODO: Misha uncomment dit als jij het goed vindt, deze code is direct overgenomen vanuit Brightspace
-        /*
-         builder.Services.AddIdendity<User, IdentityRole>()
+        builder.Services.AddIdentity<User, IdentityRole>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
             
         builder.Services.AddScoped<RoleManager<IdentityRole>>();
-        builder.services.AddTransient<IEmailSender<User>, DummyEmailSender>();
-         */
+        builder.Services.AddTransient<IEmailSender<User>, DummyEmailSender>();
 
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
@@ -70,8 +70,6 @@ public class Program
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             c.SchemaFilter<EnumSchemaFilter>();
             
-            //TODO: Misha, dit is ook wel belangrijk eigenlijk, dit is de auth
-            /*
             //security definitie toevoegen
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -102,8 +100,6 @@ public class Program
                 }
 
             });
-            */
-            
         });
 
         var app = builder.Build();

@@ -1,5 +1,6 @@
 ﻿using LeafBidAPI.Data;
 using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Identity.Bearer")]
 public class ProviderController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>

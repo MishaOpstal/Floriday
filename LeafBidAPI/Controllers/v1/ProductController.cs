@@ -2,6 +2,7 @@
 using System.Net;
 using LeafBidAPI.Data;
 using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
@@ -13,6 +14,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Identity.Bearer")]
 public class ProductController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -58,6 +60,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Create a new product
     /// </summary>
     [HttpPost]
+    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Provider")]
     public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
     {
         if (!string.IsNullOrEmpty(product.Picture) && product.Picture.StartsWith("data:image"))
@@ -121,6 +124,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Update an existing product
     /// </summary>
     [HttpPut("{id:int}")]
+    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Provider")]
     public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
     {
         var product = await GetProduct(id);
@@ -154,6 +158,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Delete a product by ID.
     /// </summary>
     [HttpDelete("{id:int}")]
+    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Provider")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await GetProduct(id);

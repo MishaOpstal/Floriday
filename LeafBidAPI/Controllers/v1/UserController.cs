@@ -1,5 +1,6 @@
 ﻿using LeafBidAPI.Data;
 using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +8,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = "Identity.Bearer")]
 public class UserController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -24,13 +26,14 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
     [HttpGet("{id:int}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
-        var user = await Context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        return user;
+        // var user = await Context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+        // if (user == null)
+        // {
+        //     return NotFound();
+        // }
+        //
+        // return user;
+        return NotFound("User not found");
     }
     
     /// <summary>
@@ -60,7 +63,6 @@ public class UserController(ApplicationDbContext context) : BaseController(conte
         user.Value.Name = updatedUser.Name;
         user.Value.Email = updatedUser.Email;
         user.Value.PasswordHash = updatedUser.PasswordHash;
-        user.Value.UserType = updatedUser.UserType;
         
         await Context.SaveChangesAsync();
         return new JsonResult(user.Value);
