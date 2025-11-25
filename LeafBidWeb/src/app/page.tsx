@@ -5,6 +5,7 @@ import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import {useState, useEffect} from "react";
 import {Auction} from "@/types/Auction";
 import {parseClockLocation} from "@/enums/ClockLocation";
+import AuctionTimer from "@/components/veilingKlok/veilingKlok";
 
 
 const auctionIdList = [1, 2, 3, 4];

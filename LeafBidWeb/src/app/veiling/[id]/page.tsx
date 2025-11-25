@@ -3,7 +3,7 @@
 import InfoVeld from "@/components/infoVeldKlein/infoVeldKlein";
 import BigInfoVeld from "@/components/veilingInfo/veilingInfo";
 import Header from "@/components/header/header";
-import VeilingKlok from "@/components/veilingKlok/veilingKlok";
+import AuctionTimer from '@/components/veilingKlok/veilingKlok';
 import s from "./page.module.css";
 import { Product } from "@/types/Product";
 import { Auction } from "@/types/Auction";
@@ -18,6 +18,8 @@ export default function AuctionPage() {
     const [auction, setAuction] = useState<Auction | null>(null);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+
+
 
     useEffect(() => {
         if (!id) return;
@@ -73,11 +75,35 @@ export default function AuctionPage() {
     const currentProduct = products[0];
     const nextProducts = products.slice(1);
 
+    // Determine start and min price defaults (fallbacks)
+// Prefer an explicit startPrice, then minPrice, then maxPrice, then 100
+    const startPrice: number =
+        (currentProduct as { startPrice?: number }).startPrice ??
+        currentProduct.minPrice ??
+        currentProduct.maxPrice ??
+        100;
+
+// Ensure minPrice is numeric and STRICTLY less than startPrice to avoid instant closure
+    const rawMin = currentProduct.minPrice ?? 0;
+    const minPrice: number = (() => {
+        // Clamp between 0 and startPrice - a tiny epsilon (at least 1 unit lower)
+        const upperBound = startPrice > 0 ? startPrice - 1 : 0;
+        return Math.max(0, Math.min(rawMin, upperBound));
+    })();
+
     return (
         <>
             <Header returnOption={true}/>
             <main className={s.main}>
                 <div className={s.links}>
+                    <div className="App">
+                        <AuctionTimer
+                            // duration={90}
+                            startPrice={startPrice}
+                            minPrice={minPrice }
+                            onFinished={() => alert("De veiling is gesloten!")}
+                        />
+                    </div>
                     <h3 className="fw-bold">Volgende Producten:</h3>
 
                     <div className={s.tekstblokken}>
