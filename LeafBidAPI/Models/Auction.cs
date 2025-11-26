@@ -22,10 +22,10 @@ public class Auction
     public ClockLocationEnum ClockLocationEnum { get; set; }
     
     /// <summary>
-    /// Identifier of the auctioneer associated with the auction
+    /// Identifier of the user (auctioneer) associated with the auction
     /// </summary>
-    public required int AuctioneerId { get; set; }
+    public required string UserId { get; set; }
     
     [JsonIgnore]
-    public Auctioneer? Auctioneer { get; set; }
+    public User? User { get; set; }
 }

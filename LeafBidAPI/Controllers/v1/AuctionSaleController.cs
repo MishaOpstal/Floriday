@@ -8,10 +8,9 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize(AuthenticationSchemes = "Identity.Bearer")]
+[Authorize]
 public class AuctionSaleController(ApplicationDbContext context) : BaseController(context)
 {
-    
     /// <summary>
     /// Get all auction sales
     /// </summary>
@@ -35,7 +34,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
 
         return auctionSale;
     }
-    
+
     /// <summary>
     /// Create a new auction sale
     /// </summary>

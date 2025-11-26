@@ -9,12 +9,7 @@ namespace LeafBidAPI.Models;
 public class User : IdentityUser
 {
     /// <summary>
-    /// full name of the user.
+    /// Last Login
     /// </summary>
-    public string Name { get; set; }
-    
-    /// <summary>
-    /// Email of the user used for login.
-    /// </summary>
-    public string Email { get; set; }
+    public DateTime? LastLogin { get; set; }
 }

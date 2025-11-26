@@ -76,12 +76,12 @@ public class Product
     public DateTime? HarvestedAt { get; set; }
 
     /// <summary>
-    /// Provider id associated with the product.
+    /// User id associated with the product.
     /// </summary>
-    public required int ProviderId { get; set; }
+    public required string UserId { get; set; }
 
     [JsonIgnore]
-    public Provider? Provider { get; set; }
+    public User? User { get; set; }
     
     /// <summary>
     /// Auction id associated with the product.

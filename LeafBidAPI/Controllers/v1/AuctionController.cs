@@ -8,7 +8,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize(AuthenticationSchemes = "Identity.Bearer")]
+[Authorize]
 public class AuctionController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -52,7 +52,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Update an existing auction
     /// </summary>
     [HttpPut("{id:int}")]
-    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Auctioneer")]
+    [Authorize]
     public async Task<ActionResult> UpdateAuction(int id, Auction updatedAuction)
     {
         var auction = await GetAuction(id);
@@ -63,7 +63,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
 
         auction.Value.StartDate = updatedAuction.StartDate;
         auction.Value.ClockLocationEnum = updatedAuction.ClockLocationEnum;
-        auction.Value.Auctioneer = updatedAuction.Auctioneer;
+        auction.Value.User = updatedAuction.User;
         await Context.SaveChangesAsync();
         return new JsonResult(auction.Value);
     }

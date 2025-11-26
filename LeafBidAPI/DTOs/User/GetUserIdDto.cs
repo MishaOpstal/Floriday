@@ -6,5 +6,5 @@ public class GetUserIdDto
     /// Data required to get a user by ID
     /// </summary>
     
-    public required int Id { get; set; }
+    public required string Id { get; set; }
 }

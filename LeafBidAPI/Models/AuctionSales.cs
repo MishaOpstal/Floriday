@@ -21,12 +21,12 @@ public class AuctionSales
     public Auction? Auction { get; set; }
     
     /// <summary>
-    /// Unique identifier for the buyer who made the purchase.
+    /// Unique identifier for the user who made the purchase.
     /// </summary>
-    public required int BuyerId { get; set; }
+    public required string UserId { get; set; }
     
     [JsonIgnore]
-    public Buyer? Buyer { get; set; }
+    public User? User { get; set; }
     
     /// <summary>
     /// Date and time when the sale occurred.

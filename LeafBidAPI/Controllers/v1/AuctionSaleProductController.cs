@@ -8,7 +8,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize(AuthenticationSchemes = "Identity.Bearer")]
+[Authorize]
 public class AuctionSaleProductController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -39,7 +39,8 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Create a new auction sale product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<AuctionSalesProducts>> CreateAuctionSaleProducts(AuctionSalesProducts auctionSaleProduct)
+    public async Task<ActionResult<AuctionSalesProducts>> CreateAuctionSaleProducts(
+        AuctionSalesProducts auctionSaleProduct)
     {
         Context.AuctionSalesProducts.Add(auctionSaleProduct);
         await Context.SaveChangesAsync();
@@ -64,7 +65,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
         auctionSaleProduct.Value.Product = updatedAuctionSaleProduct.Product;
         auctionSaleProduct.Value.Quantity = updatedAuctionSaleProduct.Quantity;
         auctionSaleProduct.Value.Price = updatedAuctionSaleProduct.Price;
-        
+
         await Context.SaveChangesAsync();
         return new JsonResult(auctionSaleProduct.Value);
     }
