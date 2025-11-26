@@ -52,6 +52,7 @@ export default function Home() {
         fetchAuctions();
     }, []);
 
+
     return (
         <>
             <Header/>
@@ -75,6 +76,8 @@ export default function Home() {
                                 const product = auction.products?.[0];
                                 const nextProduct = auction.products?.[1];
 
+
+
                                 return (
                                     <>
                                         <a key={`auction-${auction.id}`} href={`/veiling/${auction.id}`}>
@@ -90,12 +93,12 @@ export default function Home() {
                                                 aankomendProductStartprijs={nextProduct?.minPrice}
                                             />
                                         </a>
-
                                     </>
                                 );
                             })
                         )}
                     </div>
+                    <AuctionTimer startPrice={20} minPrice={5}></AuctionTimer>
                 </div>
             </main>
         </>

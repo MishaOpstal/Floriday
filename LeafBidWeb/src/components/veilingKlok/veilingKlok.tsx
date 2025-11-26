@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Zorg dat Bootstrap is geïmporteerd
 import { parsePrice } from '@/types/Product';
+import s from './veilingKlok.module.css';
 
 interface AuctionTimerProps {
     onFinished?: () => void; // Optionele callback als de tijd op is
@@ -78,12 +79,10 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({
             {/* Bootstrap Progress Bar Container */}
             <div className="progress" style={{ height: '30px', position: 'relative' }}>
                 <div
-                    className={`progress-bar progress-bar progress-bar-animated`}
+                    className={`progress-bar progress-bar progress-bar-animated ${s.balkAnimatie}`}
                     role="progressbar"
                     style={{
                         width: `${percentage}%`,
-                        transition: 'width 0.1s linear',
-                        backgroundColor: 'var(--accent-soft)'
                     }}
                     aria-valuenow={percentage}
                     aria-valuemin={0}
@@ -92,19 +91,7 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({
                     {/* Leeg laten zodat de tekst niet meeschuift met de voortgang */}
                 </div>
                 {/* Overlay die altijd gecentreerd in het midden staat */}
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        color: 'var(--muted-text)'
-                    }}
+                <div className={s.balkTekst}
                     aria-hidden
                 >
                     {formatTime(remainingSeconds)}
