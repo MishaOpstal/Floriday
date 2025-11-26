@@ -78,7 +78,7 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
                     <tr>
                         <td
                             colSpan={2}
-                            className="`text-center text-muted py-3"
+                            className="text-center text-muted py-3"
                         >
                             Geen producten geselecteerd
                         </td>

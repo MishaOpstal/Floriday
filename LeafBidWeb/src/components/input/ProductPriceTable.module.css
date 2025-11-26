@@ -20,7 +20,8 @@
     width: 100%;
     text-align: right;
 }
-.th{
+
+.th {
     background-color: var(--primary) !important;
     color: var(--background) !important;
 }

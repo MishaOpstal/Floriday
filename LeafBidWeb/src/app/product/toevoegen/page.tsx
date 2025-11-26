@@ -204,7 +204,6 @@ export default function ProductForm() {
                     label="Oogst Datum"
                     placeholder="Selecteer startdatum"
                     onSelect={handleDateSelect}
-                    useTime={true}
                 />
 
                 <SelectableButtonGroup

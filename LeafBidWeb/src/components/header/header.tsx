@@ -1,8 +1,8 @@
 import s from "./header.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import {Moon, MoonFill} from "react-bootstrap-icons";
-import ThemeInitializer ,{toggleTheme} from './darkmode'
+import {MoonFill} from "react-bootstrap-icons";
+import ThemeInitializer ,{toggleTheme} from './theme'
 
 interface HeaderProps {
     returnOption?: boolean;
@@ -13,8 +13,6 @@ export default function Header({ returnOption = false }: HeaderProps) {
     return (
         <header>
             <ThemeInitializer />
-            {
-            }
             <div className={s.logoWrapper}>
             <Image
                 src="/LeafBid.svg"
