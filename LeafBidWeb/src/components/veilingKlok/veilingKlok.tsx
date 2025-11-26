@@ -104,30 +104,29 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, startPrice, min
         start > min && start * 0.05 > 0 ? (currentPrice - min) / (start * 0.05) : 0;
 
     return (
-        <div className="container mt-4">
+        <section className="container mt-4" >
             <h2>{parsePrice(Number(currentPrice.toFixed(2)))} </h2>
 
-            <div className="progress" style={{ height: '30px', position: 'relative' }}>
-                <div
+            <section className={`progress ${s.progress}`} >
+                <section
                     className={`progress-bar progress-bar-animated ${s.balkAnimatie}`}
                     role="progressbar"
                     style={{
                         width: `${percentage}%`,
-                        transition: 'width 0.06s linear',
                     }}
                     aria-valuenow={Math.round(percentage * 100) / 100}
                     aria-valuemin={0}
                     aria-valuemax={100}
                 />
-                <div className={s.balkTekst} aria-hidden>
+                <section className={s.balkTekst} aria-hidden>
                     {formatTime(remainingSeconds)}
-                </div>
-            </div>
+                </section>
+            </section>
 
-            <div className="mt-2 text-muted">
+            <section className="mt-2 text-muted">
                 {currentPrice <= min && 'De veiling is gesloten!'}
-            </div>
-        </div>
+            </section>
+        </section>
     );
 };
 

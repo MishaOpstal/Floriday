@@ -1,4 +1,4 @@
-﻿.kaas{}
+﻿.idk{}
 
 .balkTekst {
     position: absolute;
@@ -12,7 +12,12 @@
     pointer-events: none;
     color: var(--muted-text);
 }
+.progress{
+    height: 30px;
+    position: relative;
+}
 
 .balkAnimatie{
     background: var(--accent-soft);
+    transition: width 0.06s linear;
 }
