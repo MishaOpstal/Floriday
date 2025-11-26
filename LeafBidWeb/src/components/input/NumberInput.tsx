@@ -36,11 +36,11 @@ const NumberInput: React.FC<NumberInputProps> = ({
     );
 
     return (
-        <Form.Group>
+        <Form.Group className="mb-3">
             <Form.Label>{label}</Form.Label>
 
             {prefix || postfix ? (
-                <InputGroup className="mb-3">
+                <InputGroup>
                     {prefix && (
                         <InputGroup.Text id={`${name}-prefix`}>{prefix}</InputGroup.Text>
                     )}

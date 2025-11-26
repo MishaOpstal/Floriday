@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, InputGroup } from "react-bootstrap";
+import {Form, InputGroup} from "react-bootstrap";
 
 interface TextInputProps {
     label: string;
@@ -7,6 +7,7 @@ interface TextInputProps {
     placeholder?: string;
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    secret?: boolean;
 
     // NEW:
     prefix?: string;
@@ -19,13 +20,14 @@ const TextInput: React.FC<TextInputProps> = ({
                                                  placeholder,
                                                  value,
                                                  onChange,
+                                                 secret,
                                                  prefix,
                                                  postfix
                                              }) => {
 
     const control = (
         <Form.Control
-            type="text"
+            type={secret ? "password" : "text"}
             name={name}
             placeholder={placeholder}
             value={value}

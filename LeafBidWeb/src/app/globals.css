@@ -123,15 +123,15 @@ label{
 }
 .form-control{
     border: var(--primary) 1px solid;
-    color: var(--text);
+    color: var(--background);
 }
 .form-control[type="file"]::file-selector-button {
     background-color: var(--primary);
-    color: white;
+    color: var(--background);
 }
 .form-control[type="file"]:hover::file-selector-button {
     background-color: var(--primary-hover) !important;
-    color: white;
+    color: var(--text) !important;
 }
 
 .btn.active {

@@ -10,7 +10,7 @@ interface ProductPriceTableProps {
 }
 
 /**
- * A controlled, scrollable table that lets the user assign prices
+ * A controlled, scrollable table that lets the User assign prices
  * to products. Each row includes the product name (read-only)
  * and a numeric input for its price.
  */
