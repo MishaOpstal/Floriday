@@ -14,7 +14,10 @@ namespace LeafBidAPI.Controllers.v1;
 [ApiController]
 [Authorize]
 [AllowAnonymous]
-public class UserController(ApplicationDbContext context, SignInManager<User> signInManager, UserManager<User> userManager)
+public class UserController(
+    ApplicationDbContext context,
+    SignInManager<User> signInManager,
+    UserManager<User> userManager)
     : BaseController(context)
 {
     /// <summary>
@@ -74,7 +77,8 @@ public class UserController(ApplicationDbContext context, SignInManager<User> si
         User? user = await userManager.FindByEmailAsync(login.Email ?? "");
         if (user == null) return Unauthorized("Invalid credentials.");
 
-        SignInResult check = await signInManager.CheckPasswordSignInAsync(user, login.Password ?? "", lockoutOnFailure: false);
+        SignInResult check =
+            await signInManager.CheckPasswordSignInAsync(user, login.Password ?? "", lockoutOnFailure: false);
         if (!check.Succeeded) return Unauthorized("Invalid credentials.");
 
         user.LastLogin = DateTime.UtcNow;
@@ -103,19 +107,6 @@ public class UserController(ApplicationDbContext context, SignInManager<User> si
         }
 
         return OkResult("You are free to go!");
-    }
-
-    /// <summary>
-    /// Create a new user.
-    /// </summary>
-    [HttpPost]
-    [Authorize]
-    public async Task<ActionResult<User>> CreateUser(User user)
-    {
-        Context.Users.Add(user);
-        await Context.SaveChangesAsync();
-
-        return new JsonResult(user) { StatusCode = 201 };
     }
 
     /// <summary>
