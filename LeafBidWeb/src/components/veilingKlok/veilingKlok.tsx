@@ -113,7 +113,7 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, startPrice, min
                     role="progressbar"
                     style={{
                         width: `${percentage}%`,
-
+                        transition: 'width 0.06s linear',
                     }}
                     aria-valuenow={Math.round(percentage * 100) / 100}
                     aria-valuemin={0}
