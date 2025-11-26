@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import s from './page.module.css';
+import s from '../page.module.css';
 import "bootstrap/dist/css/bootstrap-grid.min.css"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -44,12 +44,12 @@ export default function LoginPage() {
                             </Form.Label>
 
                     {/* Remember me */}
-                        <Form.Label className="form-check-label" htmlFor="remember">
+                        <Form.Label className={`form-check-label ${s.check}`} htmlFor="remember me">
                             <Form.Control
-                                className={s.checkInput}
+                                className={`form-check-input ${s.checkInput} p-0`}
                                 type="checkbox"
                                 id="remember"
-                                name="remember"
+                                name="remember me"
                             />
                             Onthoud mij?
                         </Form.Label>
