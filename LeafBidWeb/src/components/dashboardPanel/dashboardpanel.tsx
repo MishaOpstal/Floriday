@@ -44,17 +44,34 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                 <Card.Body className="d-flex justify-content-between align-items-center py-2">
                     {/* Left side: title + time inline */}
                     <div className="d-flex align-items-center gap-2">
-                        <Card.Title className="mb-0">{kloklocatie}</Card.Title>
-                        <small className="text-muted">{resterendeTijd}</small>
+                        {loading ? (
+                            <>
+                                {/*loading compact card*/}
+                                <Placeholder as={Card.Title} animation="glow">
+                                    <Placeholder xs={4} />
+                                </Placeholder>
+                                <Placeholder as="small" animation="glow">
+                                    <Placeholder xs={3} />
+                                </Placeholder>
+                            </>
+                        ) : (
+                            // standard compact card
+                            <>
+                                <Card.Title className="mb-0">{kloklocatie}</Card.Title>
+                                <small className="text-muted">{resterendeTijd}</small>
+                            </>
+                        )}
                     </div>
 
                     {/* Right side: children */}
                     <div className="d-flex gap-2">
-                        {children}
+                        {loading ? (
+                            <Placeholder.Button variant="secondary" xs={2} />
+                        ) : (
+                            children
+                        )}
                     </div>
                 </Card.Body>
-
-
             </Card>
         );
     }
@@ -94,7 +111,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                         )}
                     </div>
 
-                {/*laadt kaart*/}
+                {/*loading card*/}
                     <div className="flex-fill w-100 w-md-25">
                         {loading ? (
                             <>

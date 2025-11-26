@@ -6,7 +6,6 @@ import ActionButtons from "@/components/smallButton/smallButton";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import { useState, useEffect } from "react";
 
-// Types
 type Auction = {
     id: number;
     startDate: string;
@@ -35,11 +34,14 @@ type Product = {
 
 type PageResponse = {
     auction: Auction;
-    product: Product;
+    products: Product[];
 };
+
+const auctionIdList = [1, 2, 3, 4, 7]; // example IDs
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const handleDelete = () => {
         // TODO : implement delete functionality
@@ -50,27 +52,40 @@ export default function Home() {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchAuctions = async () => {
+            setLoading(true);
             try {
-                const res = await fetch("http://localhost:5001/api/v1/Pages/7");
-                if (!res.ok) throw new Error("Failed to fetch auction+product");
+                const results = await Promise.all(
+                    auctionIdList.map(async (id) => {
+                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
+                        if (!res.ok) return null;
 
-                const data: PageResponse = await res.json();
+                        const data: PageResponse = await res.json();
 
-                // Combineer auction + product in één object
-                const auctionWithProducts: Auction = {
-                    ...data.auction,
-                    products: [data.product],
-                };
+                        return {
+                            ...data.auction,
+                            products: data.products || [],
+                        } as Auction;
+                    })
+                );
 
-                setAuctions([auctionWithProducts]);
+                const filtered = results.filter((a): a is Auction => a !== null);
+                setAuctions(filtered);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to load auctions:", err);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchData();
+        fetchAuctions();
     }, []);
+
+    // Categorize auctions
+    const now = new Date();
+    const current = auctions.filter(a => new Date(a.startDate) <= now);
+    const upcoming = auctions.filter(a => new Date(a.startDate) > now);
+    const past: Auction[] = []; // TODO somehow add past auctions with something like a end date in database
 
     return (
         <>
@@ -78,40 +93,96 @@ export default function Home() {
             <main className={styles.main}>
                 <div className={styles.page}>
                     <h1>Alle veilingen</h1>
+
                     <h2 className={styles.padding}>Huidige veilingen</h2>
-
                     <div className={styles.panels}>
-
+                        {loading ? (
+                            <DashboardPanel
+                                compact
+                                loading
+                                title="Placeholder title"
+                                kloklocatie="Klok X"
+                                resterendeTijd="--:--"
+                                imageSrc="/images/PIPIPOTATO.png"
+                            />
+                        ) : current.length === 0 ? (
+                            <p>Geen huidige veilingen beschikbaar</p>
+                        ) : (
+                            current.map((auction) => {
+                                const product = auction.products[0];
+                                return (
+                                    <DashboardPanel
+                                        key={auction.id}
+                                        compact
+                                        imageSrc={product?.picture ? `http://localhost:5001/uploads/${product.picture}` : "/images/placeholder.png"}
+                                        kloklocatie={`Klok ${auction.clockLocationEnum}`}
+                                        resterendeTijd={new Date(auction.startDate).toLocaleString()}
+                                    >
+                                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                                    </DashboardPanel>
+                                );
+                            })
+                        )}
                     </div>
 
-
-
                     <h2 className={styles.padding}>Aankomende veilingen</h2>
-
                     <div className={styles.panels}>
-
+                        {loading ? (
+                            <DashboardPanel
+                                compact
+                                loading
+                                title="Placeholder title"
+                                kloklocatie="Klok X"
+                                resterendeTijd="--:--"
+                                imageSrc="/images/PIPIPOTATO.png"
+                            />
+                        ) : upcoming.length === 0 ? (
+                            <p>Geen aankomende veilingen beschikbaar</p>
+                        ) : (
+                            upcoming.map((auction) => {
+                                const product = auction.products[0];
+                                return (
+                                    <DashboardPanel
+                                        key={auction.id}
+                                        compact
+                                        imageSrc={product?.picture ? `http://localhost:5001/uploads/${product.picture}` : "/images/placeholder.png"}
+                                        kloklocatie={`Klok ${auction.clockLocationEnum}`}
+                                        resterendeTijd={new Date(auction.startDate).toLocaleString()}
+                                    >
+                                        <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                                    </DashboardPanel>
+                                );
+                            })
+                        )}
                     </div>
 
                     <h2 className={styles.padding}>Afgelopen veilingen</h2>
-
                     <div className={styles.panels}>
-
-
-                    </div>
-                    {auctions.map((auction) => {
-                        const product = auction.products[0];
-                        return (
+                        {loading ? (
                             <DashboardPanel
-                                key={auction.id}
                                 compact
-                                imageSrc={"/images/PIPIPOTATO.png"}
-                                kloklocatie={`Klok ${auction.clockLocationEnum}`}
-                                resterendeTijd={new Date(auction.startDate).toLocaleString()}
-                            >
-                                <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
-                            </DashboardPanel>
-                        );
-                    })}
+                                loading
+                                title="Placeholder title"
+                                kloklocatie="Klok X"
+                                resterendeTijd="--:--"
+                                imageSrc="/images/PIPIPOTATO.png"
+                            />
+                        ) : past.length === 0 ? (
+                            <p>Geen afgelopen veilingen beschikbaar</p>
+                        ) : (
+                            past.map((auction) => (
+                                <DashboardPanel
+                                    key={auction.id}
+                                    compact
+                                    imageSrc={"/images/placeholder.png"}
+                                    kloklocatie={`Klok ${auction.clockLocationEnum}`}
+                                    resterendeTijd={new Date(auction.startDate).toLocaleString()}
+                                >
+                                    <ActionButtons onDelete={handleDelete} onUpdate={handleUpdate} />
+                                </DashboardPanel>
+                            ))
+                        )}
+                    </div>
                 </div>
             </main>
         </>
