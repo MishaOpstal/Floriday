@@ -53,17 +53,6 @@ export default function LoginPage() {
                         <Form.Control className={s.input} type="password" placeholder="Wachtwoord"/>
                     </Form.Label>
 
-                    {/* Remember me */}
-                    <Form.Label className="form-check-label" htmlFor="remember">
-                        <Form.Control
-                            className={s.checkInput}
-                            type="checkbox"
-                            id="remember"
-                            name="remember"
-                        />
-                        Onthoud mij?
-                    </Form.Label>
-
                     {/* Submit */}
                     <Form.Control as={Button} type="submit" value="Registreren" onClick={handleLoginClick}>Registreer</Form.Control>
                 </Form>
