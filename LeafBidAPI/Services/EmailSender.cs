@@ -1,34 +1,30 @@
 ﻿using System.Net;
 using System.Net.Mail;
-using System.Threading.Tasks;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace LeafBidAPI.Services
 {
-    public class EmailSender : IEmailSender<Models.User>
+    public class EmailSender(IOptions<EmailSettings> emailSettings) : IEmailSender<User>
     {
-        private readonly EmailSettings _emailSettings;
+        private readonly EmailSettings _emailSettings = emailSettings.Value;
 
-        public EmailSender(IOptions<EmailSettings> emailSettings)
+        public Task SendConfirmationLinkAsync(User user, string email, string confirmationLink)
         {
-            _emailSettings = emailSettings.Value;
+            return Execute(_emailSettings.Subject,
+                $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>link</a>", email);
         }
 
-        public Task SendConfirmationLinkAsync(Models.User user, string email, string confirmationLink)
+        public Task SendPasswordResetLinkAsync(User user, string email, string resetLink)
         {
-            return Execute(_emailSettings.Subject, $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>link</a>", email);
-        }
-
-        public Task SendPasswordResetLinkAsync(Models.User user, string email, string resetLink)
-        {
-            return Execute(_emailSettings.Subject, $"Please reset your password by clicking this link: <a href='{resetLink}'>link</a>", email);
+            return Execute(_emailSettings.Subject,
+                $"Please reset your password by clicking this link: <a href='{resetLink}'>link</a>", email);
         }
 
         public Task SendPasswordResetCodeAsync(User user, string email, string resetCode)
         {
-            throw new NotImplementedException();
+            return Execute(_emailSettings.Subject, $"Your password reset code is: {resetCode}", email);
         }
 
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -36,7 +32,7 @@ namespace LeafBidAPI.Services
             return Execute(subject, htmlMessage, email);
         }
 
-        public async Task Execute(string subject, string message, string email)
+        private async Task Execute(string subject, string message, string email)
         {
             try
             {
@@ -51,29 +47,27 @@ namespace LeafBidAPI.Services
                 mail.IsBodyHtml = true;
                 mail.Priority = MailPriority.High;
 
-                using (SmtpClient smtp = new SmtpClient(_emailSettings.PrimaryDomain, _emailSettings.PrimaryPort))
-                {
-                    smtp.Credentials = new NetworkCredential(_emailSettings.UsernameEmail, _emailSettings.UsernamePassword);
-                    smtp.EnableSsl = true;
-                    await smtp.SendMailAsync(mail);
-                }
+                using SmtpClient smtp = new(_emailSettings.PrimaryDomain, _emailSettings.PrimaryPort);
+                smtp.Credentials =
+                    new NetworkCredential(_emailSettings.UsernameEmail, _emailSettings.UsernamePassword);
+                smtp.EnableSsl = true;
+                await smtp.SendMailAsync(mail);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                // TODO: Log this exception
-                throw ex;
+                Console.WriteLine("An exception occured whilst sending an email: " + ex.Message);
             }
         }
     }
 
-    public class DummyEmailSender : IEmailSender<Models.User>
+    public class DummyEmailSender : IEmailSender<User>
     {
-        public Task SendConfirmationLinkAsync(Models.User user, string email, string confirmationLink)
+        public Task SendConfirmationLinkAsync(User user, string email, string confirmationLink)
         {
             return Task.CompletedTask;
         }
 
-        public Task SendPasswordResetLinkAsync(Models.User user, string email, string resetLink)
+        public Task SendPasswordResetLinkAsync(User user, string email, string resetLink)
         {
             return Task.CompletedTask;
         }
@@ -91,12 +85,12 @@ namespace LeafBidAPI.Services
 
     public class EmailSettings
     {
-        public string PrimaryDomain { get; set; }
-        public int PrimaryPort { get; set; }
-        public string UsernameEmail { get; set; }
-        public string UsernamePassword { get; set; }
-        public string FromEmail { get; set; }
-        public string ToEmail { get; set; }
-        public string Subject { get; set; }
+        public required string PrimaryDomain { get; init; }
+        public required int PrimaryPort { get; init; }
+        public required string UsernameEmail { get; init; }
+        public required string UsernamePassword { get; init; }
+        public required string FromEmail { get; init; }
+        public required string ToEmail { get; init; }
+        public required string Subject { get; init; }
     }
 }
