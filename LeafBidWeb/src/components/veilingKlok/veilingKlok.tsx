@@ -1,24 +1,30 @@
-﻿import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Zorg dat Bootstrap is geïmporteerd
+﻿// typescript
+import React, { useState, useEffect, useRef } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { parsePrice } from '@/types/Product';
 import s from './veilingKlok.module.css';
 
 interface AuctionTimerProps {
-    onFinished?: () => void; // Optionele callback als de tijd op is
-    startPrice: number; // Beginprijs
-    minPrice: number; // Minimumprijs waarop de klok stopt
+    onFinished?: () => void;
+    startPrice: number;
+    minPrice: number;
 }
 
-const AuctionTimer: React.FC<AuctionTimerProps> = ({
-                                                       // duration = 90,
-                                                       onFinished,
-                                                       startPrice,
-                                                       minPrice
-                                                   }) => {
-    // Start met de startprijs
-    const [currentPrice, setCurrentPrice] = useState<number>(startPrice);
+const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, startPrice, minPrice }) => {
+    const round2 = (v: number) => Math.round(v * 100) / 100;
+    const start = round2(Number(startPrice || 0));
+    const min = round2(Number(minPrice || 0));
 
-    // Helper om seconden als mm:ss te tonen
+    // displayed price (0.01 steps)
+    const [currentPrice, setCurrentPrice] = useState<number>(start);
+    // smooth progress used for the bar (updated each tick)
+    const [percentage, setPercentage] = useState<number>(() => (start > min ? 100 : 0));
+
+    const rawRef = useRef<number>(start); // internal precise price (smooth)
+    const displayedRef = useRef<number>(start); // last shown price
+    const lastTsRef = useRef<number | null>(null);
+    const intervalRef = useRef<number | null>(null);
+
     const formatTime = (totalSeconds: number) => {
         const s = Math.max(0, Math.floor(totalSeconds));
         const m = Math.floor(s / 60);
@@ -27,79 +33,99 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({
     };
 
     useEffect(() => {
-        // Als startPrice al op of onder minPrice is, zet direct naar minPrice
-        if (startPrice <= minPrice) {
-            setCurrentPrice(minPrice);
+        // cleanup any previous interval
+        if (intervalRef.current !== null) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+        rawRef.current = start;
+        displayedRef.current = start;
+        setCurrentPrice(start);
+        lastTsRef.current = null;
+        setPercentage(start > min ? 100 : 0);
+
+        if (start <= min) {
+            setCurrentPrice(round2(min));
             if (onFinished) onFinished();
             return;
         }
 
-        setCurrentPrice(startPrice);
+        const decreasePerSecond = start * 0.05; // currency units per second
+        if (decreasePerSecond <= 0) return;
 
-        // Update elke 100ms voor vloeiende animatie
-        const intervalTime = 100; // ms
-        const decreasePerSecond = startPrice * 0.05; // 5% van startprijs per seconde
-        const decreasePerMs = decreasePerSecond / 1000; // per ms
+        const centStep = 0.01;
+        const tickMs = 50; // consistent short interval (works whether mouse is over page or not)
 
-        const timer = setInterval(() => {
-            setCurrentPrice((prev) => {
-                const newPrice = prev - decreasePerMs * intervalTime;
-                if (newPrice <= minPrice) {
-                    clearInterval(timer);
+        intervalRef.current = window.setInterval(() => {
+            const now = performance.now();
+            if (lastTsRef.current == null) lastTsRef.current = now;
+            const deltaSec = (now - lastTsRef.current) / 1000;
+            lastTsRef.current = now;
+
+            // decrease raw price smoothly
+            rawRef.current = Math.max(min, rawRef.current - decreasePerSecond * deltaSec);
+
+            // update smooth percentage from raw value
+            const rawPct = start > min ? ((rawRef.current - min) / (start - min)) * 100 : 0;
+            const clamped = Number.isFinite(rawPct) ? Math.max(0, Math.min(100, rawPct)) : 0;
+            setPercentage(clamped);
+
+            // If raw has dropped enough, step the displayed price by integer cents
+            const deltaDisplayed = displayedRef.current - rawRef.current;
+            const centsToRemove = Math.floor(deltaDisplayed / centStep);
+            if (centsToRemove > 0) {
+                const newDisplayed = round2(displayedRef.current - centsToRemove * centStep);
+                displayedRef.current = newDisplayed;
+                // ensure we don't go below min
+                if (newDisplayed <= min) {
+                    setCurrentPrice(round2(min));
+                    setPercentage(0);
+                    if (intervalRef.current !== null) {
+                        clearInterval(intervalRef.current);
+                        intervalRef.current = null;
+                    }
                     if (onFinished) onFinished();
-                    return minPrice;
+                    return;
+                } else {
+                    setCurrentPrice(newDisplayed);
                 }
-                return newPrice;
-            });
-        }, intervalTime);
+            }
+        }, tickMs);
 
-        return () => clearInterval(timer);
-    }, [startPrice, minPrice, onFinished]);
+        return () => {
+            if (intervalRef.current !== null) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [start, min, onFinished]);
 
-    // Berekening van het percentage tussen startPrice (100%) en minPrice (0%)
-    let percentage = 0;
-    if (startPrice > minPrice) {
-        percentage = ((currentPrice - minPrice) / (startPrice - minPrice)) * 100;
-        // clamp
-        percentage = Math.max(0, Math.min(100, percentage));
-    }
-
-    // Bereken resterende seconden 1x zodat we het kunnen tonen op een overlay
-    const decreasePerSecond = startPrice * 0.05; // zelfde als timer-logica
     const remainingSeconds =
-        startPrice > minPrice && decreasePerSecond > 0
-            ? (currentPrice - minPrice) / decreasePerSecond
-            : 0;
-
+        start > min && start * 0.05 > 0 ? (currentPrice - min) / (start * 0.05) : 0;
 
     return (
         <div className="container mt-4">
-            <h2>{parsePrice(Math.ceil(currentPrice))} </h2>
+            <h2>{parsePrice(Number(currentPrice.toFixed(2)))} </h2>
 
-            {/* Bootstrap Progress Bar Container */}
             <div className="progress" style={{ height: '30px', position: 'relative' }}>
                 <div
-                    className={`progress-bar progress-bar progress-bar-animated ${s.balkAnimatie}`}
+                    className={`progress-bar progress-bar-animated ${s.balkAnimatie}`}
                     role="progressbar"
                     style={{
                         width: `${percentage}%`,
+                        transition: 'width 0.06s linear',
                     }}
-                    aria-valuenow={percentage}
+                    aria-valuenow={Math.round(percentage * 100) / 100}
                     aria-valuemin={0}
                     aria-valuemax={100}
-                >
-                    {/* Leeg laten zodat de tekst niet meeschuift met de voortgang */}
-                </div>
-                {/* Overlay die altijd gecentreerd in het midden staat */}
-                <div className={s.balkTekst}
-                    aria-hidden
-                >
+                />
+                <div className={s.balkTekst} aria-hidden>
                     {formatTime(remainingSeconds)}
                 </div>
             </div>
 
             <div className="mt-2 text-muted">
-                {currentPrice <= minPrice && "De veiling is gesloten!"}
+                {currentPrice <= min && 'De veiling is gesloten!'}
             </div>
         </div>
     );

@@ -14,7 +14,7 @@
 }
 
 .balkAnimatie{
-    transition: width 1s linear;
+    transition: width 0.6s linear;
     background: var(--accent-soft);
 }
 /*style={{*/
