@@ -32,7 +32,9 @@
     border: 1px solid var(--muted-text);
     background: var(--background);
 }
-
+.input::placeholder {
+    color: var(--muted-text);
+}
 .check {
     display: flex;
     align-items: center;

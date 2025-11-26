@@ -34,7 +34,7 @@ const TextInput: React.FC<TextInputProps> = ({
     );
 
     return (
-        <Form.Group>
+        <Form.Group className="mb-3">
             <Form.Label>{label}</Form.Label>
 
             {prefix || postfix ? (

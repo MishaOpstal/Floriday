@@ -12,9 +12,11 @@
 }
 
 .inputParents {
+    width: 100%;
     display: flex;
     flex-direction: row;
     gap: 0.3rem;
+    margin: 0;
 }
 
 
@@ -23,7 +25,7 @@
     font-size: 0.95rem;
     padding: 0.45rem 0.75rem;
     transition: border-color 0.2s ease;
-    flex: 1;
+    background-color: transparent;
 
     /* Icon appearance */
     appearance: auto;
@@ -31,13 +33,22 @@
     -moz-appearance: auto;    /* Firefox */
 }
 
+.dateControl{
+    flex: 1;
+}
+.timeControl {
+    width: fit-content;
+}
 .formControl:focus {
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     .inputParents {
         flex-direction: column;
+    }
+    .timeControl {
+        width: 100%;
     }
 }

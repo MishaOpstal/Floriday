@@ -26,7 +26,7 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
             const price = isNaN(parsed) || parsed < 0 ? 0 : parsed;
 
             const updated = products.map((p) =>
-                p.id === productId ? { ...p, productPrice: price } : p
+                p.id === productId ? { ...p, maxPrice: price } : p
             );
 
             onChange?.(updated);
@@ -39,8 +39,8 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
             <Table striped bordered hover size="sm" className={s.table}>
                 <thead className={s.header}>
                 <tr>
-                    <th style={{ width: "70%" }}>Productnaam</th>
-                    <th style={{ width: "30%" }}>Prijs (€)</th>
+                    <th style={{ width: "70%" }} className={s.th}>Productnaam</th>
+                    <th style={{ width: "30%" }} className={s.th}>Prijs (€)</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
                                     type="number"
                                     step="0.01"
                                     min="0"
-                                    value={product.minPrice?.toString() ?? ""}
+                                    value={product.maxPrice?.toString() ?? ""}
                                     placeholder="0.00"
                                     onChange={(e) => {
                                         // Allow typing any valid number (still sends numeric to parent)
@@ -78,7 +78,7 @@ const ProductPriceTable: React.FC<ProductPriceTableProps> = ({
                     <tr>
                         <td
                             colSpan={2}
-                            className="text-center text-muted py-3"
+                            className="`text-center text-muted py-3"
                         >
                             Geen producten geselecteerd
                         </td>
