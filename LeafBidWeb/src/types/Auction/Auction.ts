@@ -1,11 +1,11 @@
 import {Product} from "@/types/Product/Product";
 
 export interface Auction {
-    id: number;
+    id?: number;
     startDate: string;
     clockLocationEnum: number;
-    auctioneerId: number;
     products: Product[]; // product(s) zitten hier in
+    userId: string;
 }
 
 export function parseDate(date: Date|string): string {

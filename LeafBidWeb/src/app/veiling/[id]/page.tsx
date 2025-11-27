@@ -3,7 +3,7 @@
 import InfoVeld from "@/components/infoVeldKlein/infoVeldKlein";
 import BigInfoVeld from "@/components/veilingInfo/veilingInfo";
 import Header from "@/components/header/header";
-import VeilingKlok from "@/components/veilingKlok/veilingKlok";
+import AuctionTimer from '@/components/veilingKlok/veilingKlok';
 import s from "./page.module.css";
 import { Product } from "@/types/Product/Product";
 import { Auction } from "@/types/Auction/Auction";
@@ -18,6 +18,8 @@ export default function AuctionPage() {
     const [auction, setAuction] = useState<Auction | null>(null);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+
+
 
     useEffect(() => {
         if (!id) return;
@@ -78,11 +80,33 @@ export default function AuctionPage() {
     const currentProduct = products[0];
     const nextProducts = products.slice(1);
 
+    const maxPrice = currentProduct.maxPrice;
+    const minPrice = currentProduct.minPrice;
+
+    if (!maxPrice || !minPrice) {
+        return (
+            <>
+                <Header returnOption={true}/>
+                <main className={s.main}>
+                    <h2>Prijsinformatie niet beschikbaar</h2>
+                </main>
+            </>
+        );
+    }
+
     return (
         <>
             <Header returnOption={true}/>
             <main className={s.main}>
                 <div className={s.links}>
+                    <div className="App">
+
+                        <AuctionTimer
+                            // duration={90}
+                            maxPrice={maxPrice}
+                            minPrice={minPrice}
+                        />
+                    </div>
                     <h3 className="fw-bold">Volgende Producten:</h3>
 
                     <div className={s.tekstblokken}>

@@ -11,11 +11,12 @@
 }
 
 .clickables {
-    display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 20px;
+    display: flex;
+    flex: 1;
 }
 
 .themeToggle {

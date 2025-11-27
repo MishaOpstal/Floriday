@@ -8,7 +8,7 @@ export default function BigInfoVeld({product}: { product: Product }) {
 
     return (
         <div
-            className={`d-flex flex-column text-black bg-white ${s.wrapper}`}>
+            className={`d-flex flex-column  ${s.wrapper}`}>
             <div className="d-flex flex-row gap-4">
                 <Image
                     src={imageSrc}
@@ -20,13 +20,13 @@ export default function BigInfoVeld({product}: { product: Product }) {
             </div>
             <div className={`d-flex flex-column gap-3 p-3 ${s.tekstcontainer}`}>
                 <h2>{product.name}</h2>
-                <p className="text-muted">Aantal: {product.stock}</p>
-                <p className="text-muted">Start prijs: <span
+                <p>Aantal: {product.stock}</p>
+                <p>Start prijs: <span
                     className="text-decoration-line-through">{product.minPrice}</span>
                 </p>
-                <p className="text-muted">Geoogst: {parseDate(product.harvestedAt ?? "")}</p>
-                <p className="text-muted">Leverancier: {product.providerId}</p>
-                <p className="text-muted">Regio Oorsprong: {product.region}</p>
+                <p>Geoogst: {parseDate(product.harvestedAt ?? "")}</p>
+                <p>Leverancier: {product.providerId}</p>
+                <p>Regio Oorsprong: {product.region}</p>
             </div>
             <Button label="Koop Product" variant="primary" type="button" className={s.knop}/>
         </div>
