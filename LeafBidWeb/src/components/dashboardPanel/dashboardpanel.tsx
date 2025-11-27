@@ -83,7 +83,7 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                 alt={`Foto van ${title}`}
                 className={`${s.image}`}
                 variant="left"
-                src={imageSrc || "/images/PIPIPOTATO.png"}
+                src={imageSrc || "/images/grey.png"}
             />
             <Card.Body className="w-100">
                 <div className="d-flex flex-column flex-md-row gap-3">
