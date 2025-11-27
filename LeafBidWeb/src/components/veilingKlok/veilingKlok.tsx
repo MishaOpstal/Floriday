@@ -104,7 +104,7 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, startPrice, min
         start > min && start * 0.05 > 0 ? (currentPrice - min) / (start * 0.05) : 0;
 
     return (
-        <section className="container mt-4" >
+        <section className="container mt-4" aria-label={"Veiling klok"}>
             <h2>{parsePrice(Number(currentPrice.toFixed(2)))} </h2>
 
             <section className={`progress ${s.progress}`} >
