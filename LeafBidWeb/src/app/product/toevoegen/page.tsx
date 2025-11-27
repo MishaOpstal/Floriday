@@ -105,7 +105,7 @@ export default function ProductForm() {
                         : null,
                 stock: parseInt(formData.stock),
                 harvestedAt: formData.harvestedAt,
-                providerId: 1,
+                userId: "7141ab20-418e-4fe2-be4c-caadc7a45a9f",
             };
 
             const response = await fetch("http://localhost:5001/api/v1/Product", {

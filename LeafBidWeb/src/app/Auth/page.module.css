@@ -32,7 +32,9 @@
     border: 1px solid var(--muted-text);
     background: var(--background);
 }
-
+.input::placeholder {
+    color: var(--muted-text);
+}
 .check {
     display: flex;
     align-items: center;
@@ -45,6 +47,17 @@
     accent-color: var(--primary-hover) !important;
 }
 
+.passwordRow{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+}
+
+.passwordLabel{
+    flex: 1;
+    width: 100%;
+}
 .button {
     display: flex;
     width: 100%;
@@ -61,4 +74,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+@media (max-width: 768px) {
+    .passwordRow{
+        flex-direction: column;
+    }
 }
