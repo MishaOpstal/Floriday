@@ -5,6 +5,7 @@ import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import {useState, useEffect} from "react";
 import {Auction} from "@/types/Auction";
 import {parseClockLocation} from "@/enums/ClockLocation";
+import AuctionTimer from "@/components/veilingKlok/veilingKlok";
 
 
 const auctionIdList = [1, 2, 3, 4];
@@ -51,6 +52,7 @@ export default function Home() {
         fetchAuctions();
     }, []);
 
+
     return (
         <>
             <Header/>
@@ -72,6 +74,8 @@ export default function Home() {
                                 const product = auction.products?.[0];
                                 const nextProduct = auction.products?.[1];
 
+
+
                                 return (
                                     <>
                                         <a key={`auction-${auction.id}`} href={`/veiling/${auction.id}`}>
@@ -87,12 +91,12 @@ export default function Home() {
                                                 aankomendProductStartprijs={nextProduct?.minPrice}
                                             />
                                         </a>
-
                                     </>
                                 );
                             })
                         )}
                     </div>
+
                 </div>
             </main>
         </>
