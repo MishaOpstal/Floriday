@@ -5,8 +5,8 @@ import BigInfoVeld from "@/components/veilingInfo/veilingInfo";
 import Header from "@/components/header/header";
 import VeilingKlok from "@/components/veilingKlok/veilingKlok";
 import s from "./page.module.css";
-import { Product } from "@/types/Product";
-import { Auction } from "@/types/Auction";
+import { Product } from "@/types/Product/Product";
+import { Auction } from "@/types/Auction/Auction";
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";

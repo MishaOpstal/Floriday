@@ -1,5 +1,5 @@
 ﻿import s from './infoVeldKlein.module.css';
-import {parsePrice, Product} from "@/types/Product";
+import {parsePrice, Product} from "@/types/Product/Product";
 import {Image} from "react-bootstrap";
 
 export default function InfoVeld({ product }: { product: Product }) {

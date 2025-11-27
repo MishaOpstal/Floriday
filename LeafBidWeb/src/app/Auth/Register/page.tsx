@@ -11,7 +11,7 @@ import React, {useState} from "react";
 import {Register} from "@/types/User/Register";
 import RegisterFailedException, {isRegisterFailedException} from '@/exceptions/Auth/RegisterFailedException';
 import SearchableDropdown from "@/components/input/SearchableDropdown";
-import {Role} from "@/types/Role";
+import {Role} from "@/types/User/Role";
 import RoleFetchFailedException from "@/exceptions/Auth/RoleFetchFailedException";
 import TextInput from "@/components/input/TextInput";
 import ValidationFailedException, {isValidationFailedException} from "@/exceptions/ValidationFailedException";

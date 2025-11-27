@@ -3,11 +3,11 @@ import styles from './page.module.css';
 import Header from "@/components/header/header";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import {useState, useEffect} from "react";
-import {Auction} from "@/types/Auction";
+import {Auction} from "@/types/Auction/Auction";
 import {parseClockLocation} from "@/enums/ClockLocation";
 
 
-const auctionIdList = [1, 2, 3, 4];
+const auctionIdList = [1002, 2, 3, 4];
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
