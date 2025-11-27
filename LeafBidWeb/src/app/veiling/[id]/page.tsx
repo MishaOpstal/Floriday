@@ -75,21 +75,19 @@ export default function AuctionPage() {
     const currentProduct = products[0];
     const nextProducts = products.slice(1);
 
-    // Determine start and min price defaults (fallbacks)
-// Prefer an explicit startPrice, then minPrice, then maxPrice, then 100
-    const startPrice: number =
-        (currentProduct as { startPrice?: number }).startPrice ??
-        currentProduct.minPrice ??
-        currentProduct.maxPrice ??
-        100;
+    const maxPrice = currentProduct.maxPrice;
+    const minPrice = currentProduct.minPrice;
 
-// Ensure minPrice is numeric and STRICTLY less than startPrice to avoid instant closure
-    const rawMin = currentProduct.minPrice ?? 0;
-    const minPrice: number = (() => {
-        // Clamp between 0 and startPrice - a tiny epsilon (at least 1 unit lower)
-        const upperBound = startPrice > 0 ? startPrice - 1 : 0;
-        return Math.max(0, Math.min(rawMin, upperBound));
-    })();
+    if (!maxPrice || !minPrice) {
+        return (
+            <>
+                <Header returnOption={true}/>
+                <main className={s.main}>
+                    <h2>Prijsinformatie niet beschikbaar</h2>
+                </main>
+            </>
+        );
+    }
 
     return (
         <>
@@ -97,11 +95,11 @@ export default function AuctionPage() {
             <main className={s.main}>
                 <div className={s.links}>
                     <div className="App">
+
                         <AuctionTimer
                             // duration={90}
-                            startPrice={startPrice}
-                            minPrice={minPrice }
-                            onFinished={() => alert("De veiling is gesloten!")}
+                            maxPrice={maxPrice}
+                            minPrice={minPrice}
                         />
                     </div>
                     <h3 className="fw-bold">Volgende Producten:</h3>

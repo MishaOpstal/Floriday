@@ -98,7 +98,7 @@ export default function Home() {
                             })
                         )}
                     </div>
-                    <AuctionTimer startPrice={20.99} minPrice={5.99}></AuctionTimer>
+
                 </div>
             </main>
         </>

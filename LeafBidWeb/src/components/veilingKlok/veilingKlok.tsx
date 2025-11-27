@@ -6,13 +6,13 @@ import s from './veilingKlok.module.css';
 
 interface AuctionTimerProps {
     onFinished?: () => void;
-    startPrice: number;
+    maxPrice: number;
     minPrice: number;
 }
 
-const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, startPrice, minPrice }) => {
+const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, maxPrice, minPrice }) => {
     const round2 = (v: number) => Math.round(v * 100) / 100;
-    const start = round2(Number(startPrice || 0));
+    const start = round2(Number(maxPrice || 0));
     const min = round2(Number(minPrice || 0));
 
     // displayed price (0.01 steps)
@@ -123,7 +123,7 @@ const AuctionTimer: React.FC<AuctionTimerProps> = ({ onFinished, startPrice, min
                 </section>
             </section>
 
-            <section className="mt-2 text-muted">
+            <section className="mt-2">
                 {currentPrice <= min && 'De veiling is gesloten!'}
             </section>
         </section>
