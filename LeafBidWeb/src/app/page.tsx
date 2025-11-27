@@ -3,7 +3,7 @@ import styles from './page.module.css';
 import Header from "@/components/header/header";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import {useState, useEffect} from "react";
-import {Auction} from "@/types/Auction";
+import {Auction} from "@/types/Auction/Auction";
 import {parseClockLocation} from "@/enums/ClockLocation";
 
 
@@ -22,7 +22,10 @@ export default function Home() {
                 // Fetch all auctions in parallel
                 const results = await Promise.all(
                     auctionIdList.map(async (id) => {
-                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
+                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
+                            method: "GET",
+                            credentials: "include",
+                        });
                         if (!res.ok) return null;
 
                         const data = await res.json();

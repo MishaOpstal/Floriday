@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Table, Form } from "react-bootstrap";
-import { Product } from "@/types/Product";
+import { Product } from "@/types/Product/Product";
 import s from "./ProductPriceTable.module.css";
 
 interface ProductPriceTableProps {

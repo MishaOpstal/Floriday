@@ -5,8 +5,8 @@ import ToevoegenLayout from "@/app/layouts/toevoegen/layout";
 
 import Form from "react-bootstrap/Form";
 import OrderedMultiSelect from "@/components/input/OrderedMultiSelect";
-import { Product } from "@/types/Product";
-import { Locatie } from "@/types/Locatie";
+import { Product } from "@/types/Product/Product";
+import { Locatie } from "@/types/Auction/Locatie";
 import React, { useState } from "react";
 import DateSelect from "@/components/input/DateSelect";
 import SearchableDropdown from "@/components/input/SearchableDropdown";
