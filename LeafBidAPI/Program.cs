@@ -29,7 +29,9 @@ public class Program
                 {
                     policy.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        // Needed to allow the browser to send/receive the refresh-token cookie
+                        .AllowCredentials();
                 });
         });
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -66,16 +68,36 @@ public class Program
         // 2. Add Authentication WITH REQUIRED AddBearerToken()
         builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-                options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+                options.DefaultScheme = "Smart";
+                options.DefaultChallengeScheme = "Smart";
             })
-            .AddBearerToken(IdentityConstants.BearerScheme,
-                options =>
+            .AddPolicyScheme("Smart", "Bearer or Cookie", options =>
+            {
+                options.ForwardDefaultSelector = ctx =>
+                    ctx.Request.Headers.ContainsKey("Authorization")
+                        ? IdentityConstants.BearerScheme
+                        : IdentityConstants.ApplicationScheme;
+            })
+            .AddBearerToken(IdentityConstants.BearerScheme, options =>
+            {
+                options.BearerTokenExpiration =
+                    TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
+            })
+            .AddCookie(IdentityConstants.ApplicationScheme, options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // requires HTTPS
+                options.Events.OnRedirectToLogin = ctx =>
                 {
-                    options.BearerTokenExpiration =
-                        TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
-                })
-            .AddCookie(IdentityConstants.ApplicationScheme);
+                    ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
+                options.Events.OnRedirectToAccessDenied = ctx =>
+                {
+                    ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    return Task.CompletedTask;
+                };
+            });
 
 
         builder.Services.AddScoped<RoleManager<IdentityRole>>();
@@ -173,14 +195,17 @@ public class Program
             app.UseHttpsRedirection();
         }
 
-        app.UseAuthentication();
-        app.MapIdentityApi<User>();
-        app.UseRouting();
-        app.UseAuthorization();
-        app.MapControllers();
-        app.UseStaticFiles();
+        // CORS must be applied early so preflight/credentialed requests succeed
         app.UseCors(allowedOrigins);
 
+        app.UseRouting();
+        app.UseCors(allowedOrigins);
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapIdentityApi<User>(); // if this registers endpoints, keep it after UseRouting
+        app.MapControllers();
+        app.UseStaticFiles();
+        
         app.Run();
     }
 }

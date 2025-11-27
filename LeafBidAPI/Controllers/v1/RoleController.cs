@@ -22,6 +22,22 @@ public class RoleController(ApplicationDbContext context, UserManager<User> user
     {
         return await Context.Roles.ToListAsync();
     }
+    
+    /// <summary>
+    /// Check whether a user has a given role.
+    /// </summary>
+    [HttpGet("{id}/{roleName}")]
+    public async Task<bool> GetUserHasRole(string id, string roleName)
+    {
+        User? user = await userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return false;
+        }
+        
+        IList<string> roles = await userManager.GetRolesAsync(user);
+        return roles.Contains(roleName);
+    }
 
     /// <summary>
     /// Get all users associated with a given role.

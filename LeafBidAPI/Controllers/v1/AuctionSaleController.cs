@@ -9,6 +9,7 @@ namespace LeafBidAPI.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
+[AllowAnonymous]
 public class AuctionSaleController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>

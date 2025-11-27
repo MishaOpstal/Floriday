@@ -1,3 +1,5 @@
+using LeafBidAPI.Enums;
+
 namespace LeafBidAPI.DTOs.Auction;
 
 public class CreateAuctionDto
@@ -6,6 +8,8 @@ public class CreateAuctionDto
     /// Data required to create a new auction
     /// </summary>
 
-    public required decimal Amount { get; set; }
-    public required int ClockLocationEnum { get; set; }
+    public required DateTime StartDate { get; set; }
+    public required ClockLocationEnum ClockLocationEnum { get; set; }
+    public required Models.Product[] Products { get; set; }
+    public required string UserId { get; set; }
 }

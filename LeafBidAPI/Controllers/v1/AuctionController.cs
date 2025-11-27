@@ -1,6 +1,8 @@
 ﻿using LeafBidAPI.Data;
+using LeafBidAPI.DTOs.Auction;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +11,8 @@ namespace LeafBidAPI.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
-public class AuctionController(ApplicationDbContext context) : BaseController(context)
+[AllowAnonymous]
+public class AuctionController(ApplicationDbContext context, UserManager<User> userManager) : BaseController(context)
 {
     /// <summary>
     /// Get all auctions
@@ -40,9 +43,43 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// </summary>
     [HttpPost]
     [Authorize(Roles = "Auctioneer")]
-    public async Task<ActionResult<Auction>> CreateAuction(Auction auction)
+    public async Task<ActionResult<Auction>> CreateAuction(CreateAuctionDto auctionData)
     {
+        // Check if UserId has role
+        RoleController roleController = new (context, userManager);
+        bool userHasPermission = await roleController.GetUserHasRole(auctionData.UserId, "Auctioneer");
+        if (!userHasPermission)
+        {
+            throw new Exception("User does not have permission to create an auction.");
+        }
+        
+        // Check if products don't already belong to an existing auction
+        foreach (Product product in auctionData.Products)
+        {
+            if (product.AuctionId != null)
+            {
+                throw new Exception("Product already belongs to an existing auction.");
+            }
+        }
+
+        Auction auction = new()
+        {
+            UserId = auctionData.UserId,
+            ClockLocationEnum = auctionData.ClockLocationEnum,
+            StartDate = auctionData.StartDate
+        };
+            
         Context.Auctions.Add(auction);
+        await Context.SaveChangesAsync();
+        
+        // Add the Products to the auction
+        foreach (Product product in auctionData.Products)
+        {
+            product.AuctionId = auction.Id;
+        }
+        
+        // Update the products in db
+        Context.Products.UpdateRange(auctionData.Products);
         await Context.SaveChangesAsync();
 
         return new JsonResult(auction) { StatusCode = 201 };

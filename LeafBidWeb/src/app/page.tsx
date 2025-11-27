@@ -7,7 +7,7 @@ import {Auction} from "@/types/Auction/Auction";
 import {parseClockLocation} from "@/enums/ClockLocation";
 
 
-const auctionIdList = [1, 2, 3, 4];
+const auctionIdList = [1, 2, 3, 4, 1002];
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -24,6 +24,9 @@ export default function Home() {
                     auctionIdList.map(async (id) => {
                         const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
                             method: "GET",
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("bearerToken")}`,
+                            },
                             credentials: "include",
                         });
                         if (!res.ok) return null;

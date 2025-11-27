@@ -13,6 +13,7 @@ namespace LeafBidAPI.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
+[AllowAnonymous]
 public class ProductController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -22,6 +23,15 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     public async Task<ActionResult<List<Product>>> GetProducts()
     {
         return await Context.Products.ToListAsync();
+    }
+
+    /// <summary>
+    /// Get all available products
+    /// </summary>
+    [HttpGet("available")]
+    public async Task<ActionResult<List<Product>>> GetAvailableProducts()
+    {
+        return await Context.Products.Where(p => p.AuctionId == null).ToListAsync();
     }
 
     /// <summary>
