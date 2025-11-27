@@ -44,34 +44,51 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                 <Card.Body className="d-flex justify-content-between align-items-center py-2">
                     {/* Left side: title + time inline */}
                     <div className="d-flex align-items-center gap-2">
-                        <Card.Title className="mb-0">{kloklocatie}</Card.Title>
-                        <small className="text-muted">{resterendeTijd}</small>
+                        {loading ? (
+                            <>
+                                {/*loading compact card*/}
+                                <Placeholder as={Card.Title} animation="glow">
+                                    <Placeholder xs={4} />
+                                </Placeholder>
+                                <Placeholder as="small" animation="glow">
+                                    <Placeholder xs={3} />
+                                </Placeholder>
+                            </>
+                        ) : (
+                            // standard compact card
+                            <>
+                                <Card.Title className="mb-0">{kloklocatie}</Card.Title>
+                                <small className="text-muted">{resterendeTijd}</small>
+                            </>
+                        )}
                     </div>
 
                     {/* Right side: children */}
                     <div className="d-flex gap-2">
-                        {children}
+                        {loading ? (
+                            <Placeholder.Button variant="secondary" xs={2} />
+                        ) : (
+                            children
+                        )}
                     </div>
                 </Card.Body>
-
-
             </Card>
         );
     }
 
 // Standaard kaart
     return (
-        <Card className={`d-flex flex-row ${s.card}`}>
+        <Card className={`d-flex flex-column flex-md-row ${s.card}`}>
             <Card.Img
                 alt={`Foto van ${title}`}
-                className={`w-25 ${s.image}`}
+                className={`${s.image}`}
                 variant="left"
-                src={imageSrc || "/images/PIPIPOTATO.png"}
+                src={imageSrc || "/images/grey.png"}
             />
             <Card.Body className="w-100">
-                <div className="d-flex gap-3">
+                <div className="d-flex flex-column flex-md-row gap-3">
                     {/* First block */}
-                    <div className="flex-fill w-75">
+                    <div className="flex-fill w-100 w-md-75">
                         {loading ? (
                             <>
                                 <Placeholder as={Card.Title} animation="glow">
@@ -94,8 +111,8 @@ const DashboardPanel: React.FC<DashboardPanelProps> = ({title, kloklocatie, imag
                         )}
                     </div>
 
-                {/*laadt kaart*/}
-                    <div className="flex-fill w-25">
+                {/*loading card*/}
+                    <div className="flex-fill w-100 w-md-25">
                         {loading ? (
                             <>
                                 <Placeholder as={Card.Title} animation="glow">

@@ -62,10 +62,8 @@ export default function Home() {
                         {loading ? (
                             <>
                                 <DashboardPanel loading={true} title="Laden..."/>
-                                <DashboardPanel loading={true}
-                                                title="Laden..."/>
-                                <DashboardPanel
-                                    loading={true} title="Laden..."/>
+                                <DashboardPanel loading={true} title="Laden..."/>
+                                <DashboardPanel loading={true} title="Laden..."/>
                                 <DashboardPanel loading={true} title="Laden..."/></>
                         ) : auctions.length === 0 ? (
                             <DashboardPanel loading={true} title="Geen veilingen beschikbaar"/>
