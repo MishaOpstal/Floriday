@@ -12,9 +12,9 @@ export default function InfoVeld({ product }: { product: Product }) {
                 alt={product.name}
                 className={`img-fluid ${s.image}`}
             />
-            <div className="d-flex flex-column justify-content-center ps-3 gap-2">
+            <div className={`d-flex flex-column justify-content-center ps-3 gap-2 ${s.omschrijving}`}>
                 <h4 className="fw-bold">{product.name}</h4>
-                <p className="text-muted">{parsePrice(product.minPrice ?? 0)}</p>
+                <p>{parsePrice(product.minPrice ?? 0)}</p>
             </div>
         </div>
     );
