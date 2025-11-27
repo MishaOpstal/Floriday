@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import OrderedMultiSelect from "@/components/input/OrderedMultiSelect";
 import { Product } from "@/types/Product/Product";
 import { Locatie } from "@/types/Auction/Locatie";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import DateSelect from "@/components/input/DateSelect";
 import SearchableDropdown from "@/components/input/SearchableDropdown";
 import Button from "@/components/input/Button";
