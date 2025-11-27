@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using System.Net;
-using LeafBidAPI.Data;
+﻿using LeafBidAPI.Data;
 using LeafBidAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
@@ -13,6 +12,7 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
+[Authorize]
 public class ProductController(ApplicationDbContext context) : BaseController(context)
 {
     /// <summary>
@@ -38,7 +38,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
 
         return product;
     }
-    
+
     /// <summary>
     /// get a product by AuctionId
     /// </summary>
@@ -46,7 +46,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     public async Task<ActionResult<Product>> GetProductByAuctionId(int auctionId)
     {
         var product = await Context.Products.FirstOrDefaultAsync(p => p.AuctionId == auctionId);
-        if (product ==  null)
+        if (product == null)
         {
             return NotFound();
         }
@@ -58,6 +58,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Create a new product
     /// </summary>
     [HttpPost]
+    [Authorize(Roles = "Provider")]
     public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
     {
         if (!string.IsNullOrEmpty(product.Picture) && product.Picture.StartsWith("data:image"))
@@ -121,10 +122,11 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Update an existing product
     /// </summary>
     [HttpPut("{id:int}")]
+    [Authorize(Roles = "Provider")]
     public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
     {
         var product = await GetProduct(id);
-        if (product.Value == null) 
+        if (product.Value == null)
         {
             return NotFound();
         }
@@ -140,20 +142,22 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         {
             product.Value.PotSize = updatedProduct.PotSize;
             updatedProduct.StemLength = null;
-        } else if (updatedProduct.StemLength.HasValue)
+        }
+        else if (updatedProduct.StemLength.HasValue)
         {
             product.Value.StemLength = updatedProduct.StemLength;
-            updatedProduct.PotSize = null;       
+            updatedProduct.PotSize = null;
         }
-        
+
         await Context.SaveChangesAsync();
         return new JsonResult(product.Value);
     }
-    
+
     /// <summary>
     /// Delete a product by ID.
     /// </summary>
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = "Provider")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await GetProduct(id);

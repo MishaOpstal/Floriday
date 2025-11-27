@@ -60,7 +60,6 @@ export default function Home() {
 
     const handlePriceUpdate = (updated: Product[]) => {
         setSelectedProducts(updated);
-        console.log("Updated prices:", updated);
     };
 
     return (
@@ -71,17 +70,14 @@ export default function Home() {
                         <h1 className={s.h1}>Veiling Aanmaken</h1>
 
                         {/* Date picker */}
-                        <div className="mb-3">
                             <Form.Label>Startdatum en tijd</Form.Label>
                             <DateSelect
                                 placeholder="Selecteer startdatum"
                                 onSelect={setSelectedDate}
                                 useTime={true} label={""}                            />
-                        </div>
 
                         {/* Location dropdown */}
-                        <div className="mb-3">
-                            <Form.Label>Locatie</Form.Label>
+                            <Form.Label>Locatie
                             <SearchableDropdown
                                 label="Selecteer locatie"
                                 items={locaties}
@@ -89,8 +85,7 @@ export default function Home() {
                                 valueKey="locatieId"
                                 onSelect={(loc) => setSelectedLocatie(loc.locatieNaam)}
                                 placeholder="Zoek locatie..."
-                            />
-                        </div>
+                            /></Form.Label>
 
                         <ProductPriceTable
                             products={selectedProducts}

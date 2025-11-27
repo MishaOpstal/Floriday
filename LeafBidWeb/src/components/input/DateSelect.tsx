@@ -48,32 +48,26 @@ const DateSelect: React.FC<DateSelectProps> = ({
     }, [date, time, delay, onSelect, useTime]);
 
     return (
-        <div className={`mb-3 ${s.inputGroup}`}>
-            <Form.Label>
+            <Form.Label className="mb-3">
                 {label}
-            <Row className="g-2">
-                <Col xs={useTime ? 7 : 12}>
+            <Row className={s.inputParents}>
                     <Form.Control
                         type="date"
                         value={date}
                         placeholder={placeholder}
                         onChange={(e) => setDate(e.target.value)}
-                        className={s.formControl}
+                        className={`${s.formControl} ${s.dateControl}`}
                     />
-                </Col>
                 {useTime && (
-                    <Col xs={5}>
                         <Form.Control
                             type="time"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
-                            className={s.formControl}
+                            className={`${s.formControl} ${s.timeControl}`}
                         />
-                    </Col>
                 )}
             </Row>
             </Form.Label>
-        </div>
     );
 };
 

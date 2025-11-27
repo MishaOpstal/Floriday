@@ -39,7 +39,7 @@ const SelectableButtonGroup: React.FC<SelectableButtonGroupProps> = ({
     }, [selected]);
 
     return (
-        <ButtonGroup aria-label={`${name} options`}>
+        <ButtonGroup aria-label={`${name} options`} className="mb-3">
             {options.map((option) => (
                 <Button
                     key={option}
