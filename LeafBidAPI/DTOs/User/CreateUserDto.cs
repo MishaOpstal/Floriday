@@ -9,4 +9,6 @@ public class CreateUserDto
     public required string UserName { get; set; }
     public required string Email { get; set; }
     public required string Password { get; set; }
+    public required string PasswordConfirmation { get; set; }
+    public string[]? Roles { get; set; }
 }

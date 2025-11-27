@@ -39,7 +39,7 @@ public class AuctionController(ApplicationDbContext context) : BaseController(co
     /// Create a new auction
     /// </summary>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = "Identity.Bearer", Roles = "Auctioneer")]
+    [Authorize(Roles = "Auctioneer")]
     public async Task<ActionResult<Auction>> CreateAuction(Auction auction)
     {
         Context.Auctions.Add(auction);

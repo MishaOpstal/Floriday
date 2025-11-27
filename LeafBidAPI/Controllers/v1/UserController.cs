@@ -54,12 +54,24 @@ public class UserController(
                 UserName = userData.UserName,
                 Email = userData.Email,
             };
+            
+            // Check if passwords match
+            if (userData.Password != userData.PasswordConfirmation)
+            {
+                return BadRequest("Passwords do not match.");
+            }
 
             IdentityResult result = await userManager.CreateAsync(user, userData.Password);
+            
+            // If roles are provided assign them
+            if (userData.Roles != null && !Array.Empty<string>().Equals(userData.Roles))
+            {
+                result = await userManager.AddToRolesAsync(user, userData.Roles);
+            }
 
             if (!result.Succeeded)
             {
-                return BadRequest("Something went wrong, please try again.");
+                return BadRequest(result.Errors);
             }
         }
         catch (Exception ex)
