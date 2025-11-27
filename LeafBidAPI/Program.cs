@@ -1,6 +1,9 @@
 using System.Reflection;
 using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
+using LeafBidAPI.Models;
+using LeafBidAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -35,16 +38,56 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddRouting();
         builder.Services.AddHttpClient();
-        
-        //TODO: Misha uncomment dit als jij het goed vindt, deze code is direct overgenomen vanuit Brightspace
-        /*
-         builder.Services.AddIdendity<User, IdentityRole>()
+
+        builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
+        builder.Services.AddIdentityCore<User>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
+
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                options.User.AllowedUserNameCharacters =
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+            })
             .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
-            
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders();
+
+        // 2. Add Authentication WITH REQUIRED AddBearerToken()
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+                options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+            })
+            .AddBearerToken(IdentityConstants.BearerScheme,
+                options =>
+                {
+                    options.BearerTokenExpiration =
+                        TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
+                })
+            .AddCookie(IdentityConstants.ApplicationScheme);
+
+
         builder.Services.AddScoped<RoleManager<IdentityRole>>();
-        builder.services.AddTransient<IEmailSender<User>, DummyEmailSender>();
-         */
+
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddTransient<IEmailSender<User>, DummyEmailSender>();
+        }
+        else
+        {
+            builder.Services.AddTransient<IEmailSender<User>, EmailSender>();
+        }
 
         // Set-up versioning
         builder.Services.AddApiVersioning(options =>
@@ -61,7 +104,7 @@ public class Program
             options.SubstituteApiVersionInUrl = true;
         });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
@@ -69,9 +112,7 @@ public class Program
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             c.SchemaFilter<EnumSchemaFilter>();
-            
-            //TODO: Misha, dit is ook wel belangrijk eigenlijk, dit is de auth
-            /*
+
             //security definitie toevoegen
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -81,7 +122,7 @@ public class Program
                 Type = SecuritySchemeType.Http,
                 Scheme = "Bearer"
             });
-            
+
             // security requierment toevoegen
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -98,12 +139,9 @@ public class Program
                             Type = ReferenceType.SecurityScheme
                         }
                     },
-                new List<string>()
+                    new List<string>()
                 }
-
             });
-            */
-            
         });
 
         var app = builder.Build();
@@ -115,20 +153,34 @@ public class Program
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI v1"));
         }
 
+        //Role seeding
+        using (var scope = app.Services.CreateScope())
+        {
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            string[] roles = ["Buyer", "Provider", "Auctioneer"];
+            foreach (var role in roles)
+            {
+                if (!roleManager.RoleExistsAsync(role).Result)
+                {
+                    roleManager.CreateAsync(new IdentityRole(role)).Wait();
+                }
+            }
+        }
+
         // Configure HTTPS if not in development
         if (!app.Environment.IsDevelopment())
         {
             app.UseHttpsRedirection();
         }
-        
-        //app.UseAuthentication();
-        app.UseAuthorization();
-        //app.MapIdentityApi<[NaamVanIdentityKlasse]>();
+
+        app.UseAuthentication();
+        app.MapIdentityApi<User>();
         app.UseRouting();
+        app.UseAuthorization();
         app.MapControllers();
         app.UseStaticFiles();
         app.UseCors(allowedOrigins);
-        
+
         app.Run();
     }
 }

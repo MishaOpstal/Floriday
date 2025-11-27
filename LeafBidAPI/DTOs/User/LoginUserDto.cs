@@ -1,11 +1,12 @@
 namespace LeafBidAPI.DTOs.User;
 
-public class UpdateUserDto
+public class LoginUserDto
 {
     /// <summary>
-    /// Data required to update a user
+    /// Data required to login a user
     /// </summary>
-    public string? UserName { get; set; }
+    
     public string? Email { get; set; }
     public string? Password { get; set; }
+    public bool Remember { get; set; } = false;
 }

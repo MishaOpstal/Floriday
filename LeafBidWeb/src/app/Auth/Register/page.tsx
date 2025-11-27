@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import s from './page.module.css';
+import s from '../page.module.css';
 import "bootstrap/dist/css/bootstrap-grid.min.css"
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -51,17 +51,6 @@ export default function LoginPage() {
                     {/* Password */}
                     <Form.Label htmlFor="password" className="form-label">
                         <Form.Control className={s.input} type="password" placeholder="Wachtwoord"/>
-                    </Form.Label>
-
-                    {/* Remember me */}
-                    <Form.Label className="form-check-label" htmlFor="remember">
-                        <Form.Control
-                            className={s.checkInput}
-                            type="checkbox"
-                            id="remember"
-                            name="remember"
-                        />
-                        Onthoud mij?
                     </Form.Label>
 
                     {/* Submit */}
