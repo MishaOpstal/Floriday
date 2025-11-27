@@ -1,5 +1,5 @@
 ﻿import s from '@/components/veilingInfo/velinginfo.module.css';
-import {parseDate, Product} from "@/types/Product";
+import {parseDate, Product} from "@/types/Product/Product";
 import {Image} from "react-bootstrap";
 import Button from "@/components/input/Button";
 
