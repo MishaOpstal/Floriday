@@ -45,20 +45,11 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
     [Authorize(Roles = "Auctioneer")]
     public async Task<ActionResult<Auction>> CreateAuction(CreateAuctionDto auctionData)
     {
-        // Check if UserId has role
-        RoleController roleController = new (context, userManager);
-        bool userHasPermission = await roleController.GetUserHasRole(auctionData.UserId, "Auctioneer");
-        if (!userHasPermission)
-        {
-            throw new Exception("User does not have permission to create an auction.");
-        }
-        
-        // Check if products don't already belong to an existing auction
         foreach (Product product in auctionData.Products)
         {
             if (product.AuctionId != null)
             {
-                throw new Exception("Product already belongs to an existing auction.");
+                return BadRequest("Product already belongs to an existing auction.");
             }
         }
 
