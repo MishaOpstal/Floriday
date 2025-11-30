@@ -1,0 +1,15 @@
+﻿namespace LeafBidAPI.DTOs.User;
+
+public class UserResponse
+{
+    public required DateTime LastLogin { get; set; }
+    public required string Id { get; set; }
+    public required string UserName { get; set; }
+    public required string NormalizedUserName { get; set; }
+    public required string Email { get; set; }
+    public required string NormalizedEmail { get; set; }
+    public required bool EmailConfirmed { get; set; }
+    public required DateTime? LockoutEnd { get; set; }
+    public required bool LockoutEnabled { get; set; }
+    public required int AccessFailedCount { get; set; }
+}

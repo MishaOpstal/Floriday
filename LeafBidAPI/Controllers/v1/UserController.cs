@@ -122,6 +122,45 @@ public class UserController(
     }
 
     /// <summary>
+    /// Retrieve current user data
+    /// </summary>
+    [HttpGet("me")]
+    [AllowAnonymous]
+    public async Task<ActionResult> LoggedInUser()
+    {
+        // Get the currently authorized user
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized(new GetLoggedInUserDto
+            {
+                LoggedIn = false,
+                UserData = null
+            });
+        }
+
+        var dto = new GetLoggedInUserDto
+        {
+            LoggedIn = true,
+            UserData = new UserResponse
+            {
+                LastLogin = user.LastLogin ?? DateTime.MinValue,
+                Id = user.Id,
+                UserName = user.UserName ?? "",
+                NormalizedUserName = user.NormalizedUserName ?? "",
+                Email = user.Email ?? "",
+                NormalizedEmail = user.NormalizedEmail ?? "",
+                EmailConfirmed = user.EmailConfirmed,
+                LockoutEnd = user.LockoutEnd?.UtcDateTime,
+                LockoutEnabled = user.LockoutEnabled,
+                AccessFailedCount = user.AccessFailedCount
+            }
+        };
+
+        return new JsonResult(dto);
+    }
+
+    /// <summary>
     /// Update an existing user by ID.
     /// </summary>
     [HttpPut("{id}")]

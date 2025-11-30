@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AuthBootstrapper from "@/app/auth/utils/AuthBootstrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -72,7 +71,6 @@ export default function RootLayout({
               rel="stylesheet"/>
     </head>
     <body className={`${geistSans.variable} ${geistMono.variable}`}>
-    <AuthBootstrapper />
     {children}
     </body>
     </html>

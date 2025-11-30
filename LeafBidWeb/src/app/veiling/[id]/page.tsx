@@ -28,9 +28,7 @@ export default function AuctionPage() {
             try {
                 const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
                     method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("bearerToken")}`,
-                    },
+                    credentials: "include",
                 });
                 if (!res.ok) throw new Error("Failed to fetch auction");
 

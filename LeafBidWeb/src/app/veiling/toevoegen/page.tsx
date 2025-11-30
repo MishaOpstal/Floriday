@@ -37,7 +37,10 @@ export default function Home() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetch("http://localhost:5001/api/v1/Product/available");
+                const res = await fetch("http://localhost:5001/api/v1/Product/available", {
+                    method: "GET",
+                    credentials: "include",
+                });
                 if (!res.ok) throw new Error("Failed to fetch products");
                 const data: Product[] = await res.json();
                 setProducts(data);
