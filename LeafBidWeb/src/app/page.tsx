@@ -8,7 +8,7 @@ import {parseClockLocation} from "@/enums/ClockLocation";
 import AuctionTimer from "@/components/veilingKlok/veilingKlok";
 
 
-const auctionIdList = [1002, 2, 3, 4];
+const auctionIdList = [2002, 2, 3, 4];
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -23,7 +23,10 @@ export default function Home() {
                 // Fetch all auctions in parallel
                 const results = await Promise.all(
                     auctionIdList.map(async (id) => {
-                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
+                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
+                            method: "GET",
+                            credentials: "include",
+                        });
                         if (!res.ok) return null;
 
                         const data = await res.json();
@@ -52,7 +55,6 @@ export default function Home() {
         fetchAuctions();
     }, []);
 
-
     return (
         <>
             <Header/>
@@ -74,8 +76,6 @@ export default function Home() {
                                 const product = auction.products?.[0];
                                 const nextProduct = auction.products?.[1];
 
-
-
                                 return (
                                     <>
                                         <a key={`auction-${auction.id}`} href={`/veiling/${auction.id}`}>
@@ -96,7 +96,6 @@ export default function Home() {
                             })
                         )}
                     </div>
-
                 </div>
             </main>
         </>

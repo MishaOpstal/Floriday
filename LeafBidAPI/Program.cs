@@ -3,6 +3,7 @@ using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
 using LeafBidAPI.Models;
 using LeafBidAPI.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,10 @@ public class Program
         });
 
         // Add services to the container.
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/app/dpkeys"))
+            .SetApplicationName("LeafBidAPI");
+        
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: allowedOrigins,
@@ -29,7 +34,9 @@ public class Program
                 {
                     policy.WithOrigins("http://localhost:3000")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        // Needed to allow the browser to send/receive the refresh-token cookie
+                        .AllowCredentials();
                 });
         });
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -63,20 +70,45 @@ public class Program
             .AddSignInManager()
             .AddDefaultTokenProviders();
 
-        // 2. Add Authentication WITH REQUIRED AddBearerToken()
-        builder.Services.AddAuthentication(options =>
+        // Add Authentication (Bearer OR Identity.Application cookie)
+        builder.Services
+            .AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-                options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+                options.DefaultScheme = "Smart";
+                options.DefaultChallengeScheme = "Smart";
             })
-            .AddBearerToken(IdentityConstants.BearerScheme,
-                options =>
+            .AddPolicyScheme("Smart", "Bearer or Cookie", options =>
+            {
+                options.ForwardDefaultSelector = ctx =>
+                    ctx.Request.Headers.ContainsKey("Authorization")
+                        ? IdentityConstants.BearerScheme
+                        : IdentityConstants.ApplicationScheme; // <-- Identity.Application
+            })
+            .AddBearerToken(IdentityConstants.BearerScheme, options =>
+            {
+                options.BearerTokenExpiration =
+                    TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
+            })
+            .AddIdentityCookies(identityCookies =>
+            {
+                identityCookies.ApplicationCookie?.Configure(options =>
                 {
-                    options.BearerTokenExpiration =
-                        TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
-                })
-            .AddCookie(IdentityConstants.ApplicationScheme);
+                    // Make it explicitly match what the browser sends:
+                    options.Cookie.Name = ".AspNetCore.Identity.Application";
 
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+
+                    // IMPORTANT: SecurePolicy.Always will NOT work on http://localhost
+                    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+                        ? CookieSecurePolicy.SameAsRequest
+                        : CookieSecurePolicy.Always;
+
+                    options.Events.OnRedirectToLogin = ctx
+                        => Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status401Unauthorized);
+                    options.Events.OnRedirectToAccessDenied = ctx
+                        => Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status403Forbidden);
+                });
+            });
 
         builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
@@ -173,14 +205,16 @@ public class Program
             app.UseHttpsRedirection();
         }
 
-        app.UseAuthentication();
-        app.MapIdentityApi<User>();
         app.UseRouting();
+        app.UseCors(allowedOrigins);
+        
+        app.UseAuthentication();
         app.UseAuthorization();
+
+        app.MapIdentityApi<User>();
         app.MapControllers();
         app.UseStaticFiles();
-        app.UseCors(allowedOrigins);
-
+        
         app.Run();
     }
 }

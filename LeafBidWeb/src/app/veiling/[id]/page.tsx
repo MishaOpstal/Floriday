@@ -26,7 +26,10 @@ export default function AuctionPage() {
 
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`);
+                const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
+                    method: "GET",
+                    credentials: "include",
+                });
                 if (!res.ok) throw new Error("Failed to fetch auction");
 
                 const data = await res.json();

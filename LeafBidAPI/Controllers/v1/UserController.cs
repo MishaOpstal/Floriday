@@ -13,7 +13,6 @@ namespace LeafBidAPI.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
-[AllowAnonymous]
 public class UserController(
     ApplicationDbContext context,
     SignInManager<User> signInManager,
@@ -45,6 +44,7 @@ public class UserController(
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult> RegisterUser(CreateUserDto userData)
     {
         try
@@ -99,14 +99,14 @@ public class UserController(
         // Build the principal correctly (includes roles/claims)
         ClaimsPrincipal principal = await signInManager.CreateUserPrincipalAsync(user);
 
-        // Tell SignInManager to use bearer scheme
-        signInManager.AuthenticationScheme = IdentityConstants.BearerScheme;
+        await signInManager.SignInAsync(user, login.Remember, IdentityConstants.BearerScheme);
 
         // Return SignInResult so the BearerToken handler produces the token response
         return SignIn(principal, IdentityConstants.BearerScheme);
     }
 
-    [HttpGet("logout"), Authorize]
+    [HttpPost("logout")]
+    [Authorize]
     public async Task<ActionResult> LogoutUser()
     {
         try
@@ -119,6 +119,45 @@ public class UserController(
         }
 
         return OkResult("You are free to go!");
+    }
+
+    /// <summary>
+    /// Retrieve current user data
+    /// </summary>
+    [HttpGet("me")]
+    [AllowAnonymous]
+    public async Task<ActionResult> LoggedInUser()
+    {
+        // Get the currently authorized user
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized(new GetLoggedInUserDto
+            {
+                LoggedIn = false,
+                UserData = null
+            });
+        }
+
+        var dto = new GetLoggedInUserDto
+        {
+            LoggedIn = true,
+            UserData = new UserResponse
+            {
+                LastLogin = user.LastLogin ?? DateTime.MinValue,
+                Id = user.Id,
+                UserName = user.UserName ?? "",
+                NormalizedUserName = user.NormalizedUserName ?? "",
+                Email = user.Email ?? "",
+                NormalizedEmail = user.NormalizedEmail ?? "",
+                EmailConfirmed = user.EmailConfirmed,
+                LockoutEnd = user.LockoutEnd?.UtcDateTime,
+                LockoutEnabled = user.LockoutEnabled,
+                AccessFailedCount = user.AccessFailedCount
+            }
+        };
+
+        return new JsonResult(dto);
     }
 
     /// <summary>
