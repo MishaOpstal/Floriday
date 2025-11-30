@@ -4,6 +4,7 @@ services:
     image: api
     container_name: leafbidapi-api
     volumes:
+      - ./dpkeys:/app/dpkeys
       - ./wwwroot/uploads:/app/wwwroot/uploads
     ports:
       - "5001:8080"

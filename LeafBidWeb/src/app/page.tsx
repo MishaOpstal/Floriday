@@ -8,7 +8,7 @@ import {parseClockLocation} from "@/enums/ClockLocation";
 import AuctionTimer from "@/components/veilingKlok/veilingKlok";
 
 
-const auctionIdList = [1002, 2, 3, 4];
+const auctionIdList = [2002, 2, 3, 4];
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -25,9 +25,9 @@ export default function Home() {
                     auctionIdList.map(async (id) => {
                         const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
                             method: "GET",
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("bearerToken")}`,
-                            },
+                            // headers: {
+                            //     Authorization: `Bearer ${localStorage.getItem("bearerToken")}`,
+                            // },
                             credentials: "include",
                         });
                         if (!res.ok) return null;

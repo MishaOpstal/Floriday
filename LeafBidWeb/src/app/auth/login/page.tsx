@@ -53,7 +53,7 @@ export default function LoginPage() {
 
             const data = await response.json();
             window.accessToken = data.accessToken;
-            localStorage.setItem("bearerToken", data.accessToken)
+            // localStorage.setItem("bearerToken", data.accessToken)
 
             if (typeof data.expiresIn === "number") {
                 window.accessTokenExpiresAt = Date.now() + data.expiresIn * 1000;

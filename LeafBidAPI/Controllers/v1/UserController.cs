@@ -13,7 +13,6 @@ namespace LeafBidAPI.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [Authorize]
-[AllowAnonymous]
 public class UserController(
     ApplicationDbContext context,
     SignInManager<User> signInManager,
@@ -45,6 +44,7 @@ public class UserController(
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<ActionResult> RegisterUser(CreateUserDto userData)
     {
         try
@@ -99,14 +99,14 @@ public class UserController(
         // Build the principal correctly (includes roles/claims)
         ClaimsPrincipal principal = await signInManager.CreateUserPrincipalAsync(user);
 
-        // Tell SignInManager to use bearer scheme
-        signInManager.AuthenticationScheme = IdentityConstants.BearerScheme;
+        await signInManager.SignInAsync(user, login.Remember, IdentityConstants.BearerScheme);
 
         // Return SignInResult so the BearerToken handler produces the token response
         return SignIn(principal, IdentityConstants.BearerScheme);
     }
 
-    [HttpGet("logout"), Authorize]
+    [HttpPost("logout")]
+    [Authorize]
     public async Task<ActionResult> LogoutUser()
     {
         try

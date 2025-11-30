@@ -3,6 +3,7 @@ using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
 using LeafBidAPI.Models;
 using LeafBidAPI.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,10 @@ public class Program
         });
 
         // Add services to the container.
+        builder.Services.AddDataProtection()
+            .PersistKeysToFileSystem(new DirectoryInfo("/app/dpkeys"))
+            .SetApplicationName("LeafBidAPI");
+        
         builder.Services.AddCors(options =>
         {
             options.AddPolicy(name: allowedOrigins,
@@ -65,8 +70,9 @@ public class Program
             .AddSignInManager()
             .AddDefaultTokenProviders();
 
-        // 2. Add Authentication WITH REQUIRED AddBearerToken()
-        builder.Services.AddAuthentication(options =>
+        // Add Authentication (Bearer OR Identity.Application cookie)
+        builder.Services
+            .AddAuthentication(options =>
             {
                 options.DefaultScheme = "Smart";
                 options.DefaultChallengeScheme = "Smart";
@@ -76,29 +82,33 @@ public class Program
                 options.ForwardDefaultSelector = ctx =>
                     ctx.Request.Headers.ContainsKey("Authorization")
                         ? IdentityConstants.BearerScheme
-                        : IdentityConstants.ApplicationScheme;
+                        : IdentityConstants.ApplicationScheme; // <-- Identity.Application
             })
             .AddBearerToken(IdentityConstants.BearerScheme, options =>
             {
                 options.BearerTokenExpiration =
                     TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
             })
-            .AddCookie(IdentityConstants.ApplicationScheme, options =>
+            .AddIdentityCookies(identityCookies =>
             {
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // requires HTTPS
-                options.Events.OnRedirectToLogin = ctx =>
+                identityCookies.ApplicationCookie?.Configure(options =>
                 {
-                    ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return Task.CompletedTask;
-                };
-                options.Events.OnRedirectToAccessDenied = ctx =>
-                {
-                    ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    return Task.CompletedTask;
-                };
-            });
+                    // Make it explicitly match what the browser sends:
+                    options.Cookie.Name = ".AspNetCore.Identity.Application";
 
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+
+                    // IMPORTANT: SecurePolicy.Always will NOT work on http://localhost
+                    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+                        ? CookieSecurePolicy.SameAsRequest
+                        : CookieSecurePolicy.Always;
+
+                    options.Events.OnRedirectToLogin = ctx
+                        => Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status401Unauthorized);
+                    options.Events.OnRedirectToAccessDenied = ctx
+                        => Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status403Forbidden);
+                });
+            });
 
         builder.Services.AddScoped<RoleManager<IdentityRole>>();
 
@@ -195,14 +205,13 @@ public class Program
             app.UseHttpsRedirection();
         }
 
-        // CORS must be applied early so preflight/credentialed requests succeed
-        app.UseCors(allowedOrigins);
-
         app.UseRouting();
         app.UseCors(allowedOrigins);
+        
         app.UseAuthentication();
         app.UseAuthorization();
-        app.MapIdentityApi<User>(); // if this registers endpoints, keep it after UseRouting
+
+        app.MapIdentityApi<User>();
         app.MapControllers();
         app.UseStaticFiles();
         
