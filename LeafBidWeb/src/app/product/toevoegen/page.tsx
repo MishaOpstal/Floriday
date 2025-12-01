@@ -94,6 +94,9 @@ export default function ProductForm() {
                 pictureBase64 = await fileToBase64(formData.picture);
             }
 
+            const userData = localStorage.getItem("userData");
+            const userId = userData ? JSON.parse(userData).id : null;
+
             const payload = {
                 name: formData.name,
                 description: formData.description,
@@ -112,7 +115,7 @@ export default function ProductForm() {
                         : null,
                 stock: parseInt(formData.stock),
                 harvestedAt: formData.harvestedAt,
-                userId: "7141ab20-418e-4fe2-be4c-caadc7a45a9f",
+                userId: userId,
             };
 
             const response = await fetch("http://localhost:5001/api/v1/Product", {
@@ -139,7 +142,7 @@ export default function ProductForm() {
                 measurementType: "Pot grootte",
                 stock: "",
                 harvestedAt: "",
-                userId: "1",
+                userId: userId,
                 description: "",
             });
         } catch (error) {
