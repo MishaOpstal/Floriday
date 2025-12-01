@@ -151,7 +151,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// </summary>
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Provider")]
-    public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
+    public async Task<ActionResult<Product>> UpdateProduct([FromRoute] int id, [FromBody] UpdateProductDto updatedProduct)
     {
         var product = await GetProduct(id);
         if (product.Value == null)

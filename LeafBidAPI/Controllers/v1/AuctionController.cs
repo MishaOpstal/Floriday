@@ -81,18 +81,21 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
     /// </summary>
     [HttpPut("{id:int}")]
     [Authorize]
-    public async Task<ActionResult> UpdateAuction(int id, Auction updatedAuction)
+    public async Task<ActionResult<Auction>> UpdateAuction(int id, [FromBody] UpdateAuctionDto updatedAuction)
     {
-        var auction = await GetAuction(id);
-        if (auction.Value == null)
+        ActionResult<Auction> auctionResult = await GetAuction(id);
+        Auction auction = auctionResult.Value;
+
+        if (auction == null)
         {
             return NotFound();
         }
 
-        auction.Value.StartDate = updatedAuction.StartDate;
-        auction.Value.ClockLocationEnum = updatedAuction.ClockLocationEnum;
-        auction.Value.User = updatedAuction.User;
+        auction.StartDate = updatedAuction.StartTime;
+        auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
+        auction.UserId = updatedAuction.UserId;
+
         await Context.SaveChangesAsync();
-        return new JsonResult(auction.Value);
+        return new JsonResult(auction);
     }
 }
