@@ -25,7 +25,7 @@ export default function ProductForm() {
         measurementType: "Pot grootte", //Pot Size or Stem Length toggle
         stock: "", //required
         harvestedAt: "", //required
-        providerId: "1", //required
+        userId: "1", //required
         description: "", //optional
         picture: null as File | null, //optional
     });

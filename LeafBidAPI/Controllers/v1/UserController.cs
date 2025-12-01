@@ -12,7 +12,6 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize]
 public class UserController(
     ApplicationDbContext context,
     SignInManager<User> signInManager,
@@ -23,6 +22,7 @@ public class UserController(
     /// Get all users.
     /// </summary>
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<List<User>>> GetUsers()
     {
         return await Context.Users.ToListAsync();
@@ -32,6 +32,7 @@ public class UserController(
     /// Get a user by ID.
     /// </summary>
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<User>> GetUser(string id)
     {
         User? user = await Context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
@@ -87,11 +88,19 @@ public class UserController(
     public async Task<IActionResult> LoginUser(LoginUserDto login)
     {
         User? user = await userManager.FindByEmailAsync(login.Email ?? "");
-        if (user == null) return Unauthorized("Invalid credentials.");
+        if (user == null)
+        {
+            // return Unauthorized("Invalid credentials.");
+            return Unauthorized(login.Email + " not found.");
+        }
 
         SignInResult check =
-            await signInManager.CheckPasswordSignInAsync(user, login.Password ?? "", lockoutOnFailure: false);
-        if (!check.Succeeded) return Unauthorized("Invalid credentials.");
+            await signInManager.CheckPasswordSignInAsync(user, login.Password, lockoutOnFailure: false);
+        if (!check.Succeeded)
+        {
+            // return Unauthorized("Invalid credentials.");
+            return Unauthorized("Invalid password for " + login.Email + " using provided password. " + login.Password);
+        }
 
         user.LastLogin = DateTime.UtcNow;
         await userManager.UpdateAsync(user);
@@ -164,7 +173,7 @@ public class UserController(
     /// Update an existing user by ID.
     /// </summary>
     [HttpPut("{id}")]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<ActionResult> UpdateUser(
         string id,
         [FromBody] UpdateUserDto updatedUser
@@ -206,6 +215,8 @@ public class UserController(
                 return BadRequest(resetResult.Errors);
             }
         }
+        
+        await userManager.UpdateAsync(user);
 
         return OkResult("User updated successfully");
     }
