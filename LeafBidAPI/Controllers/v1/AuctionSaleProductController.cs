@@ -80,27 +80,4 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
         await Context.SaveChangesAsync();
         return new JsonResult(auctionSaleProducts);
     }
-    
-    // /// <summary>
-    // /// Update an existing auction
-    // /// </summary>
-    // [HttpPut("{id:int}")]
-    // [Authorize]
-    // public async Task<ActionResult<Auction>> UpdateAuction(int id, [FromBody] UpdateAuctionDto updatedAuction)
-    // {
-    //     ActionResult<Auction> auctionResult = await GetAuction(id);
-    //     Auction auction = auctionResult.Value;
-    //
-    //     if (auction == null)
-    //     {
-    //         return NotFound();
-    //     }
-    //
-    //     auction.StartDate = updatedAuction.StartTime;
-    //     auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
-    //     auction.UserId = updatedAuction.UserId;
-    //
-    //     await Context.SaveChangesAsync();
-    //     return new JsonResult(auction);
-    // }
 }
