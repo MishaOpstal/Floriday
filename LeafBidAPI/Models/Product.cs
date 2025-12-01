@@ -27,18 +27,18 @@ public class Product
     /// Minimum Price of the product.
     /// </summary>
     [Decimal(10,2)]
-    public decimal MinPrice { get; set; }
+    public required decimal MinPrice { get; set; }
 
     /// <summary>
     /// Max Price of the product.
     /// </summary>
     [Decimal(10,2)]
-    public decimal MaxPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
 
     /// <summary>
     /// Weight of the product in kilograms.
     /// </summary>
-    public double Weight { get; set; }
+    public required double Weight { get; set; }
 
     /// <summary>
     /// Picture URL of the product.
@@ -48,12 +48,12 @@ public class Product
     /// <summary>
     /// Species of the product.
     /// </summary>
-    public string Species { get; set; }
+    public required string Species { get; set; }
 
     /// <summary>
     /// Region of the product.
     /// </summary>
-    public string Region { get; set; }
+    public required string Region { get; set; }
 
     /// <summary>
     /// Pot size of the product.
@@ -68,12 +68,12 @@ public class Product
     /// <summary>
     /// Stock quantity of the product.
     /// </summary>
-    public int Stock { get; set; }
+    public required int Stock { get; set; }
 
     /// <summary>
     /// Harvested date and time of the product.
     /// </summary>
-    public DateTime? HarvestedAt { get; set; }
+    public required DateTime HarvestedAt { get; set; }
 
     /// <summary>
     /// User id associated with the product.

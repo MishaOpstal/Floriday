@@ -131,7 +131,7 @@ export default function ProductForm() {
                 measurementType: "Pot grootte",
                 stock: "",
                 harvestedAt: "",
-                providerId: "1",
+                userId: "1",
                 description: "",
             });
         } catch (error) {

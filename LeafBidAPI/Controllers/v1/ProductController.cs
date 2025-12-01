@@ -69,7 +69,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// Create a new product
     /// </summary>
     [HttpPost]
-    [Authorize(Roles = "Provider")]
+    [AllowAnonymous]
     public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productData)
     {
         if (!string.IsNullOrEmpty(productData.Picture) && productData.Picture.StartsWith("data:image"))
