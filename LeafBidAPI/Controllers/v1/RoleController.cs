@@ -9,8 +9,6 @@ namespace LeafBidAPI.Controllers.v1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
-[Authorize]
-// [AllowAnonymous]
 public class RoleController(ApplicationDbContext context, UserManager<User> userManager)
     : BaseController(context)
 {
@@ -18,6 +16,7 @@ public class RoleController(ApplicationDbContext context, UserManager<User> user
     /// Get all roles.
     /// </summary>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<IdentityRole>>> GetRoles()
     {
         return await Context.Roles.ToListAsync();
@@ -27,6 +26,7 @@ public class RoleController(ApplicationDbContext context, UserManager<User> user
     /// Check whether a user has a given role.
     /// </summary>
     [HttpGet("{id}/{roleName}")]
+    [Authorize]
     public async Task<bool> GetUserHasRole(string id, string roleName)
     {
         User? user = await userManager.FindByIdAsync(id);
@@ -43,6 +43,7 @@ public class RoleController(ApplicationDbContext context, UserManager<User> user
     /// Get all users associated with a given role.
     /// </summary>
     [HttpGet("{roleName}")]
+    [Authorize]
     public async Task<IList<User>> GetUsersByRole(string roleName)
     {
         return await userManager.GetUsersInRoleAsync(roleName);
