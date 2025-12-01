@@ -85,33 +85,43 @@ public class UserController(
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> LoginUser(LoginUserDto login)
+    public async Task<IActionResult> LoginUser([FromBody] LoginUserDto login)
     {
-        User? user = await userManager.FindByEmailAsync(login.Email ?? "");
-        if (user == null)
-        {
-            // return Unauthorized("Invalid credentials.");
-            return Unauthorized(login.Email + " not found.");
-        }
+        var user = await userManager.FindByEmailAsync(login.Email ?? "");
+        if (user == null) return Unauthorized("Invalid credentials.");
 
-        SignInResult check =
-            await signInManager.CheckPasswordSignInAsync(user, login.Password, lockoutOnFailure: false);
-        if (!check.Succeeded)
-        {
-            // return Unauthorized("Invalid credentials.");
-            return Unauthorized("Invalid password for " + login.Email + " using provided password. " + login.Password);
-        }
+        var result = await signInManager.PasswordSignInAsync(
+            user,
+            login.Password,
+            isPersistent: login.Remember,
+            lockoutOnFailure: false
+        );
+
+        if (!result.Succeeded) return Unauthorized("Invalid credentials.");
 
         user.LastLogin = DateTime.UtcNow;
         await userManager.UpdateAsync(user);
 
-        // Build the principal correctly (includes roles/claims)
-        ClaimsPrincipal principal = await signInManager.CreateUserPrincipalAsync(user);
-
-        await signInManager.SignInAsync(user, login.Remember, IdentityConstants.BearerScheme);
-
-        // Return SignInResult so the BearerToken handler produces the token response
-        return SignIn(principal, IdentityConstants.BearerScheme);
+        // Optional: return the same shape as /me so your frontend can hydrate immediately
+        var roles = await userManager.GetRolesAsync(user);
+        return Ok(new
+        {
+            loggedIn = true,
+            userData = new
+            {
+                user.LastLogin,
+                user.Id,
+                user.UserName,
+                user.NormalizedUserName,
+                user.Email,
+                user.NormalizedEmail,
+                user.EmailConfirmed,
+                LockoutEnd = user.LockoutEnd?.UtcDateTime,
+                user.LockoutEnabled,
+                user.AccessFailedCount,
+                Roles = roles
+            }
+        });
     }
 
     [HttpPost("logout")]
@@ -148,6 +158,8 @@ public class UserController(
             });
         }
 
+        var roles = await userManager.GetRolesAsync(user);
+
         var dto = new GetLoggedInUserDto
         {
             LoggedIn = true,
@@ -162,7 +174,8 @@ public class UserController(
                 EmailConfirmed = user.EmailConfirmed,
                 LockoutEnd = user.LockoutEnd?.UtcDateTime,
                 LockoutEnabled = user.LockoutEnabled,
-                AccessFailedCount = user.AccessFailedCount
+                AccessFailedCount = user.AccessFailedCount,
+                Roles = roles
             }
         };
 

@@ -72,41 +72,27 @@ public class Program
 
         // Add Authentication (Bearer OR Identity.Application cookie)
         builder.Services
-            .AddAuthentication(options =>
-            {
-                options.DefaultScheme = "Smart";
-                options.DefaultChallengeScheme = "Smart";
-            })
-            .AddPolicyScheme("Smart", "Bearer or Cookie", options =>
-            {
-                options.ForwardDefaultSelector = ctx =>
-                    ctx.Request.Headers.ContainsKey("Authorization")
-                        ? IdentityConstants.BearerScheme
-                        : IdentityConstants.ApplicationScheme; // <-- Identity.Application
-            })
-            .AddBearerToken(IdentityConstants.BearerScheme, options =>
-            {
-                options.BearerTokenExpiration =
-                    TimeSpan.FromMinutes(builder.Configuration.GetValue<double>("BearerTokenExpiration"));
-            })
+            .AddAuthentication(IdentityConstants.ApplicationScheme)
             .AddIdentityCookies(identityCookies =>
             {
                 identityCookies.ApplicationCookie?.Configure(options =>
                 {
-                    // Make it explicitly match what the browser sends:
                     options.Cookie.Name = ".AspNetCore.Identity.Application";
 
+                    // For same-origin SPA calls (recommended) this is perfect.
                     options.Cookie.SameSite = SameSiteMode.Lax;
 
-                    // IMPORTANT: SecurePolicy.Always will NOT work on http://localhost
+                    // If you run ONLY http://localhost, keep SameAsRequest.
+                    // If you run HTTPS, this will become Secure automatically.
                     options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
                         ? CookieSecurePolicy.SameAsRequest
                         : CookieSecurePolicy.Always;
 
-                    options.Events.OnRedirectToLogin = ctx
-                        => Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status401Unauthorized);
-                    options.Events.OnRedirectToAccessDenied = ctx
-                        => Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status403Forbidden);
+                    // Prevent redirects in APIs
+                    options.Events.OnRedirectToLogin = ctx =>
+                        Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status401Unauthorized);
+                    options.Events.OnRedirectToAccessDenied = ctx =>
+                        Task.FromResult(ctx.Response.StatusCode = StatusCodes.Status403Forbidden);
                 });
             });
 
@@ -141,39 +127,10 @@ public class Program
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "LeafBidAPI", Version = "v1" });
+
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             c.SchemaFilter<EnumSchemaFilter>();
-
-            //security definitie toevoegen
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Name = "Authorization",
-                Description = "Please enter a valid token",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer"
-            });
-
-            // security requierment toevoegen
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Name = "Authorization",
-                        In = ParameterLocation.Header,
-                        Type = SecuritySchemeType.Http,
-                        Scheme = "Bearer",
-                        Reference = new OpenApiReference
-                        {
-                            Id = "Bearer",
-                            Type = ReferenceType.SecurityScheme
-                        }
-                    },
-                    new List<string>()
-                }
-            });
         });
 
         var app = builder.Build();
@@ -211,7 +168,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapIdentityApi<User>();
+        // app.MapIdentityApi<User>();
         app.MapControllers();
         app.UseStaticFiles();
         

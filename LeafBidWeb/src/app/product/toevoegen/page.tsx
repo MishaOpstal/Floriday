@@ -12,6 +12,13 @@ import Button from "@/components/input/Button";
 import React, { useState } from "react";
 import SelectableButtonGroup from "@/components/input/SelectableButtonGroup";
 import DateSelect from "@/components/input/DateSelect";
+import {isUserInRole} from "@/app/auth/utils/isUserInRole";
+
+// Check if user has a Provider role
+if (!isUserInRole("Provider")) {
+    // Redirect to dashboard
+    window.location.href = "/";
+}
 
 export default function ProductForm() {
     const [formData, setFormData] = useState({
@@ -111,6 +118,7 @@ export default function ProductForm() {
             const response = await fetch("http://localhost:5001/api/v1/Product", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify(payload),
             });
 

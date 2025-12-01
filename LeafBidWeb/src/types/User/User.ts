@@ -9,4 +9,5 @@
     lockoutEnd: string|null;
     lockoutEnabled: boolean;
     accessFailedCount: number;
+    roles: string[]|null;
 }
