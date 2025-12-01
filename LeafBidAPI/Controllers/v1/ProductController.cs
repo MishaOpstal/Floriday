@@ -1,4 +1,5 @@
 ﻿using LeafBidAPI.Data;
+using LeafBidAPI.DTOs.Product;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,9 +70,9 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// </summary>
     [HttpPost]
     [Authorize(Roles = "Provider")]
-    public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
+    public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productData)
     {
-        if (!string.IsNullOrEmpty(product.Picture) && product.Picture.StartsWith("data:image"))
+        if (!string.IsNullOrEmpty(productData.Picture) && productData.Picture.StartsWith("data:image"))
         {
             try
             {
@@ -79,9 +80,9 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
                 Directory.CreateDirectory(uploadsDir);
 
                 // Strip prefix "data:image/...;base64,"
-                string? base64Data = product.Picture.Contains(',')
-                    ? product.Picture[(product.Picture.IndexOf(',') + 1)..]
-                    : product.Picture;
+                string? base64Data = productData.Picture.Contains(',')
+                    ? productData.Picture[(productData.Picture.IndexOf(',') + 1)..]
+                    : productData.Picture;
 
                 byte[] bytes = Convert.FromBase64String(base64Data);
                 string fileName = $"{Guid.NewGuid()}.png";
@@ -114,13 +115,30 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
                     await image.SaveAsPngAsync(filePath);
                 }
 
-                product.Picture = $"/uploads/{fileName}";
+                productData.Picture = $"/uploads/{fileName}";
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
+        
+        Product product = new Product
+        {
+            Name = productData.Name,
+            Description = productData.Description,
+            MinPrice = productData.MinPrice,
+            Weight = productData.Weight,
+            Picture = productData.Picture,
+            Species = productData.Species,
+            Region = productData.Region,
+            PotSize = productData.PotSize,
+            StemLength = productData.StemLength,
+            Stock = productData.Stock,
+            HarvestedAt = productData.HarvestedAt,
+            UserId = productData.UserId,
+            AuctionId = productData.AuctionId
+        };
 
         Context.Products.Add(product);
         await Context.SaveChangesAsync();
@@ -133,7 +151,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     /// </summary>
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Provider")]
-    public async Task<ActionResult> UpdateProduct(int id, Product updatedProduct)
+    public async Task<ActionResult<Product>> UpdateProduct([FromRoute] int id, [FromBody] UpdateProductDto updatedProduct)
     {
         var product = await GetProduct(id);
         if (product.Value == null)

@@ -1,11 +1,15 @@
+﻿using LeafBidAPI.Enums;
+using System.Text.Json.Serialization;
+
 namespace LeafBidAPI.DTOs.Auction;
 
 public class UpdateAuctionDto
 {
-    /// <summary>
-    /// Data required to update an existing auction
-    /// </summary>
-
-    public required int Id { get; set; }
-    public int? ClockLocationEnum { get; set; }
+    public required DateTime StartTime {get; set;}
+    public required ClockLocationEnum ClockLocationEnum {get; set;}
+    
+    public required string UserId {get; set;}
+    
+    [JsonIgnore]
+    public required LeafBidAPI.Models.User User {get; set;} // doing it like this instead of a neat using up top, cus it throws an error without an explanation
 }

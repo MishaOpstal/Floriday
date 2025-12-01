@@ -39,6 +39,8 @@ export default function Header({ returnOption = false }: HeaderProps) {
             document.cookie = "session=; Max-Age=0; path=/";
             document.cookie = "PHPSESSID=; Max-Age=0; path=/";
 
+            localStorage.removeItem("userData");
+
             window.location.href = "/auth/login";
         } catch (err) {
             console.error(err);

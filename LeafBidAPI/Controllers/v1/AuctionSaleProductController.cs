@@ -1,4 +1,5 @@
 ﻿using LeafBidAPI.Data;
+using LeafBidAPI.DTOs.AuctionSaleProduct;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,10 +41,15 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// Create a new auction sale product
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<AuctionSalesProducts>> CreateAuctionSaleProducts(
-        AuctionSalesProducts auctionSaleProduct)
+    public async Task<ActionResult<AuctionSalesProducts>> CreateAuctionSaleProducts([FromBody] CreateAuctionSaleProductDto auctionSaleProductData)
     {
-        Context.AuctionSalesProducts.Add(auctionSaleProduct);
+        AuctionSalesProducts auctionSaleProduct = new()
+        {
+            AuctionSaleId = auctionSaleProductData.AuctionSaleId,
+            ProductId = auctionSaleProductData.ProductId,
+            Quantity = auctionSaleProductData.Quantity,
+            Price = auctionSaleProductData.Price
+        };
         await Context.SaveChangesAsync();
 
         return new JsonResult(auctionSaleProduct) { StatusCode = 201 };
@@ -54,20 +60,24 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     /// </summary>
     [HttpPut("{id:int}")]
     public async Task<ActionResult<AuctionSalesProducts>> UpdateAuctionSaleProducts(
-        int id, AuctionSalesProducts updatedAuctionSaleProduct)
+        int id, [FromBody]UpdateAuctionSaleProductDto updatedAuctionSaleProduct)
     {
-        var auctionSaleProduct = await GetAuctionSaleProduct(id);
-        if (auctionSaleProduct.Value == null)
+        ActionResult<AuctionSalesProducts> auctionSaleProduct = await GetAuctionSaleProduct(id);
+        AuctionSalesProducts auctionSaleProducts = auctionSaleProduct.Value;
+        
+        if (auctionSaleProducts == null)
         {
             return NotFound();
         }
 
-        auctionSaleProduct.Value.AuctionSale = updatedAuctionSaleProduct.AuctionSale;
-        auctionSaleProduct.Value.Product = updatedAuctionSaleProduct.Product;
-        auctionSaleProduct.Value.Quantity = updatedAuctionSaleProduct.Quantity;
-        auctionSaleProduct.Value.Price = updatedAuctionSaleProduct.Price;
+        auctionSaleProducts.Id = updatedAuctionSaleProduct.Id;
+        auctionSaleProducts.AuctionSaleId = updatedAuctionSaleProduct.AuctionSaleId;
+        auctionSaleProducts.ProductId = updatedAuctionSaleProduct.ProductId;
+        auctionSaleProducts.Quantity = updatedAuctionSaleProduct.Quantity;
+        auctionSaleProducts.Price = updatedAuctionSaleProduct.Price;
+        
 
         await Context.SaveChangesAsync();
-        return new JsonResult(auctionSaleProduct.Value);
+        return new JsonResult(auctionSaleProducts);
     }
 }

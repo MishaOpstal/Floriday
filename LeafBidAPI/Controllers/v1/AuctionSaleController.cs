@@ -1,4 +1,5 @@
 ﻿using LeafBidAPI.Data;
+using LeafBidAPI.DTOs.AuctionSale;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,16 +36,22 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
 
         return auctionSale;
     }
-
+//   public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productData)
     /// <summary>
     /// Create a new auction sale
     /// </summary>
     [HttpPost]
-    public async Task<ActionResult<AuctionSales>> CreateAuctionSale(AuctionSales auctionSale)
+    public async Task<ActionResult<AuctionSales>> CreateAuctionSale([FromBody] CreateAuctionSaleDto auctionSaleData)
     {
-        Context.AuctionSales.Add(auctionSale);
+        AuctionSales auctionSale = new()
+        {
+            AuctionId = auctionSaleData.AuctionId,
+            UserId = auctionSaleData.UserId,
+            PaymentReference = auctionSaleData.PaymentReference,
+            Date = auctionSaleData.Date
+        };
         await Context.SaveChangesAsync();
 
-        return new JsonResult(auctionSale) { StatusCode = 201 };
+        return new JsonResult(auctionSaleData) { StatusCode = 201 };
     }
 }

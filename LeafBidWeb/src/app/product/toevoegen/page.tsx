@@ -12,6 +12,13 @@ import Button from "@/components/input/Button";
 import React, { useState } from "react";
 import SelectableButtonGroup from "@/components/input/SelectableButtonGroup";
 import DateSelect from "@/components/input/DateSelect";
+import {isUserInRole} from "@/app/auth/utils/isUserInRole";
+
+// Check if user has a Provider role
+if (!isUserInRole("Provider")) {
+    // Redirect to dashboard
+    window.location.href = "/";
+}
 
 export default function ProductForm() {
     const [formData, setFormData] = useState({
@@ -25,7 +32,7 @@ export default function ProductForm() {
         measurementType: "Pot grootte", //Pot Size or Stem Length toggle
         stock: "", //required
         harvestedAt: "", //required
-        providerId: "1", //required
+        userId: "1", //required
         description: "", //optional
         picture: null as File | null, //optional
     });
@@ -87,6 +94,9 @@ export default function ProductForm() {
                 pictureBase64 = await fileToBase64(formData.picture);
             }
 
+            const userData = localStorage.getItem("userData");
+            const userId = userData ? JSON.parse(userData).id : null;
+
             const payload = {
                 name: formData.name,
                 description: formData.description,
@@ -105,12 +115,13 @@ export default function ProductForm() {
                         : null,
                 stock: parseInt(formData.stock),
                 harvestedAt: formData.harvestedAt,
-                userId: "7141ab20-418e-4fe2-be4c-caadc7a45a9f",
+                userId: userId,
             };
 
             const response = await fetch("http://localhost:5001/api/v1/Product", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: "include",
                 body: JSON.stringify(payload),
             });
 
@@ -131,7 +142,7 @@ export default function ProductForm() {
                 measurementType: "Pot grootte",
                 stock: "",
                 harvestedAt: "",
-                providerId: "1",
+                userId: userId,
                 description: "",
             });
         } catch (error) {

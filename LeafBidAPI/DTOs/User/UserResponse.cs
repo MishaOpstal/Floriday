@@ -1,4 +1,6 @@
-﻿namespace LeafBidAPI.DTOs.User;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace LeafBidAPI.DTOs.User;
 
 public class UserResponse
 {
@@ -9,7 +11,8 @@ public class UserResponse
     public required string Email { get; set; }
     public required string NormalizedEmail { get; set; }
     public required bool EmailConfirmed { get; set; }
-    public required DateTime? LockoutEnd { get; set; }
+    public DateTime? LockoutEnd { get; set; }
     public required bool LockoutEnabled { get; set; }
     public required int AccessFailedCount { get; set; }
+    public IList<string>? Roles { get; set; }
 }
