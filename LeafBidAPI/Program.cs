@@ -146,7 +146,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = ["Buyer", "Provider", "Auctioneer"];
+            string[] roles = ["Admin", "Buyer", "Provider", "Auctioneer"];
             foreach (var role in roles)
             {
                 if (!roleManager.RoleExistsAsync(role).Result)

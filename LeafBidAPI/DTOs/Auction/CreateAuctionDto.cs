@@ -9,7 +9,7 @@ public class CreateAuctionDto
     /// </summary>
 
     public required DateTime StartDate { get; set; }
+
     public required ClockLocationEnum ClockLocationEnum { get; set; }
     public required Models.Product[] Products { get; set; }
-    public required string UserId { get; set; }
 }

@@ -29,7 +29,7 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Auction>> GetAuction(int id)
     {
-        var auction = await Context.Auctions.Where(a => a.Id == id).FirstOrDefaultAsync();
+        Auction? auction = await Context.Auctions.Where(a => a.Id == id).FirstOrDefaultAsync();
         if (auction == null)
         {
             return NotFound();
@@ -45,6 +45,12 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
     [Authorize(Roles = "Auctioneer")]
     public async Task<ActionResult<Auction>> CreateAuction(CreateAuctionDto auctionData)
     {
+        User? currentUser = await userManager.GetUserAsync(User);
+        if (currentUser == null)
+        {
+            return Unauthorized();
+        }
+        
         foreach (Product product in auctionData.Products)
         {
             if (product.AuctionId != null)
@@ -55,11 +61,11 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
 
         Auction auction = new()
         {
-            UserId = auctionData.UserId,
+            UserId = currentUser.Id,
             ClockLocationEnum = auctionData.ClockLocationEnum,
             StartDate = auctionData.StartDate
         };
-            
+        
         Context.Auctions.Add(auction);
         await Context.SaveChangesAsync();
         
@@ -83,8 +89,7 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
     [Authorize]
     public async Task<ActionResult<Auction>> UpdateAuction(int id, [FromBody] UpdateAuctionDto updatedAuction)
     {
-        ActionResult<Auction> auctionResult = await GetAuction(id);
-        Auction auction = auctionResult.Value;
+        Auction? auction = await Context.Auctions.Where(a => a.Id == id).FirstOrDefaultAsync();
 
         if (auction == null)
         {
@@ -93,8 +98,7 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
 
         auction.StartDate = updatedAuction.StartTime;
         auction.ClockLocationEnum = updatedAuction.ClockLocationEnum;
-        auction.UserId = updatedAuction.UserId;
-
+        
         await Context.SaveChangesAsync();
         return new JsonResult(auction);
     }

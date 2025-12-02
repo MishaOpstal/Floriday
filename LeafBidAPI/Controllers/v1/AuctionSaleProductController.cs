@@ -62,8 +62,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     public async Task<ActionResult<AuctionSalesProducts>> UpdateAuctionSaleProducts(
         int id, [FromBody]UpdateAuctionSaleProductDto updatedAuctionSaleProduct)
     {
-        ActionResult<AuctionSalesProducts> auctionSaleProduct = await GetAuctionSaleProduct(id);
-        AuctionSalesProducts auctionSaleProducts = auctionSaleProduct.Value;
+        AuctionSalesProducts? auctionSaleProducts =  await Context.AuctionSalesProducts.Where(asp => asp.Id == id).FirstOrDefaultAsync();
         
         if (auctionSaleProducts == null)
         {

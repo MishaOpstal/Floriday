@@ -186,7 +186,7 @@ public class UserController(
     /// Update an existing user by ID.
     /// </summary>
     [HttpPut("{id}")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<ActionResult> UpdateUser(
         string id,
         [FromBody] UpdateUserDto updatedUser
@@ -238,7 +238,7 @@ public class UserController(
     /// Delete a user by ID.
     /// </summary>
     [HttpDelete("{id}")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult> DeleteUser(string id)
     {
         ActionResult<User> user = await GetUser(id);

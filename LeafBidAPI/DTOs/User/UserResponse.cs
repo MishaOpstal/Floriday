@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace LeafBidAPI.DTOs.User;
+﻿namespace LeafBidAPI.DTOs.User;
 
 public class UserResponse
 {

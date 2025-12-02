@@ -153,32 +153,36 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [Authorize(Roles = "Provider")]
     public async Task<ActionResult<Product>> UpdateProduct([FromRoute] int id, [FromBody] UpdateProductDto updatedProduct)
     {
-        var product = await GetProduct(id);
-        if (product.Value == null)
+        Product? product = await Context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null)
         {
             return NotFound();
         }
 
-        product.Value.Name = updatedProduct.Name;
-        product.Value.Weight = updatedProduct.Weight;
-        product.Value.Picture = updatedProduct.Picture;
-        product.Value.Species = updatedProduct.Species;
-        product.Value.Stock = updatedProduct.Stock;
-        product.Value.AuctionId = updatedProduct.AuctionId;
+        product.Name = updatedProduct.Name;
+        product.Description = updatedProduct.Description;
+        product.MinPrice = updatedProduct.MinPrice;
+        product.Weight = updatedProduct.Weight;
+        product.Picture = updatedProduct.Picture;
+        product.Species = updatedProduct.Species;
+        product.Region = updatedProduct.Region;
+        product.Stock = updatedProduct.Stock;
+        product.HarvestedAt = updatedProduct.HarvestedAt;
+        product.AuctionId = updatedProduct.AuctionId;
 
         if (updatedProduct.PotSize.HasValue)
         {
-            product.Value.PotSize = updatedProduct.PotSize;
+            product.PotSize = updatedProduct.PotSize;
             updatedProduct.StemLength = null;
         }
         else if (updatedProduct.StemLength.HasValue)
         {
-            product.Value.StemLength = updatedProduct.StemLength;
+            product.StemLength = updatedProduct.StemLength;
             updatedProduct.PotSize = null;
         }
 
         await Context.SaveChangesAsync();
-        return new JsonResult(product.Value);
+        return new JsonResult(product);
     }
 
     /// <summary>
@@ -188,13 +192,13 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [Authorize(Roles = "Provider")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
-        var product = await GetProduct(id);
-        if (product.Value == null)
+        Product? product = await Context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+        if (product == null)
         {
             return NotFound();
         }
 
-        Context.Products.Remove(product.Value);
+        Context.Products.Remove(product);
         await Context.SaveChangesAsync();
         return new OkResult();
     }

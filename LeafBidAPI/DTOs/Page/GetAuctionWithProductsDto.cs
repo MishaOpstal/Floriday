@@ -1,10 +1,9 @@
 ﻿namespace LeafBidAPI.DTOs.Page;
-using LeafBidAPI.Models;
+using Models;
 
 public class GetAuctionWithProductsDto
 {
-    public required Auction auction { get; set; }
+    public required Auction Auction { get; set; }
 
-    public required List<Product> products { get; set; }
-
+    public required List<Product> Products { get; set; }
 }

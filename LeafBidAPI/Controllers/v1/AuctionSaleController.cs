@@ -28,7 +28,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AuctionSales>> GetAuctionSale(int id)
     {
-        var auctionSale = await Context.AuctionSales.Where(sale => sale.Id == id).FirstOrDefaultAsync();
+        AuctionSales? auctionSale = await Context.AuctionSales.Where(sale => sale.Id == id).FirstOrDefaultAsync();
         if (auctionSale == null)
         {
             return NotFound();
@@ -36,7 +36,7 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
 
         return auctionSale;
     }
-//   public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productData)
+
     /// <summary>
     /// Create a new auction sale
     /// </summary>
@@ -50,8 +50,11 @@ public class AuctionSaleController(ApplicationDbContext context) : BaseControlle
             PaymentReference = auctionSaleData.PaymentReference,
             Date = auctionSaleData.Date
         };
+        
+        // Create the auction sale
+        Context.AuctionSales.Add(auctionSale);
         await Context.SaveChangesAsync();
 
-        return new JsonResult(auctionSaleData) { StatusCode = 201 };
+        return new JsonResult(auctionSale) { StatusCode = 201 };
     }
 }

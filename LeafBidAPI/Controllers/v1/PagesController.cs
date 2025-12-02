@@ -34,8 +34,8 @@ public class PagesController(ApplicationDbContext dbContext) : BaseController(db
 
         GetAuctionWithProductsDto result = new()
         {
-            auction = auction,
-            products = products
+            Auction = auction,
+            Products = products
         };
 
         return new JsonResult(result);
