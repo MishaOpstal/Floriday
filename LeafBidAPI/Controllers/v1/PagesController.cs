@@ -1,5 +1,7 @@
 ﻿using LeafBidAPI.Data;
 using LeafBidAPI.DTOs.Page;
+using LeafBidAPI.DTOs.Product;
+using LeafBidAPI.Enums;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,28 +18,86 @@ namespace LeafBidAPI.Controllers.v1;
 public class PagesController(ApplicationDbContext dbContext) : BaseController(dbContext)
 {
     /// <summary>
-    /// get auction and product by AuctionId
+    /// Get the closest auction and its products for a given clock location
     /// </summary>
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(int id)
+    [HttpGet("closest/{clockLocationEnum}")]
+    public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(
+        ClockLocationEnum clockLocationEnum)
     {
-        // Get the Auctions and the Products within the Auctions.
-        Auction? auction = await Context.Auctions.FindAsync(id);
-        List<Product> products = await Context.Products
-            .Where(p => p.AuctionId == id)
+        Auction? auction = await Context.Auctions
+            .Where(a => a.ClockLocationEnum == clockLocationEnum)
+            .OrderBy(a => a.StartDate)
+            .FirstOrDefaultAsync();
+
+        if (auction == null)
+        {
+            return NotFound("Auction not found.");
+        }
+
+        List<Product?> products = await Context.AuctionProducts
+            .Where(ap => ap.AuctionId == auction.Id)
+            .OrderBy(ap => ap.ServeOrder)
+            .Select(ap => ap.Product)          // requires navigation property AuctionProducts.Product
+            .Where(p => p != null)
             .ToListAsync();
 
-        if (auction == null || products.Count == 0)
+        if (products.Count == 0)
         {
-            return NotFound("Auction or product not found. Auction data: " + auction + ", Product data: " + products);
+            return NotFound("No products found for this auction.");
         }
+        
+        ProductController productController = new(Context);
+        List<ProductResponse> productResponse = products.OfType<Product>()
+            .Select(product => productController.CreateProductResponse(product))
+            .ToList();
 
         GetAuctionWithProductsDto result = new()
         {
             Auction = auction,
-            Products = products
+            Products = productResponse
         };
 
-        return new JsonResult(result);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Get the auction and provided products using the auction id
+    /// </summary>
+    [HttpGet("{auctionId:int}")]
+    public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(int auctionId)
+    {
+        Auction? auction = await Context.Auctions
+            .Where(a => a.Id == auctionId)
+            .FirstOrDefaultAsync();
+
+        if (auction == null)
+        {
+            return NotFound("Auction not found.");
+        }
+
+        List<Product?> products = await Context.AuctionProducts
+            .Where(ap => ap.AuctionId == auction.Id)
+            .OrderBy(ap => ap.ServeOrder)
+            .Select(ap => ap.Product) // requires navigation property AuctionProducts.Product
+            .Where(p => p != null)
+            .ToListAsync();
+
+        if (products.Count == 0)
+        {
+            return NotFound("No products found for this auction.");
+        }
+
+        ProductController productController = new(Context);
+        List<ProductResponse> productResponse = products.OfType<Product>()
+            .Select(product => productController.CreateProductResponse(product))
+            .ToList();
+        
+        GetAuctionWithProductsDto result = new()
+        {
+            Auction = auction,
+            Products = productResponse
+        };
+
+        return Ok(result);
     }
 }

@@ -32,37 +32,21 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [HttpGet("available")]
     public async Task<ActionResult<List<Product>>> GetAvailableProducts()
     {
-        return await Context.Products.Where(p => p.AuctionId == null).ToListAsync();
+        List<Product> products = await Context.Products
+            .Where(p => !Context.AuctionProducts.Any(ap => ap.ProductId == p.Id))
+            .ToListAsync();
+
+        return products;
     }
 
     /// <summary>
     /// Get a product by id
     /// </summary>
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<ActionResult<ProductResponse>> GetProduct(int id)
     {
-        var product = await Context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
-        if (product == null)
-        {
-            return NotFound();
-        }
-
-        return product;
-    }
-
-    /// <summary>
-    /// get a product by AuctionId
-    /// </summary>
-    [HttpGet("by-auctionId/{auctionId:int}")]
-    public async Task<ActionResult<Product>> GetProductByAuctionId(int auctionId)
-    {
-        var product = await Context.Products.FirstOrDefaultAsync(p => p.AuctionId == auctionId);
-        if (product == null)
-        {
-            return NotFound();
-        }
-
-        return product;
+        Product? product = await Context.Products.Where(p => p.Id == id).Include(product => product.User).FirstOrDefaultAsync();
+        return product == null ? NotFound() : CreateProductResponse(product);
     }
 
     /// <summary>
@@ -123,7 +107,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
             }
         }
         
-        Product product = new Product
+        Product product = new()
         {
             Name = productData.Name,
             Description = productData.Description,
@@ -137,13 +121,12 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
             Stock = productData.Stock,
             HarvestedAt = productData.HarvestedAt,
             UserId = productData.UserId,
-            AuctionId = productData.AuctionId
         };
 
         Context.Products.Add(product);
         await Context.SaveChangesAsync();
 
-        return new JsonResult(product) { StatusCode = 201 };
+        return new JsonResult(CreateProductResponse(product)) { StatusCode = 201 };
     }
 
     /// <summary>
@@ -168,7 +151,6 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         product.Region = updatedProduct.Region;
         product.Stock = updatedProduct.Stock;
         product.HarvestedAt = updatedProduct.HarvestedAt;
-        product.AuctionId = updatedProduct.AuctionId;
 
         if (updatedProduct.PotSize.HasValue)
         {
@@ -182,7 +164,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         }
 
         await Context.SaveChangesAsync();
-        return new JsonResult(product);
+        return new JsonResult(CreateProductResponse(product)) { StatusCode = 200 };
     }
 
     /// <summary>
@@ -201,5 +183,28 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         Context.Products.Remove(product);
         await Context.SaveChangesAsync();
         return new OkResult();
+    }
+
+    public ProductResponse CreateProductResponse(Product product)
+    {
+        ProductResponse productResponse = new()
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            MinPrice = product.MinPrice,
+            MaxPrice = product.MaxPrice,
+            Weight = product.Weight,
+            Picture = product.Picture,
+            Species = product.Species,
+            Region = product.Region,
+            PotSize = product.PotSize,
+            StemLength = product.StemLength,
+            Stock = product.Stock,
+            HarvestedAt = product.HarvestedAt,
+            ProviderUserName = product.User?.UserName ?? ""
+        };
+
+        return productResponse;
     }
 }

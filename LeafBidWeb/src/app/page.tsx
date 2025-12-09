@@ -4,16 +4,15 @@ import Header from "@/components/header/header";
 import DashboardPanel from "@/components/dashboardPanel/dashboardpanel";
 import {useState, useEffect} from "react";
 import {Auction} from "@/types/Auction/Auction";
-import {parseClockLocation} from "@/enums/ClockLocation";
-import AuctionTimer from "@/components/veilingKlok/veilingKlok";
-
-
-const auctionIdList = [2002, 2, 3, 4];
+import {ClockLocation, parseClockLocation} from "@/enums/ClockLocation";
 
 export default function Home() {
     const [auctions, setAuctions] = useState<Auction[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const clockIds = Object.values(ClockLocation).filter(
+        (v): v is number => typeof v === "number"
+    );
 
     useEffect(() => {
         const fetchAuctions = async () => {
@@ -22,8 +21,8 @@ export default function Home() {
             try {
                 // Fetch all auctions in parallel
                 const results = await Promise.all(
-                    auctionIdList.map(async (id) => {
-                        const res = await fetch(`http://localhost:5001/api/v1/Pages/${id}`, {
+                    clockIds.map(async (clockLocation) => {
+                        const res = await fetch(`http://localhost:5001/api/v1/Pages/closest/${clockLocation}`, {
                             method: "GET",
                             credentials: "include",
                         });
@@ -31,10 +30,9 @@ export default function Home() {
 
                         const data = await res.json();
 
-                        // Normalize product+auction into your Auction type
                         const auction: Auction = {
                             ...data.auction,
-                            products: data.products
+                            products: data.products,
                         };
 
                         return auction;

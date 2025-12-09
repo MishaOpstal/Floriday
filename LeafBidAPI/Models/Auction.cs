@@ -22,6 +22,11 @@ public class Auction
     public ClockLocationEnum ClockLocationEnum { get; set; }
     
     /// <summary>
+    /// Is the auction live?
+    /// </summary>
+    public bool IsLive { get; set; }
+    
+    /// <summary>
     /// Identifier of the user (auctioneer) associated with the auction
     /// </summary>
     public required string UserId { get; set; }

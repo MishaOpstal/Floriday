@@ -21,11 +21,8 @@ export default function BigInfoVeld({product}: { product: Product }) {
             <div className={`d-flex flex-column gap-3 p-3 ${s.tekstcontainer}`}>
                 <h2>{product.name}</h2>
                 <p>Aantal: {product.stock}</p>
-                <p>Start prijs: <span
-                    className="text-decoration-line-through">{product.minPrice}</span>
-                </p>
                 <p>Geoogst: {parseDate(product.harvestedAt ?? "")}</p>
-                <p>Leverancier: {product.providerId}</p>
+                <p>Leverancier: {product.providerUserName}</p>
                 <p>Regio Oorsprong: {product.region}</p>
             </div>
             <Button label="Koop Product" variant="primary" type="button" className={s.knop}/>

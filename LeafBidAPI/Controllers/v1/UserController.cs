@@ -148,7 +148,7 @@ public class UserController(
     public async Task<ActionResult> LoggedInUser()
     {
         // Get the currently authorized user
-        var user = await userManager.GetUserAsync(User);
+        User? user = await userManager.GetUserAsync(User);
         if (user == null)
         {
             return Unauthorized(new GetLoggedInUserDto

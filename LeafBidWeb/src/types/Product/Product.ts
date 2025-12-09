@@ -12,7 +12,7 @@ export interface Product {
     stemLength?: number;
     stock?: number;
     harvestedAt?: Date;
-    providerId?: number;
+    providerUserName?: string;
     auctionId?: number;
 }
 

@@ -24,13 +24,13 @@ public class Product
     public string Description { get; set; }
 
     /// <summary>
-    /// Minimum Price of the product.
+    /// Minimum Price of the product per unit.
     /// </summary>
     [Decimal(10,2)]
     public required decimal MinPrice { get; set; }
 
     /// <summary>
-    /// Max Price of the product.
+    /// Max Price of the product per unit.
     /// </summary>
     [Decimal(10,2)]
     public decimal? MaxPrice { get; set; }
@@ -82,12 +82,4 @@ public class Product
 
     [JsonIgnore]
     public User? User { get; set; }
-    
-    /// <summary>
-    /// Auction id associated with the product.
-    /// </summary>
-    public int? AuctionId { get; set; }
-    
-    [JsonIgnore]
-    public Auction? Auction { get; set; }
 }

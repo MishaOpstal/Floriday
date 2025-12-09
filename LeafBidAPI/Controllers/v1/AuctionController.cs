@@ -1,5 +1,6 @@
 ﻿using LeafBidAPI.Data;
 using LeafBidAPI.DTOs.Auction;
+using LeafBidAPI.DTOs.Product;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -53,7 +54,9 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
         
         foreach (Product product in auctionData.Products)
         {
-            if (product.AuctionId != null)
+            // Check the AuctionProduct model
+            AuctionProducts? auctionProducts = await Context.AuctionProducts.Where(a => a.ProductId == product.Id).FirstOrDefaultAsync();
+            if (auctionProducts != null)
             {
                 return BadRequest("Product already belongs to an existing auction.");
             }
@@ -70,9 +73,18 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
         await Context.SaveChangesAsync();
         
         // Add the Products to the auction
+        int counter = 1;
         foreach (Product product in auctionData.Products)
         {
-            product.AuctionId = auction.Id;
+            AuctionProducts auctionProduct = new()
+            {
+                AuctionId = auction.Id,
+                ProductId = product.Id,
+                ServeOrder = counter++, // Start at 1, then 2, etc.
+                AuctionStock = product.Stock
+            };
+            
+            Context.AuctionProducts.Add(auctionProduct);
         }
         
         // Update the products in db
@@ -101,5 +113,30 @@ public class AuctionController(ApplicationDbContext context, UserManager<User> u
         
         await Context.SaveChangesAsync();
         return new JsonResult(auction);
+    }
+
+    /// <summary>
+    /// get products by AuctionId
+    /// </summary>
+    [HttpGet("products/{auctionId:int}")]
+    public async Task<ActionResult<List<Product>>> GetProductsByAuctionId(int auctionId)
+    {
+        List<Product?> products = await Context.AuctionProducts
+            .Where(ap => ap.AuctionId == auctionId)
+            .OrderBy(ap => ap.ServeOrder)
+            .Select(ap => ap.Product)
+            .ToListAsync();
+        
+        if (products.Count == 0)
+        {
+            return NotFound();
+        }
+
+        ProductController productController = new(Context);
+        List<ProductResponse> productResponse = products.OfType<Product>()
+            .Select(product => productController.CreateProductResponse(product))
+            .ToList();
+
+        return new JsonResult(productResponse) { StatusCode = 200 };
     }
 }

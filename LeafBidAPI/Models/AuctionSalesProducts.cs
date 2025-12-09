@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Toolbelt.ComponentModel.DataAnnotations.Schema.V5;
 
 namespace LeafBidAPI.Models;
 
@@ -31,10 +32,11 @@ public class AuctionSalesProducts
     /// <summary>
     /// Quantity of the product in the auction sale.
     /// </summary>
-    public int Quantity { get; set; }
+    public required int Quantity { get; set; }
     
     /// <summary>
     /// Price of the product in the auction sale.
     /// </summary>
-    public int Price { get; set; }
+    [Decimal(10,2)]
+    public required decimal Price { get; set; }
 }

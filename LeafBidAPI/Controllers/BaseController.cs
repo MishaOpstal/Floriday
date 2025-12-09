@@ -11,7 +11,7 @@ public class BaseController(ApplicationDbContext dbContext) : ControllerBase
 
     protected ActionResult OkResult(string message = "Success")
     {
-        return new JsonResult(new { message }) { StatusCode = 200 };
+        return new JsonResult(new { Message = message }) { StatusCode = 200 };
     }
     
     protected ActionResult BadRequest(string message = "Bad request")

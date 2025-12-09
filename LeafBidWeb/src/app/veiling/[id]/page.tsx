@@ -19,8 +19,6 @@ export default function AuctionPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
-
-
     useEffect(() => {
         if (!id) return;
 
