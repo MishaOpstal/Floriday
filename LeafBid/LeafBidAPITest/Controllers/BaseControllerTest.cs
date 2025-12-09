@@ -17,7 +17,7 @@ public class BaseControllerTest
         return new ApplicationDbContext(options);
     }
 
-    private static void AssertJsonResult(ActionResult result, int expectedStatusCode, string expectedMessage)
+    public static void AssertJsonResult(ActionResult result, int expectedStatusCode, string expectedMessage)
     {
         JsonResult json = Assert.IsType<JsonResult>(result);
         Assert.Equal(expectedStatusCode, json.StatusCode);
