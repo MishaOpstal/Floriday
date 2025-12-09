@@ -9,27 +9,32 @@ public class BaseController(ApplicationDbContext dbContext) : ControllerBase
 {
     protected readonly ApplicationDbContext Context = dbContext;
 
-    protected ActionResult OkResult(string message = "Success")
+    [NonAction]
+    public ActionResult OkResult(string message = "Success")
     {
         return new JsonResult(new { Message = message }) { StatusCode = 200 };
     }
     
-    protected ActionResult BadRequest(string message = "Bad request")
+    [NonAction]
+    public ActionResult BadRequest(string message = "Bad request")
     {
         return new JsonResult(new { Message = message }) { StatusCode = 400 };
     }
 
-    protected ActionResult InternalError(string message = "Internal Server Error")
+    [NonAction]
+    public ActionResult InternalError(string message = "Internal Server Error")
     {
         return new JsonResult(new { Message = message }) { StatusCode = 500 };
     }
 
-    protected ActionResult NotFound(string message = "Not Found")
+    [NonAction]
+    public ActionResult NotFound(string message = "Not Found")
     {
         return new JsonResult(new { Message = message }) { StatusCode = 404 };
     }
     
-    protected ActionResult Unauthorized(string message = "Not authorized")
+    [NonAction]
+    public ActionResult Unauthorized(string message = "Not authorized")
     {
         return new JsonResult(new { Message = message }) { StatusCode = 401 };
     }

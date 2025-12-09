@@ -185,6 +185,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         return new OkResult();
     }
 
+    [NonAction]
     public ProductResponse CreateProductResponse(Product product)
     {
         ProductResponse productResponse = new()
