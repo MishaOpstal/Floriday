@@ -8,7 +8,7 @@ public class DummyProducts
     {
         return new List<Product>
         {
-            new Product
+            new()
             {
                 Id = 1,
                 Name = "Rose Bouquet",
@@ -24,7 +24,7 @@ public class DummyProducts
                 HarvestedAt = DateTime.UtcNow.AddDays(-2),
                 UserId = "user1"
             },
-            new Product
+            new()
             {
                 Id = 2,
                 Name = "Tulip Bunch",
@@ -40,7 +40,7 @@ public class DummyProducts
                 HarvestedAt = DateTime.UtcNow.AddDays(-1),
                 UserId = "user1"
             },
-            new Product
+            new()
             {
                 Id = 3,
                 Name = "Potted Orchid",
@@ -57,7 +57,7 @@ public class DummyProducts
                 UserId = "user1"
             },
             
-            new Product
+            new()
             {
                 Id = 4,
                 Name = "Sunflower Bundle",

@@ -9,7 +9,7 @@ public class DummyAuctions
     {
         return new List<Auction>
         {
-            new Auction
+            new()
             {
                 Id = 1,
                 StartDate = DateTime.UtcNow,
@@ -17,7 +17,7 @@ public class DummyAuctions
                 UserId = "user1",
                 ClockLocationEnum = LeafBidAPI.Enums.ClockLocationEnum.Aalsmeer
             },
-            new Auction
+            new()
             {
                 Id = 2,
                 StartDate = DateTime.UtcNow.AddHours(1),
@@ -25,7 +25,7 @@ public class DummyAuctions
                 UserId = "user2",
                 ClockLocationEnum = LeafBidAPI.Enums.ClockLocationEnum.Eelde
             },
-            new Auction
+            new()
             {
                 Id = 3,
                 StartDate = DateTime.UtcNow.AddHours(2),
@@ -33,7 +33,7 @@ public class DummyAuctions
                 UserId = "user3",
                 ClockLocationEnum = LeafBidAPI.Enums.ClockLocationEnum.Rijnsburg
             },
-            new Auction
+            new()
             {
                 Id = 4,
                 StartDate = DateTime.UtcNow.AddHours(3),
