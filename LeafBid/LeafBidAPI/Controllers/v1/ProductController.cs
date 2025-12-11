@@ -33,7 +33,7 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     public async Task<ActionResult<List<Product>>> GetAvailableProducts()
     {
         List<Product> products = await Context.Products
-            .Where(p => !Context.AuctionProducts.Any(ap => ap.ProductId == p.Id))
+            .Where(p => p.Stock > 0 && !Context.AuctionProducts.Any(ap => ap.ProductId == p.Id))
             .ToListAsync();
 
         return products;
@@ -56,6 +56,14 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
     [Authorize(Roles = "Provider")]
     public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productData)
     {
+        if (productData.HarvestedAt > DateTime.UtcNow)
+        {
+            return new JsonResult("Harvest date cannot be in the future")
+            {
+                StatusCode = StatusCodes.Status400BadRequest
+            };
+        }
+        
         if (!string.IsNullOrEmpty(productData.Picture) && productData.Picture.StartsWith("data:image"))
         {
             try
@@ -139,7 +147,18 @@ public class ProductController(ApplicationDbContext context) : BaseController(co
         Product? product = await Context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
         if (product == null)
         {
-            return NotFound();
+            return new JsonResult("Product not found")
+            {
+                StatusCode = StatusCodes.Status404NotFound
+            };
+        }
+        
+        if (updatedProduct.HarvestedAt > DateTime.UtcNow)
+        {
+            return new JsonResult("Harvest date cannot be in the future")
+            {
+                StatusCode = StatusCodes.Status400BadRequest
+            };
         }
 
         product.Name = updatedProduct.Name;

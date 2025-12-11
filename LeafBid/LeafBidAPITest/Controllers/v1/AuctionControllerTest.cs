@@ -13,7 +13,7 @@ using Moq;
 
 namespace LeafBidAPITest.Controllers.v1;
 
-public sealed class AuctionControllerTest
+public class AuctionControllerTest
 {
     private static ApplicationDbContext CreateDbContext()
     {
