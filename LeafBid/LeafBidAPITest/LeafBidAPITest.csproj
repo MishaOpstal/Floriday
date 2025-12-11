@@ -18,16 +18,16 @@
     </ItemGroup>
 
     <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
+    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
+    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
     <ItemGroup>
         <Using Include="Xunit"/>
     </ItemGroup>
 
-    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
     <ItemGroup>
         <ProjectReference Include="..\LeafBidAPI\LeafBidAPI.csproj" />
     </ItemGroup>
 
-    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
         <PackageReference Include="xunit" Version="2.*" />
