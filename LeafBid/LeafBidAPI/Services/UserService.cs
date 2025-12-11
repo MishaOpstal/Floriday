@@ -15,22 +15,11 @@ public class UserService(
     UserManager<User> userManager,
     IRoleService roleService) : IUserService
 {
-
-    /// <summary>
-    /// Get all users.
-    /// </summary>
-    /// <returns></returns>
     public async Task<List<User>> GetUsers()
     {
         return await context.Users.ToListAsync();
     }
-
-    /// <summary>
-    /// Get a user by ID.
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
+    
     public async Task<User> GetUserById(string id)
     {
         User? user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -38,26 +27,18 @@ public class UserService(
         {
             throw new NotFoundException("User not found");
         }
-        
+
         return user;
     }
-
-    /// <summary>
-    /// Register a new user.
-    /// </summary>
-    /// <param name="userData"></param>
-    /// <returns></returns>
-    /// <exception cref="PasswordMismatchException"></exception>
-    /// <exception cref="UserCreationFailedException"></exception>
+    
     public async Task<User> RegisterUser(CreateUserDto userData)
     {
         User user = new()
         {
             UserName = userData.UserName,
-            Email = userData.Email,
+            Email = userData.Email
         };
 
-        // Check if passwords match
         if (userData.Password != userData.PasswordConfirmation)
         {
             throw new PasswordMismatchException("Passwords do not match");
@@ -65,7 +46,6 @@ public class UserService(
 
         IdentityResult result = await userManager.CreateAsync(user, userData.Password);
 
-        // If roles are provided assign them
         if (userData.Roles != null && !Array.Empty<string>().Equals(userData.Roles))
         {
             result = await userManager.AddToRolesAsync(user, userData.Roles);
@@ -75,18 +55,10 @@ public class UserService(
         {
             throw new UserCreationFailedException("User creation failed");
         }
-        
+
         return user;
     }
-
-    /// <summary>
-    /// Update an existing user by ID.
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="updatedUser"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
-    /// <exception cref="UserUpdateFailedException"></exception>
+    
     public async Task<User> UpdateUser(string id, UpdateUserDto updatedUser)
     {
         User? user = context.Users.FirstOrDefault(u => u.Id == id);
@@ -117,7 +89,7 @@ public class UserService(
 
         if (!string.IsNullOrEmpty(updatedUser.Password))
         {
-            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+            string token = await userManager.GeneratePasswordResetTokenAsync(user);
             IdentityResult resetResult = await userManager.ResetPasswordAsync(user, token, updatedUser.Password);
 
             if (!resetResult.Succeeded)
@@ -128,14 +100,7 @@ public class UserService(
 
         return user;
     }
-
-    /// <summary>
-    /// Proxy to update the logged in user
-    /// </summary>
-    /// <param name="loggedInUser"></param>
-    /// <param name="updatedUser"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
+    
     public async Task<User> UpdateUser(ClaimsPrincipal loggedInUser, UpdateUserDto updatedUser)
     {
         User? user = await userManager.GetUserAsync(loggedInUser);
@@ -146,14 +111,7 @@ public class UserService(
 
         return await UpdateUser(user.Id, updatedUser);
     }
-
-    /// <summary>
-    /// Login a user with email and password.
-    /// </summary>
-    /// <param name="loginData"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
-    /// <exception cref="UnauthorizedException"></exception>
+    
     public async Task<User> LoginUser(LoginUserDto loginData)
     {
         User? user = await userManager.FindByEmailAsync(loginData.Email);
@@ -179,13 +137,7 @@ public class UserService(
 
         return user;
     }
-
-    /// <summary>
-    /// Logout the currently logged-in user.
-    /// </summary>
-    /// <param name="loggedInUser"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
+    
     public async Task<bool> LogoutUser(ClaimsPrincipal loggedInUser)
     {
         User? user = await userManager.GetUserAsync(loggedInUser);
@@ -197,13 +149,7 @@ public class UserService(
         await signInManager.SignOutAsync();
         return true;
     }
-
-    /// <summary>
-    /// Retrieve current user data
-    /// </summary>
-    /// <param name="loggedInUser"></param>
-    /// <returns></returns>
-    /// <exception cref="NotFoundException"></exception>
+    
     public async Task<LoggedInUserResponse> GetLoggedInUser(ClaimsPrincipal loggedInUser)
     {
         User? user = await userManager.GetUserAsync(loggedInUser);
@@ -214,6 +160,7 @@ public class UserService(
 
         IList<string> roles = await roleService.GetRolesForUser(user);
         UserResponse userResponse = CreateUserResponse(user, roles);
+
         LoggedInUserResponse loggedInUserResponse = new()
         {
             LoggedIn = true,
@@ -222,7 +169,7 @@ public class UserService(
 
         return loggedInUserResponse;
     }
-
+    
     public async Task<bool> DeleteUser(string id)
     {
         User? user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -242,13 +189,13 @@ public class UserService(
             LastLogin = user.LastLogin,
             Id = user.Id,
             AccessFailedCount = user.AccessFailedCount,
-            UserName = user.UserName ?? "",
-            Email = user.Email ?? "",
+            UserName = user.UserName ?? string.Empty,
+            Email = user.Email ?? string.Empty,
             EmailConfirmed = user.EmailConfirmed,
             LockoutEnabled = user.LockoutEnabled,
             LockoutEnd = user.LockoutEnd,
-            NormalizedEmail = user.NormalizedEmail ?? "",
-            NormalizedUserName = user.NormalizedUserName ?? "",
+            NormalizedEmail = user.NormalizedEmail ?? string.Empty,
+            NormalizedUserName = user.NormalizedUserName ?? string.Empty,
             Roles = roles
         };
 

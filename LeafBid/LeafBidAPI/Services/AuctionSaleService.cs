@@ -9,15 +9,16 @@ namespace LeafBidAPI.Services;
 
 public class AuctionSaleService(ApplicationDbContext context) : IAuctionSaleService
 {
-
     public async Task<List<AuctionSales>> GetAuctionSales()
     {
         return await context.AuctionSales.ToListAsync();
     }
-
+    
     public async Task<AuctionSales> GetAuctionSaleById(int id)
     {
-        AuctionSales? auctionSale = await context.AuctionSales.Where(sale => sale.Id == id).FirstOrDefaultAsync();
+        AuctionSales? auctionSale =
+            await context.AuctionSales.FirstOrDefaultAsync(sale => sale.Id == id);
+
         if (auctionSale == null)
         {
             throw new NotFoundException("Auction sale not found");
@@ -25,7 +26,7 @@ public class AuctionSaleService(ApplicationDbContext context) : IAuctionSaleServ
 
         return auctionSale;
     }
-
+    
     public async Task<AuctionSales> CreateAuctionSale(CreateAuctionSaleDto auctionSaleData)
     {
         AuctionSales auctionSale = new()
@@ -35,8 +36,7 @@ public class AuctionSaleService(ApplicationDbContext context) : IAuctionSaleServ
             PaymentReference = auctionSaleData.PaymentReference,
             Date = auctionSaleData.Date
         };
-        
-        // Create the auction sale
+
         context.AuctionSales.Add(auctionSale);
         await context.SaveChangesAsync();
 

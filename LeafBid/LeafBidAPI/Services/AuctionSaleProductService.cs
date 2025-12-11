@@ -9,7 +9,6 @@ namespace LeafBidAPI.Services;
 
 public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionSaleProductService
 {
-
     public async Task<List<AuctionSalesProducts>> GetAuctionSaleProducts()
     {
         return await context.AuctionSalesProducts.ToListAsync();
@@ -17,7 +16,9 @@ public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionS
 
     public async Task<AuctionSalesProducts> GetAuctionSaleProductById(int id)
     {
-        var auctionSaleProduct = await context.AuctionSalesProducts.Where(asp => asp.Id == id).FirstOrDefaultAsync();
+        AuctionSalesProducts? auctionSaleProduct =
+            await context.AuctionSalesProducts.FirstOrDefaultAsync(asp => asp.Id == id);
+
         if (auctionSaleProduct == null)
         {
             throw new NotFoundException("Auction sale product not found");
@@ -25,8 +26,9 @@ public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionS
 
         return auctionSaleProduct;
     }
-
-    public async Task<AuctionSalesProducts> CreateAuctionSaleProduct(CreateAuctionSaleProductDto auctionSaleProductData)
+    
+    public async Task<AuctionSalesProducts> CreateAuctionSaleProduct(
+        CreateAuctionSaleProductDto auctionSaleProductData)
     {
         AuctionSalesProducts auctionSaleProduct = new()
         {
@@ -35,16 +37,20 @@ public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionS
             Quantity = auctionSaleProductData.Quantity,
             Price = auctionSaleProductData.Price
         };
+
         context.AuctionSalesProducts.Add(auctionSaleProduct);
         await context.SaveChangesAsync();
+
         return auctionSaleProduct;
     }
-
-    public async Task<AuctionSalesProducts> UpdateAuctionSaleProduct(int id, UpdateAuctionSaleProductDto auctionSaleProductData)
+    
+    public async Task<AuctionSalesProducts> UpdateAuctionSaleProduct(
+        int id,
+        UpdateAuctionSaleProductDto auctionSaleProductData)
     {
-        
-        AuctionSalesProducts? auctionSaleProducts =  await context.AuctionSalesProducts.Where(asp => asp.Id == id).FirstOrDefaultAsync();
-        
+        AuctionSalesProducts? auctionSaleProducts =
+            await context.AuctionSalesProducts.FirstOrDefaultAsync(asp => asp.Id == id);
+
         if (auctionSaleProducts == null)
         {
             throw new NotFoundException("Auction sale product not found");
@@ -54,9 +60,9 @@ public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionS
         auctionSaleProducts.ProductId = auctionSaleProductData.ProductId;
         auctionSaleProducts.Quantity = auctionSaleProductData.Quantity;
         auctionSaleProducts.Price = auctionSaleProductData.Price;
-        
 
         await context.SaveChangesAsync();
+
         return auctionSaleProducts;
     }
 }

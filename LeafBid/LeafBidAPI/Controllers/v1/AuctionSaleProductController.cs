@@ -28,7 +28,7 @@ public class AuctionSaleProductController(ApplicationDbContext context) : BaseCo
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AuctionSalesProducts>> GetAuctionSaleProduct(int id)
     {
-        var auctionSaleProduct = await Context.AuctionSalesProducts.Where(asp => asp.Id == id).FirstOrDefaultAsync();
+        AuctionSalesProducts? auctionSaleProduct = await Context.AuctionSalesProducts.Where(asp => asp.Id == id).FirstOrDefaultAsync();
         if (auctionSaleProduct == null)
         {
             return NotFound();

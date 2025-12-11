@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using LeafBidAPI.Controllers.v1;
 using LeafBidAPI.Data;
 using LeafBidAPI.DTOs.Auction;
 using LeafBidAPI.DTOs.Product;
@@ -15,15 +14,14 @@ public class AuctionService(
     ApplicationDbContext context,
     UserManager<User> userManager) : IAuctionService
 {
-
     public async Task<List<Auction>> GetAuctions()
     {
         return await context.Auctions.ToListAsync();
     }
-
+    
     public async Task<Auction> GetAuctionById(int id)
     {
-        Auction? auction = await context.Auctions.Where(a => a.Id == id).FirstOrDefaultAsync();
+        Auction? auction = await context.Auctions.FirstOrDefaultAsync(a => a.Id == id);
         if (auction == null)
         {
             throw new NotFoundException("Auction not found");
@@ -31,7 +29,7 @@ public class AuctionService(
 
         return auction;
     }
-
+    
     public async Task<Auction> CreateAuction(CreateAuctionDto auctionData, ClaimsPrincipal user)
     {
         User? currentUser = await userManager.GetUserAsync(user);
@@ -39,16 +37,17 @@ public class AuctionService(
         {
             throw new NotFoundException("User not found");
         }
+
         IList<string> roles = await userManager.GetRolesAsync(currentUser);
         if (!roles.Contains("Auctioneer"))
         {
             throw new UnauthorizedAccessException("User does not have the required role to create an auction");
         }
+
         foreach (Product product in auctionData.Products)
         {
-            // Check the AuctionProduct model
             AuctionProducts? auctionProducts =
-                await context.AuctionProducts.Where(a => a.ProductId == product.Id).FirstOrDefaultAsync();
+                await context.AuctionProducts.FirstOrDefaultAsync(a => a.ProductId == product.Id);
             if (auctionProducts != null)
             {
                 throw new ProductAlreadyAssignedException("Product already assigned");
@@ -65,7 +64,6 @@ public class AuctionService(
         context.Auctions.Add(auction);
         await context.SaveChangesAsync();
 
-        // Add the Products to the auction
         int counter = 1;
         foreach (Product product in auctionData.Products)
         {
@@ -73,23 +71,22 @@ public class AuctionService(
             {
                 AuctionId = auction.Id,
                 ProductId = product.Id,
-                ServeOrder = counter++, // Start at 1, then 2, etc.
+                ServeOrder = counter++,
                 AuctionStock = product.Stock
             };
 
             context.AuctionProducts.Add(auctionProduct);
         }
 
-        // Update the products in db
         context.Products.UpdateRange(auctionData.Products);
         await context.SaveChangesAsync();
 
         return auction;
     }
-
+    
     public async Task<Auction> UpdateAuction(int id, UpdateAuctionDto updatedAuction)
     {
-        Auction? auction = await context.Auctions.Where(a => a.Id == id).FirstOrDefaultAsync();
+        Auction? auction = await context.Auctions.FirstOrDefaultAsync(a => a.Id == id);
 
         if (auction == null)
         {
@@ -102,7 +99,7 @@ public class AuctionService(
         await context.SaveChangesAsync();
         return auction;
     }
-
+    
     public async Task<List<Product>> GetProductsByAuctionId(int auctionId)
     {
         List<Product?> products = await context.AuctionProducts
@@ -115,7 +112,7 @@ public class AuctionService(
         {
             throw new NotFoundException("Product not found");
         }
-        
-        return products!; // ! to suppress the nullable warning since we already catch null product lists.
+
+        return products!;
     }
 }

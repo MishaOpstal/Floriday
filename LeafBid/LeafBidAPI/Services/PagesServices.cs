@@ -11,7 +11,6 @@ namespace LeafBidAPI.Services;
 
 public class PagesServices(ApplicationDbContext context) : IPagesServices
 {
-
     public async Task<GetAuctionWithProductsDto> GetAuctionWithProducts(ClockLocationEnum clockLocation)
     {
         Auction? auction = await context.Auctions
@@ -27,7 +26,7 @@ public class PagesServices(ApplicationDbContext context) : IPagesServices
         List<Product?> products = await context.AuctionProducts
             .Where(ap => ap.AuctionId == auction.Id)
             .OrderBy(ap => ap.ServeOrder)
-            .Select(ap => ap.Product) // requires navigation property AuctionProducts.Product
+            .Select(ap => ap.Product)
             .Where(p => p != null)
             .ToListAsync();
 
@@ -37,7 +36,8 @@ public class PagesServices(ApplicationDbContext context) : IPagesServices
         }
 
         ProductService productService = new(context);
-        List<ProductResponse> productResponse = products.OfType<Product>()
+        List<ProductResponse> productResponse = products
+            .OfType<Product>()
             .Select(product => productService.CreateProductResponse(product))
             .ToList();
 
@@ -46,10 +46,11 @@ public class PagesServices(ApplicationDbContext context) : IPagesServices
             Auction = auction,
             Products = productResponse
         };
+
         return result;
     }
-
-public async Task<GetAuctionWithProductsDto> GetAuctionWithProductsById(int auctionId)
+    
+    public async Task<GetAuctionWithProductsDto> GetAuctionWithProductsById(int auctionId)
     {
         Auction? auction = await context.Auctions
             .Where(a => a.Id == auctionId)
@@ -63,7 +64,7 @@ public async Task<GetAuctionWithProductsDto> GetAuctionWithProductsById(int auct
         List<Product?> products = await context.AuctionProducts
             .Where(ap => ap.AuctionId == auction.Id)
             .OrderBy(ap => ap.ServeOrder)
-            .Select(ap => ap.Product) // requires navigation property AuctionProducts.Product
+            .Select(ap => ap.Product)
             .Where(p => p != null)
             .ToListAsync();
 
@@ -73,15 +74,17 @@ public async Task<GetAuctionWithProductsDto> GetAuctionWithProductsById(int auct
         }
 
         ProductService productService = new(context);
-        List<ProductResponse> productResponse = products.OfType<Product>()
+        List<ProductResponse> productResponse = products
+            .OfType<Product>()
             .Select(product => productService.CreateProductResponse(product))
             .ToList();
-        
+
         GetAuctionWithProductsDto result = new()
         {
             Auction = auction,
             Products = productResponse
         };
+
         return result;
     }
 }

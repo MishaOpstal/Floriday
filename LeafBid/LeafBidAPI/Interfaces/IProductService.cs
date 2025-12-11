@@ -1,4 +1,5 @@
 using LeafBidAPI.DTOs.Product;
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,11 +7,62 @@ namespace LeafBidAPI.Interfaces;
 
 public interface IProductService
 {
+    /// <summary>
+    /// Get all products.
+    /// </summary>
+    /// <returns>A list of all products.</returns>
     Task<List<Product>> GetProducts();
+
+    /// <summary>
+    /// Get all products that are not currently assigned to an auction.
+    /// </summary>
+    /// <returns>A list of available products.</returns>
     Task<List<Product>> GetAvailableProducts();
+
+    /// <summary>
+    /// Get a product by ID, including its provider user.
+    /// </summary>
+    /// <param name="id">The product ID.</param>
+    /// <returns>The product with the specified ID.</returns>
+    /// <exception cref="NotFoundException">
+    /// Thrown when no product is found with the specified ID.
+    /// </exception>
     Task<Product> GetProductById(int id);
+
+    /// <summary>
+    /// Create a new product.
+    /// </summary>
+    /// <param name="productData">The product creation data, including an optional base64 image.</param>
+    /// <returns>The created product.</returns>
+    /// <exception cref="Exception">
+    /// Thrown when the provided image cannot be processed or saved.
+    /// </exception>
     Task<Product> CreateProduct(CreateProductDto productData);
+
+    /// <summary>
+    /// Update an existing product by ID.
+    /// </summary>
+    /// <param name="id">The product ID.</param>
+    /// <param name="updatedProduct">The updated product data.</param>
+    /// <returns>The updated product.</returns>
+    /// <exception cref="NotFoundException">
+    /// Thrown when no product is found with the specified ID.
+    /// </exception>
     Task<Product> UpdateProduct(int id, UpdateProductDto updatedProduct);
+
+    /// <summary>
+    /// Delete a product by ID.
+    /// </summary>
+    /// <param name="id">The product ID.</param>
+    /// <returns>
+    /// <c>true</c> if the product was found and deleted; otherwise <c>false</c>.
+    /// </returns>
     Task<bool> DeleteProduct(int id);
+
+    /// <summary>
+    /// Create a DTO representation of a product.
+    /// </summary>
+    /// <param name="product">The product to map.</param>
+    /// <returns>A <see cref="ProductResponse"/> populated from the product.</returns>
     ProductResponse CreateProductResponse(Product product);
 }
