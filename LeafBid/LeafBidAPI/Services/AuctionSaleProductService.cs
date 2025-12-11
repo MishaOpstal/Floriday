@@ -35,6 +35,7 @@ public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionS
             Quantity = auctionSaleProductData.Quantity,
             Price = auctionSaleProductData.Price
         };
+        context.AuctionSalesProducts.Add(auctionSaleProduct);
         await context.SaveChangesAsync();
         return auctionSaleProduct;
     }
