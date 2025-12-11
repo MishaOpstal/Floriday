@@ -1,5 +1,6 @@
 ﻿using LeafBidAPI.DTOs.Page;
 using LeafBidAPI.Enums;
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,11 +28,20 @@ public class PagesController(IPagesServices pagesServices) : ControllerBase
     /// </returns>
     [HttpGet("closest/{clockLocationEnum}")]
     [ProducesResponseType(typeof(GetAuctionWithProductsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(
         ClockLocationEnum clockLocationEnum)
     {
-        GetAuctionWithProductsDto auction = await pagesServices.GetAuctionWithProducts(clockLocationEnum);
-        return Ok(auction);
+        try
+        {
+            GetAuctionWithProductsDto auction = await pagesServices.GetAuctionWithProducts(clockLocationEnum);
+            return Ok(auction);
+        }
+        catch (NotFoundException e)
+        {
+           return NotFound(e.Message);
+        }
+        
     }
 
     /// <summary>
@@ -46,7 +56,15 @@ public class PagesController(IPagesServices pagesServices) : ControllerBase
     [ProducesResponseType(typeof(GetAuctionWithProductsDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProductsById(int auctionId)
     {
-        GetAuctionWithProductsDto result = await pagesServices.GetAuctionWithProductsById(auctionId);
-        return Ok(result);
+        try
+        {
+            GetAuctionWithProductsDto result = await pagesServices.GetAuctionWithProductsById(auctionId);
+            return Ok(result);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        
     }
 }

@@ -1,4 +1,5 @@
 using LeafBidAPI.DTOs.AuctionSale;
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -33,10 +34,19 @@ public class AuctionSaleController(IAuctionSaleService auctionSaleService) : Con
     /// <returns>The requested auction sale.</returns>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(AuctionSales), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AuctionSales>> GetAuctionSaleById(int id)
     {
-        AuctionSales sale = await auctionSaleService.GetAuctionSaleById(id);
-        return Ok(sale);
+        try
+        {
+            AuctionSales sale = await auctionSaleService.GetAuctionSaleById(id);
+            return Ok(sale);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
 ﻿using LeafBidAPI.DTOs.Product;
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -87,13 +88,21 @@ public class ProductController(IProductService productService) : ControllerBase
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Provider")]
     [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProductResponse>> UpdateProduct(
         [FromRoute] int id,
         [FromBody] UpdateProductDto updatedProduct)
     {
-        Product product = await productService.UpdateProduct(id, updatedProduct);
-        ProductResponse updated = productService.CreateProductResponse(product);
-        return Ok(updated);
+        try
+        {
+            Product product = await productService.UpdateProduct(id, updatedProduct);
+            ProductResponse updated = productService.CreateProductResponse(product);
+            return Ok(updated);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     /// <summary>

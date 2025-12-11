@@ -1,3 +1,4 @@
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -35,12 +36,21 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <returns><c>true</c> if the user has the role; otherwise <c>false</c>.</returns>
     [HttpGet("users/{userId}/has")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<bool>> GetUserHasRole(
         [FromRoute] string userId,
         [FromQuery] string roleName)
     {
-        bool hasRole = await roleService.GetUserHasRole(userId, roleName);
-        return Ok(hasRole);
+        try
+        {
+            bool hasRole = await roleService.GetUserHasRole(userId, roleName);
+            return Ok(hasRole);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        
     }
 
     /// <summary>
@@ -63,13 +73,23 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <param name="roleNames">The roles to assign.</param>
     /// <returns>No content if assignment succeeded.</returns>
     [HttpPost("users/{userId}/roles")]
+    [ProducesResponseType(typeof(IList<IdentityRole>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AssignRoles(
         [FromRoute] string userId,
         [FromBody] string[] roleNames)
     {
-        bool ok = await roleService.AssignRoles(userId, roleNames);
-        return ok ? NoContent() : Problem("Assign roles failed.");
+        try
+        {
+            bool ok = await roleService.AssignRoles(userId, roleNames);
+            return ok ? NoContent() : Problem("Assign roles failed.");
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        
     }
 
     /// <summary>
@@ -79,12 +99,22 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <param name="roleNames">The roles to revoke.</param>
     /// <returns>No content if revocation succeeded.</returns>
     [HttpDelete("users/{userId}/roles")]
+    [ProducesResponseType(typeof(IList<IdentityRole>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RevokeRoles(
         [FromRoute] string userId,
         [FromBody] string[] roleNames)
     {
-        bool ok = await roleService.RevokeRoles(userId, roleNames);
-        return ok ? NoContent() : Problem("Revoke roles failed.");
+        try
+        {
+            bool ok = await roleService.RevokeRoles(userId, roleNames);
+            return ok ? NoContent() : Problem("Revoke roles failed.");
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        
     }
 }

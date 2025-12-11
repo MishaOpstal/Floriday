@@ -1,4 +1,5 @@
 using LeafBidAPI.DTOs.User;
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -43,14 +44,23 @@ public class UserController(IUserService userService, IRoleService roleService) 
     /// <returns>The requested user.</returns>
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResponse>> GetUser(string id)
     {
-        User user = await userService.GetUserById(id);
-        UserResponse userResponse = userService.CreateUserResponse(
-            user,
-            await roleService.GetRolesForUser(user)
-        );
-        return Ok(userResponse);
+        try
+        {
+            User user = await userService.GetUserById(id);
+            UserResponse userResponse = userService.CreateUserResponse(
+                user,
+                await roleService.GetRolesForUser(user)
+            );
+            return Ok(userResponse);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+
     }
 
     /// <summary>
@@ -61,19 +71,31 @@ public class UserController(IUserService userService, IRoleService roleService) 
     [HttpPost("register")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UserResponse>> RegisterUser([FromBody] CreateUserDto userData)
     {
-        User createdUser = await userService.RegisterUser(userData);
-        UserResponse createdUserResponse = userService.CreateUserResponse(
-            createdUser,
-            await roleService.GetRolesForUser(createdUser)
-        );
-
-        return CreatedAtAction(
-            actionName: nameof(GetUser),
-            routeValues: new { id = createdUserResponse.Id, version = "2.0" },
-            value: createdUserResponse
-        );
+        try
+        {
+            User createdUser = await userService.RegisterUser(userData);
+            UserResponse createdUserResponse = userService.CreateUserResponse(
+                createdUser,
+                await roleService.GetRolesForUser(createdUser)
+            );
+            
+            return CreatedAtAction(
+                actionName: nameof(GetUser),
+                routeValues: new { id = createdUserResponse.Id, version = "2.0" },
+                value: createdUserResponse
+            );
+        }
+        catch (PasswordMismatchException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (UserCreationFailedException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     /// <summary>
@@ -84,15 +106,28 @@ public class UserController(IUserService userService, IRoleService roleService) 
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResponse>> LoginUser([FromBody] LoginUserDto login)
     {
-        User user = await userService.LoginUser(login);
-        UserResponse userResponse = userService.CreateUserResponse(
-            user,
-            await roleService.GetRolesForUser(user)
-        );
-        
-        return Ok(userResponse);
+        try
+        {
+            User user = await userService.LoginUser(login);
+            UserResponse userResponse = userService.CreateUserResponse(
+                user,
+                await roleService.GetRolesForUser(user)
+            );
+
+            return Ok(userResponse);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (UnauthorizedException e)
+        {
+            return Unauthorized(e.Message);
+        }
     }
 
     /// <summary>
@@ -100,11 +135,20 @@ public class UserController(IUserService userService, IRoleService roleService) 
     /// </summary>
     /// <returns>No content if logout succeeded.</returns>
     [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> LogoutUser()
     {
-        bool ok = await userService.LogoutUser(User);
-        return ok ? NoContent() : Problem("Logout failed.");
+        try
+        {
+            bool ok = await userService.LogoutUser(User);
+            return ok ? NoContent() : Problem("Logout failed.");
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+
     }
 
     /// <summary>
@@ -113,10 +157,19 @@ public class UserController(IUserService userService, IRoleService roleService) 
     /// <returns>The currently logged-in user.</returns>
     [HttpGet("me")]
     [ProducesResponseType(typeof(LoggedInUserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<LoggedInUserResponse>> LoggedInUser()
     {
-        LoggedInUserResponse me = await userService.GetLoggedInUser(User);
-        return Ok(me);
+        try
+        {
+            LoggedInUserResponse me = await userService.GetLoggedInUser(User);
+            return Ok(me);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+
     }
 
     /// <summary>
@@ -127,17 +180,30 @@ public class UserController(IUserService userService, IRoleService roleService) 
     /// <returns>The updated user.</returns>
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResponse>> UpdateUser(
         string id,
         [FromBody] UpdateUserDto updatedUser)
     {
-        User updated = await userService.UpdateUser(id, updatedUser);
-        UserResponse userResponse = userService.CreateUserResponse(
-            updated,
-            await roleService.GetRolesForUser(updated)
-        );
-        
-        return Ok(userResponse);
+        try
+        {
+            User updated = await userService.UpdateUser(id, updatedUser);
+            UserResponse userResponse = userService.CreateUserResponse(
+                updated,
+                await roleService.GetRolesForUser(updated)
+            );
+
+            return Ok(userResponse);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (UserUpdateFailedException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
     
     /// <summary>
@@ -147,15 +213,22 @@ public class UserController(IUserService userService, IRoleService roleService) 
     /// <returns>The updated user.</returns>
     [HttpPut]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserResponse>> UpdateUser ([FromBody] UpdateUserDto updatedUser)
     {
-        User updated = await userService.UpdateUser(User, updatedUser);
-        UserResponse userResponse = userService.CreateUserResponse(
-            updated,
-            await roleService.GetRolesForUser(updated)
-        );
-        
-        return Ok(userResponse);
+        try
+        {
+            User updated = await userService.UpdateUser(User, updatedUser);
+            UserResponse userResponse = userService.CreateUserResponse(
+                updated,
+                await roleService.GetRolesForUser(updated)
+                );
+            return Ok(userResponse);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     /// <summary>
@@ -166,9 +239,18 @@ public class UserController(IUserService userService, IRoleService roleService) 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteUser(string id)
     {
-        bool ok = await userService.DeleteUser(id);
-        return ok ? NoContent() : Problem("Delete failed.");
+        try
+        {
+            bool ok = await userService.DeleteUser(id);
+            return ok ? NoContent() : Problem("Delete failed.");
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+
     }
 }

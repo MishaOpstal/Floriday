@@ -1,5 +1,6 @@
 using LeafBidAPI.DTOs.Auction;
 using LeafBidAPI.DTOs.Product;
+using LeafBidAPI.Exceptions;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -34,10 +35,19 @@ public class AuctionController(IAuctionService auctionService, IProductService p
     /// <returns>The requested auction.</returns>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(Auction), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Auction>> GetAuction(int id)
     {
-        Auction auction = await auctionService.GetAuctionById(id);
-        return Ok(auction);
+        try
+        {
+            Auction auction = await auctionService.GetAuctionById(id);
+            return Ok(auction);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+       
     }
 
     /// <summary>
@@ -68,12 +78,20 @@ public class AuctionController(IAuctionService auctionService, IProductService p
     [HttpPut("{id:int}")]
     [Authorize]
     [ProducesResponseType(typeof(Auction), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Auction>> UpdateAuction(
         int id,
         [FromBody] UpdateAuctionDto updatedAuction)
     {
-        Auction updated = await auctionService.UpdateAuction(id, updatedAuction);
-        return Ok(updated);
+        try
+        {
+            Auction updated = await auctionService.UpdateAuction(id, updatedAuction);
+            return Ok(updated);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     /// <summary>
@@ -83,13 +101,22 @@ public class AuctionController(IAuctionService auctionService, IProductService p
     /// <returns>A list of products belonging to the auction.</returns>
     [HttpGet("products/{auctionId:int}")]
     [ProducesResponseType(typeof(List<ProductResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<ProductResponse>>> GetProductsByAuctionId(int auctionId)
     {
-        List<Product> products = await auctionService.GetProductsByAuctionId(auctionId);
-        List<ProductResponse> productResponses = products
-            .Select(productService.CreateProductResponse)
-            .ToList();
+        try
+        {
+            List<Product> products = await auctionService.GetProductsByAuctionId(auctionId);
+            List<ProductResponse> productResponses = products
+                .Select(productService.CreateProductResponse)
+                .ToList();
         
-        return Ok(productResponses);
+            return Ok(productResponses);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+
     }
 }
