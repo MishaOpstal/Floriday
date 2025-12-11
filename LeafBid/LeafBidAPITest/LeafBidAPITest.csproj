@@ -17,9 +17,6 @@
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
     </ItemGroup>
 
-    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
-    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
-    <!--    TODO: DELETE THIS COMMENT WHEN MERGING -->
     <ItemGroup>
         <Using Include="Xunit"/>
     </ItemGroup>
