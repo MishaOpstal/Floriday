@@ -1,6 +1,7 @@
 using System.Reflection;
 using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
+using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using LeafBidAPI.Services;
 using Microsoft.AspNetCore.DataProtection;
@@ -39,6 +40,14 @@ public class Program
                         .AllowCredentials();
                 });
         });
+
+        // Dependency Injection for Services
+        builder.Services.AddScoped<IAuctionService, AuctionService>();
+        builder.Services.AddScoped<IAuctionSaleService, AuctionSaleService>();
+        builder.Services.AddScoped<IAuctionSaleProductService, AuctionSaleProductService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddAuthorization();
@@ -127,6 +136,7 @@ public class Program
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "LeafBidAPI", Version = "v1" });
+            c.SwaggerDoc("v2", new OpenApiInfo { Title = "LeafBidAPI", Version = "v2" });
 
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
@@ -139,7 +149,11 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "LeafBidAPI V2");
+            });
         }
 
         //Role seeding

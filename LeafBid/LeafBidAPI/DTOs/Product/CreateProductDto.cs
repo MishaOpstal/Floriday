@@ -19,5 +19,4 @@ public class CreateProductDto
     public required int Stock { get; set; }
     public required DateTime HarvestedAt { get; set; }
     public required string UserId { get; set; }
-    public int? AuctionId { get; set; }
 }

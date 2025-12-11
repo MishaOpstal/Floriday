@@ -151,7 +151,7 @@ public class UserController(
         User? user = await userManager.GetUserAsync(User);
         if (user == null)
         {
-            return Unauthorized(new GetLoggedInUserDto
+            return Unauthorized(new LoggedInUserResponse
             {
                 LoggedIn = false,
                 UserData = null
@@ -160,7 +160,7 @@ public class UserController(
 
         var roles = await userManager.GetRolesAsync(user);
 
-        var dto = new GetLoggedInUserDto
+        var dto = new LoggedInUserResponse
         {
             LoggedIn = true,
             UserData = new UserResponse

@@ -1,6 +1,6 @@
 ﻿namespace LeafBidAPI.DTOs.User;
 
-public class GetLoggedInUserDto
+public class LoggedInUserResponse
 {
     /// <summary>
     /// Data that gets send back to the front-end
