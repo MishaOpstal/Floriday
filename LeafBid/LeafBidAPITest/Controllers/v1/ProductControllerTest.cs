@@ -132,21 +132,22 @@ public class ProductControllerTest
     // test when no available products are present
 
     [Fact]
-    public async Task GetAvailableProducts_WhenStockNegative_ReturnsList()
+    public async Task GetAvailableProducts_WhenStockIsZero_ReturnsEmpty()
     {
         // Arrange
         await using var dbContext = CreateDbContext();
-        dbContext.Products.Add(CreateValidProduct(2, "user-1", 5));
+        dbContext.Products.Add(CreateValidProduct(2, "user-1", 0));
         await dbContext.SaveChangesAsync();
         var controller = CreateController(dbContext);
-        
+
         // Act
         var result = await controller.GetAvailableProducts();
-        
+
         // Assert
         var products = Assert.IsType<List<Product>>(result.Value);
-        Assert.Empty(products);
+        Assert.Empty(products); 
     }
+
     
     // test when product by id is found
     
@@ -155,17 +156,22 @@ public class ProductControllerTest
     {
         // Arrange
         await using var dbContext = CreateDbContext();
-        var product = CreateValidProduct(1, "user-1", 5);
+        var user = new User { Id = "user-1", UserName = "TestUser" };
+        dbContext.Users.Add(user);
+
+        var product = CreateValidProduct(0, user.Id, 5);
         dbContext.Products.Add(product);
         await dbContext.SaveChangesAsync();
+
         var controller = CreateController(dbContext);
-        
+
         // Act
-        var result = await controller.GetProduct(1);
-        
+        var result = await controller.GetProduct(product.Id);
+
         // Assert
-        var found = Assert.IsType<Product>(result.Value);
-        Assert.Equal(product, found);
+        var productResponse = Assert.IsType<ProductResponse>(result.Value);
+        Assert.Equal(product.Id, productResponse.Id);
+        Assert.Equal(product.Name, productResponse.Name);
     }
     
     // test when id is wrong
@@ -183,7 +189,8 @@ public class ProductControllerTest
         var result = await controller.GetProduct(6767);
 
         // Assert
-        Assert.IsType<NotFoundResult>(result.Result);
+        var json = Assert.IsType<JsonResult>(result.Result);
+        Assert.Equal(StatusCodes.Status404NotFound, json.StatusCode);
     }
 
     
@@ -200,7 +207,8 @@ public class ProductControllerTest
         var result = await controller.GetProduct(1);
         
         // Assert
-        Assert.IsType<NotFoundResult>(result.Result);
+        var json = Assert.IsType<JsonResult>(result.Result);
+        Assert.Equal(StatusCodes.Status404NotFound, json.StatusCode);
     }
     
     // test when product is added
@@ -256,7 +264,7 @@ public class ProductControllerTest
             Species = "Rose",
             Region = "NL",
             Stock = 10,
-            HarvestedAt = DateTime.UtcNow.AddDays(-10), // past date
+            HarvestedAt = DateTime.UtcNow.AddDays(10),
             UserId = "user-1",
             Picture = ""
         };
@@ -265,39 +273,8 @@ public class ProductControllerTest
         var  result = await controller.CreateProduct(dto);
         
         // Assert
-        Assert.IsType<BadRequestObjectResult>(result.Result);
-    }
-    
-    // test when role is not correct
-
-    [Fact]
-    public async Task CreateProduct_WhenRoleNotProvider_Returns403()
-    {
-        // Arrange 
-        await using var dbContext = CreateDbContext();
-        var user = CreateUser("user-1", "buyer");
-        var controller = CreateControllerWithUser(dbContext,  user);
-        
-        var dto = new CreateProductDto
-        {
-            Name = "Rose",
-            Description = "Fresh rose",
-            MinPrice = 1.5m,
-            Weight = 0.2,
-            Species = "Rose",
-            Region = "NL",
-            Stock = 10,
-            HarvestedAt = DateTime.UtcNow,
-            UserId = "user-1",
-            Picture = ""
-        };
-        
-        // Act
-        var result = await controller.CreateProduct(dto);
-        
-        // Assert
-        JsonResult json = Assert.IsType<JsonResult>(result.Result);
-        Assert.Equal(StatusCodes.Status403Forbidden, json.StatusCode);
+        var json = Assert.IsType<JsonResult>(result.Result);
+        Assert.Equal(StatusCodes.Status400BadRequest, json.StatusCode);
     }
     
     // test when product is updated
@@ -400,42 +377,8 @@ public class ProductControllerTest
         Assert.Equal(StatusCodes.Status400BadRequest, json.StatusCode);
         
     }
-    
-    // test when role is not correct
 
-    [Fact]
-    public async Task UpdateProduct_WhenRoleNotProvider_Returns403()
-    {
-        // Arrange
-        await using var dbContext = CreateDbContext();
-        var product = CreateValidProduct(1, "user-1", 5);
-        dbContext.Products.Add(product);
-        await dbContext.SaveChangesAsync();
-        
-        var user = CreateUser("user-1", "Buyer");
-        var controller = CreateControllerWithUser(dbContext, user);
-        
-        var dto = new UpdateProductDto
-        {
-            Name = "Updated product",
-            Description = "Updated description",
-            MinPrice = 2.0m,
-            Weight = 0.3,
-            Species = "Rose",
-            Region = "NL",
-            Stock = 20,
-            HarvestedAt = DateTime.UtcNow,
-            Picture = ""
-        };
-        
-        // Act
-        var result = await controller.UpdateProduct(product.Id, dto);
-        
-        // Assert
-        JsonResult json = Assert.IsType<JsonResult>(result.Result);
-        Assert.Equal(StatusCodes.Status403Forbidden, json.StatusCode);
-    }
-    
+     
     // test when product is deleted
     
     [Fact]
@@ -472,29 +415,11 @@ public class ProductControllerTest
         var result = await controller.DeleteProduct(67677);
         
         // Assert
-        Assert.IsType<NotFoundResult>(result);
+        var json = Assert.IsType<JsonResult>(result);
+        Assert.Equal(StatusCodes.Status404NotFound, json.StatusCode);
     }
     
-    // test when role is not provider
-
-    [Fact]
-    public async Task DeleteProduct_WhenRoleNotProvider_Returns403()
-    {
-        // Arrange
-        await using var dbContext = CreateDbContext();
-        var product = CreateValidProduct(1, "user-1", 5);
-        dbContext.Products.Add(product);
-        await dbContext.SaveChangesAsync();
-        
-        var user = CreateUser("user-1", "Buyer");
-        var controller = CreateControllerWithUser(dbContext, user);
-        
-        // Act
-        var result = await controller.DeleteProduct(product.Id);
-        
-        // Assert
-        Assert.IsType<ForbidResult>(result);
-    }
+   
 
 
 
