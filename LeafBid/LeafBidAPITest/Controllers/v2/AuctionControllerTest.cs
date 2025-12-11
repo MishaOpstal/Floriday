@@ -11,6 +11,7 @@ namespace LeafBidAPITest.Controllers.v2;
 public class AuctionControllerTest
 {
     private readonly Mock<IAuctionService> _auctionService = new();
+    private readonly Mock<IProductService> _productService = new();
 
 
     //GetAuctions
@@ -21,15 +22,17 @@ public class AuctionControllerTest
         List<Auction> auctionList = DummyAuctions.GetFakeAuctions();
         _auctionService.Setup(s => s.GetAuctions()).ReturnsAsync(auctionList);
 
-        AuctionController controller = new AuctionController(
-            _auctionService.Object
+        AuctionController controller = new(
+            _auctionService.Object,
+            _productService.Object
         );
 
         // Act
         ActionResult<List<Auction>> result = await controller.GetAuctions();
 
         // Assert
-        List<Auction> auctions = Assert.IsType<List<Auction>>(result.Value);
+        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
+        List<Auction> auctions = Assert.IsType<List<Auction>>(okResult.Value);
 
         Assert.Equal(4, auctions.Count);
         Assert.Equal(1, auctions[0].Id);
@@ -37,7 +40,7 @@ public class AuctionControllerTest
         Assert.Equal(3, auctions[2].Id);
         Assert.Equal(4, auctions[3].Id);
     }
-
+    
     //GetAuctionById
     [Fact] //fail
     public async Task GetAuctionById_ReturnsException_WhenAuctionNotFound()
@@ -51,7 +54,8 @@ public class AuctionControllerTest
             .ThrowsAsync(new NotFoundException($"Auction with ID {nonExistingId} not found"));
 
         AuctionController controller = new(
-            _auctionService.Object
+            _auctionService.Object,
+            _productService.Object
         );
 
         // Act & Assert
@@ -62,23 +66,30 @@ public class AuctionControllerTest
     public async Task GetAuctionById_ReturnsAuction_WhenAuctionExists()
     {
         // Arrange
-        const int existingId = 2; // ID die wel in de dummy data zit
+        const int existingId = 2;
         List<Auction> fakeAuctions = DummyAuctions.GetFakeAuctions();
+        List<Product> fakeProducts = DummyProducts.GetFakeProducts();
+        
         Auction expectedAuction = fakeAuctions.First(a => a.Id == existingId);
         _auctionService.Setup(s => s.GetAuctionById(existingId))
             .ReturnsAsync(expectedAuction);
+        _auctionService.Setup(s => s.GetProductsByAuctionId(2))
+            .ReturnsAsync(fakeProducts);
+        
         AuctionController controller = new(
-            _auctionService.Object
+            _auctionService.Object,
+            _productService.Object
         );
 
         // Act
         ActionResult<Auction> result = await controller.GetAuction(existingId);
 
         // Assert
-        Auction auction = Assert.IsType<Auction>(result.Value);
+        OkObjectResult okResult = Assert.IsType<OkObjectResult>(result.Result);
+        Auction auction = Assert.IsType<Auction>(okResult.Value);
+
         Assert.Equal(expectedAuction.Id, auction.Id);
         Assert.Equal(expectedAuction.UserId, auction.UserId);
         Assert.Equal(expectedAuction.IsLive, auction.IsLive);
     }
-
 }

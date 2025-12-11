@@ -139,6 +139,24 @@ public class UserController(IUserService userService, IRoleService roleService) 
         
         return Ok(userResponse);
     }
+    
+    /// <summary>
+    /// Update the current user.
+    /// </summary>
+    /// <param name="updatedUser">The updated user data.</param>
+    /// <returns>The updated user.</returns>
+    [HttpPut]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<UserResponse>> UpdateUser ([FromBody] UpdateUserDto updatedUser)
+    {
+        User updated = await userService.UpdateUser(User, updatedUser);
+        UserResponse userResponse = userService.CreateUserResponse(
+            updated,
+            await roleService.GetRolesForUser(updated)
+        );
+        
+        return Ok(userResponse);
+    }
 
     /// <summary>
     /// Delete a user by ID.
