@@ -50,7 +50,6 @@ public class RoleController(IRoleService roleService) : ControllerBase
         {
             return NotFound(e.Message);
         }
-        
     }
 
     /// <summary>
@@ -89,7 +88,6 @@ public class RoleController(IRoleService roleService) : ControllerBase
         {
             return NotFound(e.Message);
         }
-        
     }
 
     /// <summary>
@@ -115,6 +113,5 @@ public class RoleController(IRoleService roleService) : ControllerBase
         {
             return NotFound(e.Message);
         }
-        
     }
 }

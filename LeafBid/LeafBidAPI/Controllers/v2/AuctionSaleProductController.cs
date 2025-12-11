@@ -34,7 +34,7 @@ public class AuctionSaleProductController(IAuctionSaleProductService auctionSale
     /// <returns>The requested auction sale product.</returns>
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(AuctionSalesProducts), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)] 
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AuctionSalesProducts>> GetAuctionSaleProduct(int id)
     {
         try
@@ -46,7 +46,6 @@ public class AuctionSaleProductController(IAuctionSaleProductService auctionSale
         {
             return NotFound(e.Message);
         }
-        
     }
 
     /// <summary>

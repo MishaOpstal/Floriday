@@ -47,7 +47,6 @@ public class AuctionController(IAuctionService auctionService, IProductService p
         {
             return NotFound(e.Message);
         }
-       
     }
 
     /// <summary>
@@ -110,13 +109,12 @@ public class AuctionController(IAuctionService auctionService, IProductService p
             List<ProductResponse> productResponses = products
                 .Select(productService.CreateProductResponse)
                 .ToList();
-        
+
             return Ok(productResponses);
         }
         catch (NotFoundException e)
         {
             return NotFound(e.Message);
         }
-
     }
 }

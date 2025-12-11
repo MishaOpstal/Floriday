@@ -46,7 +46,6 @@ public class AuctionSaleController(IAuctionSaleService auctionSaleService) : Con
         {
             return NotFound(e.Message);
         }
-        
     }
 
     /// <summary>

@@ -39,9 +39,8 @@ public class PagesController(IPagesServices pagesServices) : ControllerBase
         }
         catch (NotFoundException e)
         {
-           return NotFound(e.Message);
+            return NotFound(e.Message);
         }
-        
     }
 
     /// <summary>
@@ -65,6 +64,5 @@ public class PagesController(IPagesServices pagesServices) : ControllerBase
         {
             return NotFound(e.Message);
         }
-        
     }
 }

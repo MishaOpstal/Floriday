@@ -60,7 +60,6 @@ public class UserController(IUserService userService, IRoleService roleService) 
         {
             return NotFound(e.Message);
         }
-
     }
 
     /// <summary>
@@ -81,7 +80,7 @@ public class UserController(IUserService userService, IRoleService roleService) 
                 createdUser,
                 await roleService.GetRolesForUser(createdUser)
             );
-            
+
             return CreatedAtAction(
                 actionName: nameof(GetUser),
                 routeValues: new { id = createdUserResponse.Id, version = "2.0" },
@@ -148,7 +147,6 @@ public class UserController(IUserService userService, IRoleService roleService) 
         {
             return NotFound(e.Message);
         }
-
     }
 
     /// <summary>
@@ -169,7 +167,6 @@ public class UserController(IUserService userService, IRoleService roleService) 
         {
             return NotFound(e.Message);
         }
-
     }
 
     /// <summary>
@@ -205,7 +202,7 @@ public class UserController(IUserService userService, IRoleService roleService) 
             return BadRequest(e.Message);
         }
     }
-    
+
     /// <summary>
     /// Update the current user.
     /// </summary>
@@ -214,7 +211,7 @@ public class UserController(IUserService userService, IRoleService roleService) 
     [HttpPut]
     [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<UserResponse>> UpdateUser ([FromBody] UpdateUserDto updatedUser)
+    public async Task<ActionResult<UserResponse>> UpdateUser([FromBody] UpdateUserDto updatedUser)
     {
         try
         {
@@ -222,7 +219,7 @@ public class UserController(IUserService userService, IRoleService roleService) 
             UserResponse userResponse = userService.CreateUserResponse(
                 updated,
                 await roleService.GetRolesForUser(updated)
-                );
+            );
             return Ok(userResponse);
         }
         catch (NotFoundException e)
@@ -251,6 +248,5 @@ public class UserController(IUserService userService, IRoleService roleService) 
         {
             return NotFound(e.Message);
         }
-
     }
 }
