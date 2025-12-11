@@ -103,7 +103,7 @@ public class AuctionService(
         return auction;
     }
 
-    public async Task<List<ProductResponse>> GetProductsByAuctionId(int auctionId)
+    public async Task<List<Product>> GetProductsByAuctionId(int auctionId)
     {
         List<Product?> products = await context.AuctionProducts
             .Where(ap => ap.AuctionId == auctionId)
@@ -111,16 +111,11 @@ public class AuctionService(
             .Select(ap => ap.Product)
             .ToListAsync();
 
-        if (products.Count == 0)
+        if (products == null || products.Count == 0)
         {
             throw new NotFoundException("Product not found");
         }
-
-        ProductController productController = new(context);
-        List<ProductResponse> productResponse = products.OfType<Product>()
-            .Select(product => productController.CreateProductResponse(product))
-            .ToList();
-
-        return productResponse;
+        
+        return products!; // ! to suppress the nullable warning since we already catch null product lists.
     }
 }

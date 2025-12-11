@@ -46,8 +46,8 @@ public class Program
         builder.Services.AddScoped<IAuctionSaleService, AuctionSaleService>();
         builder.Services.AddScoped<IAuctionSaleProductService, AuctionSaleProductService>();
         builder.Services.AddScoped<IProductService, ProductService>();
-        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IRoleService, RoleService>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IPagesServices, PagesServices>();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>

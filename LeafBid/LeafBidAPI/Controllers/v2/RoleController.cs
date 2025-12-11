@@ -9,13 +9,15 @@ namespace LeafBidAPI.Controllers.v2;
 [ApiController]
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
-[Authorize]
+// [Authorize]
+[AllowAnonymous]
 [Produces("application/json")]
 public class RoleController(IRoleService roleService) : ControllerBase
 {
     /// <summary>
     /// Get all roles.
     /// </summary>
+    /// <returns>A list of all roles.</returns>
     [HttpGet]
     [AllowAnonymous]
     [ProducesResponseType(typeof(List<IdentityRole>), StatusCodes.Status200OK)]
@@ -28,10 +30,13 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <summary>
     /// Check whether a user has a given role.
     /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="roleName">The role name to check.</param>
+    /// <returns><c>true</c> if the user has the role; otherwise <c>false</c>.</returns>
     [HttpGet("users/{userId}/has")]
     [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
     public async Task<ActionResult<bool>> GetUserHasRole(
-        string userId,
+        [FromRoute] string userId,
         [FromQuery] string roleName)
     {
         bool hasRole = await roleService.GetUserHasRole(userId, roleName);
@@ -41,9 +46,11 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <summary>
     /// Get all users associated with a given role.
     /// </summary>
+    /// <param name="roleName">The role name.</param>
+    /// <returns>A list of users that have the given role.</returns>
     [HttpGet("{roleName}/users")]
     [ProducesResponseType(typeof(IList<User>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<IList<User>>> GetUsersByRole(string roleName)
+    public async Task<ActionResult<IList<User>>> GetUsersByRole([FromRoute] string roleName)
     {
         IList<User> users = await roleService.GetUsersByRole(roleName);
         return Ok(users);
@@ -52,10 +59,13 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <summary>
     /// Assign roles to a user.
     /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="roleNames">The roles to assign.</param>
+    /// <returns>No content if assignment succeeded.</returns>
     [HttpPost("users/{userId}/roles")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AssignRoles(
-        string userId,
+        [FromRoute] string userId,
         [FromBody] string[] roleNames)
     {
         bool ok = await roleService.AssignRoles(userId, roleNames);
@@ -65,10 +75,13 @@ public class RoleController(IRoleService roleService) : ControllerBase
     /// <summary>
     /// Revoke roles from a user.
     /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="roleNames">The roles to revoke.</param>
+    /// <returns>No content if revocation succeeded.</returns>
     [HttpDelete("users/{userId}/roles")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RevokeRoles(
-        string userId,
+        [FromRoute] string userId,
         [FromBody] string[] roleNames)
     {
         bool ok = await roleService.RevokeRoles(userId, roleNames);

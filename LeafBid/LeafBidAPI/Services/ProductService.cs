@@ -28,11 +28,11 @@ public class ProductService(ApplicationDbContext context) : IProductService
         return products;
     }
 
-    public async Task<ProductResponse> GetProductById(int id)
+    public async Task<Product> GetProductById(int id)
     {
 
         Product? product = await context.Products.Where(p => p.Id == id).Include(product => product.User).FirstOrDefaultAsync();
-        return product == null ? throw new NotFoundException("Product not found") : CreateProductResponse(product);
+        return product ?? throw new NotFoundException("Product not found");
     }
 
     public async Task<Product> CreateProduct(CreateProductDto productData)

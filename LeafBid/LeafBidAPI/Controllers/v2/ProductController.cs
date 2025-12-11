@@ -1,83 +1,112 @@
-﻿using LeafBidAPI.Data;
-using LeafBidAPI.DTOs.Product;
+﻿using LeafBidAPI.DTOs.Product;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.Controllers.v2;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("2.0")]
-[Authorize]
-// [AllowAnonymous]
+// [Authorize]
+[AllowAnonymous]
+[Produces("application/json")]
 public class ProductController(IProductService productService) : ControllerBase
 {
     /// <summary>
-    /// Get all products
+    /// Get all products.
     /// </summary>
+    /// <returns>A list of all products.</returns>
     [HttpGet]
-    public async Task<ActionResult<List<Product>>> GetProducts()
+    [ProducesResponseType(typeof(List<ProductResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ProductResponse>>> GetProducts()
     {
-        return Ok (await productService.GetProducts());
+        List<Product> products = await productService.GetProducts();
+        List<ProductResponse> productResponses = products
+            .Select(productService.CreateProductResponse)
+            .ToList();
+        return Ok(productResponses);
     }
 
     /// <summary>
-    /// Get all available products
+    /// Get all available products.
     /// </summary>
+    /// <returns>A list of available products.</returns>
     [HttpGet("available")]
-    public async Task<ActionResult<List<Product>>> GetAvailableProducts()
+    [ProducesResponseType(typeof(List<ProductResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ProductResponse>>> GetAvailableProducts()
     {
-        return Ok (await productService.GetAvailableProducts());
+        List<Product> products = await productService.GetAvailableProducts();
+        List<ProductResponse> productResponses = products
+            .Select(productService.CreateProductResponse)
+            .ToList();
+        return Ok(productResponses);
     }
 
     /// <summary>
-    /// Get a product by id
+    /// Get a product by ID.
     /// </summary>
+    /// <param name="id">The product ID.</param>
+    /// <returns>The requested product.</returns>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult<ProductResponse>> GetProductById(int id)
     {
-        ProductResponse product =  await productService.GetProductById(id);
-        return Ok(product);
+        Product product = await productService.GetProductById(id);
+        ProductResponse productResponse = productService.CreateProductResponse(product);
+        return Ok(productResponse);
     }
 
     /// <summary>
-    /// Create a new product
+    /// Create a new product.
     /// </summary>
+    /// <param name="productData">The product data.</param>
+    /// <returns>The created product.</returns>
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productData)
+    [Authorize(Roles = "Provider")]
+    [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status201Created)]
+    public async Task<ActionResult<ProductResponse>> CreateProduct([FromBody] CreateProductDto productData)
     {
         Product product = await productService.CreateProduct(productData);
-        return Ok(productService.CreateProductResponse(product));
+        ProductResponse created = productService.CreateProductResponse(product);
+
+        return CreatedAtAction(
+            actionName: nameof(GetProductById),
+            routeValues: new { id = created.Id, version = "2.0" },
+            value: created
+        );
     }
 
     /// <summary>
-    /// Update an existing product
+    /// Update an existing product.
     /// </summary>
+    /// <param name="id">The product ID.</param>
+    /// <param name="updatedProduct">The updated product data.</param>
+    /// <returns>The updated product.</returns>
     [HttpPut("{id:int}")]
     [Authorize(Roles = "Provider")]
-    public async Task<ActionResult<Product>> UpdateProduct([FromRoute] int id, [FromBody] UpdateProductDto updatedProduct)
+    [ProducesResponseType(typeof(ProductResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ProductResponse>> UpdateProduct(
+        [FromRoute] int id,
+        [FromBody] UpdateProductDto updatedProduct)
     {
         Product product = await productService.UpdateProduct(id, updatedProduct);
-        return Ok(productService.CreateProductResponse(product));
+        ProductResponse updated = productService.CreateProductResponse(product);
+        return Ok(updated);
     }
 
     /// <summary>
     /// Delete a product by ID.
     /// </summary>
+    /// <param name="id">The product ID.</param>
+    /// <returns>No content if deletion succeeded.</returns>
     [HttpDelete("{id:int}")]
     [Authorize(Roles = "Provider")]
-    public async Task<ActionResult> DeleteProduct(int id)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteProduct(int id)
     {
         bool deleted = await productService.DeleteProduct(id);
         return deleted ? NoContent() : Problem("Product deletion failed.");
-    }
-
-    [NonAction]
-    public ProductResponse CreateProductResponse(Product product)
-    {
-        return productService.CreateProductResponse(product);
     }
 }

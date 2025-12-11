@@ -20,6 +20,11 @@ public class RoleService(
         return await context.Roles.ToListAsync();
     }
 
+    public async Task<IList<string>> GetRolesForUser(User user)
+    {
+        return await userManager.GetRolesAsync(user);
+    }
+
     /// <summary>
     /// Check whether a user has a given role.
     /// </summary>

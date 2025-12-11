@@ -1,45 +1,61 @@
-using LeafBidAPI.Data;
 using LeafBidAPI.DTOs.AuctionSale;
 using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
-using LeafBidAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.Controllers.v2;
 
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("2.0")]
-[Authorize]
-// [AllowAnonymous]
+// [Authorize]
+[AllowAnonymous]
+[Produces("application/json")]
 public class AuctionSaleController(IAuctionSaleService auctionSaleService) : ControllerBase
 {
     /// <summary>
-    /// Get all auction sales
+    /// Get all auction sales.
     /// </summary>
+    /// <returns>A list of all auction sales.</returns>
     [HttpGet]
+    [ProducesResponseType(typeof(List<AuctionSales>), StatusCodes.Status200OK)]
     public async Task<ActionResult<List<AuctionSales>>> GetAuctionSales()
     {
-        return await auctionSaleService.GetAuctionSales();
+        List<AuctionSales> sales = await auctionSaleService.GetAuctionSales();
+        return Ok(sales);
     }
 
     /// <summary>
-    /// Get auction sale by id
+    /// Get an auction sale by ID.
     /// </summary>
+    /// <param name="id">The auction sale ID.</param>
+    /// <returns>The requested auction sale.</returns>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(AuctionSales), StatusCodes.Status200OK)]
     public async Task<ActionResult<AuctionSales>> GetAuctionSaleById(int id)
     {
-        return await auctionSaleService.GetAuctionSaleById(id);
+        AuctionSales sale = await auctionSaleService.GetAuctionSaleById(id);
+        return Ok(sale);
     }
 
     /// <summary>
-    /// Create a new auction sale
+    /// Create a new auction sale.
     /// </summary>
+    /// <param name="auctionSaleData">The auction sale data.</param>
+    /// <returns>The created auction sale.</returns>
     [HttpPost]
-    public async Task<ActionResult<AuctionSales>> CreateAuctionSale([FromBody] CreateAuctionSaleDto auctionSaleData)
+    [Authorize(Roles = "Provider")]
+    [ProducesResponseType(typeof(AuctionSales), StatusCodes.Status201Created)]
+    public async Task<ActionResult<AuctionSales>> CreateAuctionSale(
+        [FromBody] CreateAuctionSaleDto auctionSaleData)
     {
-        return await auctionSaleService.CreateAuctionSale(auctionSaleData);
+        AuctionSales created = await auctionSaleService.CreateAuctionSale(auctionSaleData);
+
+        return CreatedAtAction(
+            actionName: nameof(GetAuctionSaleById),
+            routeValues: new { id = created.Id, version = "2.0" },
+            value: created
+        );
     }
 }

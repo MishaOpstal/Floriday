@@ -6,6 +6,7 @@ namespace LeafBidAPI.Interfaces;
 public interface IRoleService
 {
     Task<List<IdentityRole>> GetRoles();
+    Task<IList<string>> GetRolesForUser(User user);
     Task<bool> GetUserHasRole(string userId, string roleName);
     Task<IList<User>> GetUsersByRole(string roleName);
     Task<bool> AssignRoles(string userId, string[] roleNames);

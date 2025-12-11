@@ -11,5 +11,5 @@ public interface IAuctionService
     Task<Auction> GetAuctionById(int id);
     Task<Auction> CreateAuction(CreateAuctionDto auctionData, ClaimsPrincipal user);
     Task<Auction> UpdateAuction(int id, UpdateAuctionDto auctionSaleData);
-    Task<List<ProductResponse>> GetProductsByAuctionId(int auctionId);
+    Task<List<Product>> GetProductsByAuctionId(int auctionId);
 }

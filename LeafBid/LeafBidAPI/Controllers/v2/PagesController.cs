@@ -1,28 +1,32 @@
-﻿using LeafBidAPI.Data;
-using LeafBidAPI.DTOs.Page;
-using LeafBidAPI.DTOs.Product;
+﻿using LeafBidAPI.DTOs.Page;
 using LeafBidAPI.Enums;
 using LeafBidAPI.Interfaces;
-using LeafBidAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LeafBidAPI.Controllers.v2;
 
 /// <summary>
-/// get auction and product from the input ID
+/// Endpoints for retrieving auction pages that combine auctions and their products.
 /// </summary>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("2.0")]
-[Authorize]
+// [Authorize]
+[AllowAnonymous]
+[Produces("application/json")]
 public class PagesController(IPagesServices pagesServices) : ControllerBase
 {
     /// <summary>
-    /// Get the closest auction and its products for a given clock location
+    /// Get the closest upcoming auction and its products for a given clock location.
     /// </summary>
+    /// <param name="clockLocationEnum">The clock location for which to retrieve the closest auction.</param>
+    /// <returns>
+    /// A DTO containing the closest auction at the specified clock location
+    /// and the products belonging to that auction.
+    /// </returns>
     [HttpGet("closest/{clockLocationEnum}")]
+    [ProducesResponseType(typeof(GetAuctionWithProductsDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProducts(
         ClockLocationEnum clockLocationEnum)
     {
@@ -31,9 +35,15 @@ public class PagesController(IPagesServices pagesServices) : ControllerBase
     }
 
     /// <summary>
-    /// Get the auction and provided products using the auction id
+    /// Get a specific auction and its products by auction ID.
     /// </summary>
+    /// <param name="auctionId">The ID of the auction.</param>
+    /// <returns>
+    /// A DTO containing the auction with the given ID and the products
+    /// associated with that auction.
+    /// </returns>
     [HttpGet("{auctionId:int}")]
+    [ProducesResponseType(typeof(GetAuctionWithProductsDto), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetAuctionWithProductsDto>> GetAuctionWithProductsById(int auctionId)
     {
         GetAuctionWithProductsDto result = await pagesServices.GetAuctionWithProductsById(auctionId);

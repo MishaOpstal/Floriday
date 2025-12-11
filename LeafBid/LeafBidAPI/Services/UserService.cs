@@ -12,33 +12,17 @@ namespace LeafBidAPI.Services;
 public class UserService(
     ApplicationDbContext context,
     SignInManager<User> signInManager,
-    UserManager<User> userManager) : IUserService
+    UserManager<User> userManager,
+    IRoleService roleService) : IUserService
 {
 
     /// <summary>
     /// Get all users.
     /// </summary>
     /// <returns></returns>
-    public async Task<List<UserResponse>> GetUsers()
+    public async Task<List<User>> GetUsers()
     {
-        List<User> users = await context.Users.ToListAsync();
-
-        List<UserResponse> userResponses = users.Select(user => new UserResponse
-        {
-            LastLogin = user.LastLogin,
-            Id = user.Id,
-            AccessFailedCount = user.AccessFailedCount,
-            UserName = user.UserName ?? "",
-            Email = user.Email ?? "",
-            EmailConfirmed = user.EmailConfirmed,
-            LockoutEnabled = user.LockoutEnabled,
-            LockoutEnd = user.LockoutEnd,
-            NormalizedEmail = user.NormalizedEmail ?? "",
-            NormalizedUserName = user.NormalizedUserName ?? "",
-            Roles = userManager.GetRolesAsync(user).Result
-        }).ToList();
-
-        return userResponses;
+        return await context.Users.ToListAsync();
     }
 
     /// <summary>
@@ -47,30 +31,15 @@ public class UserService(
     /// <param name="id"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
-    public async Task<UserResponse> GetUserById(string id)
+    public async Task<User> GetUserById(string id)
     {
         User? user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null)
         {
             throw new NotFoundException("User not found");
         }
-
-        UserResponse userResponse = new()
-        {
-            LastLogin = user.LastLogin,
-            Id = user.Id,
-            AccessFailedCount = user.AccessFailedCount,
-            UserName = user.UserName ?? "",
-            Email = user.Email ?? "",
-            EmailConfirmed = user.EmailConfirmed,
-            LockoutEnabled = user.LockoutEnabled,
-            LockoutEnd = user.LockoutEnd,
-            NormalizedEmail = user.NormalizedEmail ?? "",
-            NormalizedUserName = user.NormalizedUserName ?? "",
-            Roles = userManager.GetRolesAsync(user).Result
-        };
-
-        return userResponse;
+        
+        return user;
     }
 
     /// <summary>
@@ -80,7 +49,7 @@ public class UserService(
     /// <returns></returns>
     /// <exception cref="PasswordMismatchException"></exception>
     /// <exception cref="UserCreationFailedException"></exception>
-    public async Task<UserResponse> RegisterUser(CreateUserDto userData)
+    public async Task<User> RegisterUser(CreateUserDto userData)
     {
         User user = new()
         {
@@ -106,23 +75,8 @@ public class UserService(
         {
             throw new UserCreationFailedException("User creation failed");
         }
-
-        UserResponse userResponse = new()
-        {
-            LastLogin = user.LastLogin,
-            Id = user.Id,
-            AccessFailedCount = user.AccessFailedCount,
-            UserName = user.UserName ?? "",
-            Email = user.Email ?? "",
-            EmailConfirmed = user.EmailConfirmed,
-            LockoutEnabled = user.LockoutEnabled,
-            LockoutEnd = user.LockoutEnd,
-            NormalizedEmail = user.NormalizedEmail ?? "",
-            NormalizedUserName = user.NormalizedUserName ?? "",
-            Roles = await userManager.GetRolesAsync(user)
-        };
-
-        return userResponse;
+        
+        return user;
     }
 
     /// <summary>
@@ -133,7 +87,7 @@ public class UserService(
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     /// <exception cref="UserUpdateFailedException"></exception>
-    public async Task<UserResponse> UpdateUser(string id, UpdateUserDto updatedUser)
+    public async Task<User> UpdateUser(string id, UpdateUserDto updatedUser)
     {
         User? user = context.Users.FirstOrDefault(u => u.Id == id);
         if (user == null)
@@ -172,22 +126,7 @@ public class UserService(
             }
         }
 
-        UserResponse userResponse = new()
-        {
-            LastLogin = user.LastLogin,
-            Id = user.Id,
-            AccessFailedCount = user.AccessFailedCount,
-            UserName = user.UserName ?? "",
-            Email = user.Email ?? "",
-            EmailConfirmed = user.EmailConfirmed,
-            LockoutEnabled = user.LockoutEnabled,
-            LockoutEnd = user.LockoutEnd,
-            NormalizedEmail = user.NormalizedEmail ?? "",
-            NormalizedUserName = user.NormalizedUserName ?? "",
-            Roles = await userManager.GetRolesAsync(user)
-        };
-
-        return userResponse;
+        return user;
     }
 
     /// <summary>
@@ -197,7 +136,7 @@ public class UserService(
     /// <param name="updatedUser"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
-    public async Task<UserResponse> UpdateUser(ClaimsPrincipal loggedInUser, UpdateUserDto updatedUser)
+    public async Task<User> UpdateUser(ClaimsPrincipal loggedInUser, UpdateUserDto updatedUser)
     {
         User? user = await userManager.GetUserAsync(loggedInUser);
         if (user == null)
@@ -215,7 +154,7 @@ public class UserService(
     /// <returns></returns>
     /// <exception cref="NotFoundException"></exception>
     /// <exception cref="UnauthorizedException"></exception>
-    public async Task<UserResponse> LoginUser(LoginUserDto loginData)
+    public async Task<User> LoginUser(LoginUserDto loginData)
     {
         User? user = await userManager.FindByEmailAsync(loginData.Email);
         if (user == null)
@@ -238,22 +177,7 @@ public class UserService(
         user.LastLogin = DateTime.UtcNow;
         await userManager.UpdateAsync(user);
 
-        UserResponse userResponse = new()
-        {
-            LastLogin = user.LastLogin,
-            Id = user.Id,
-            AccessFailedCount = user.AccessFailedCount,
-            UserName = user.UserName ?? "",
-            Email = user.Email ?? "",
-            EmailConfirmed = user.EmailConfirmed,
-            LockoutEnabled = user.LockoutEnabled,
-            LockoutEnd = user.LockoutEnd,
-            NormalizedEmail = user.NormalizedEmail ?? "",
-            NormalizedUserName = user.NormalizedUserName ?? "",
-            Roles = await userManager.GetRolesAsync(user)
-        };
-
-        return userResponse;
+        return user;
     }
 
     /// <summary>
@@ -288,25 +212,12 @@ public class UserService(
             throw new NotFoundException("User not found");
         }
 
-        IList<string> roles = await userManager.GetRolesAsync(user);
-
+        IList<string> roles = await roleService.GetRolesForUser(user);
+        UserResponse userResponse = CreateUserResponse(user, roles);
         LoggedInUserResponse loggedInUserResponse = new()
         {
             LoggedIn = true,
-            UserData = new UserResponse
-            {
-                LastLogin = user.LastLogin ?? DateTime.MinValue,
-                Id = user.Id,
-                UserName = user.UserName ?? "",
-                NormalizedUserName = user.NormalizedUserName ?? "",
-                Email = user.Email ?? "",
-                NormalizedEmail = user.NormalizedEmail ?? "",
-                EmailConfirmed = user.EmailConfirmed,
-                LockoutEnd = user.LockoutEnd?.UtcDateTime,
-                LockoutEnabled = user.LockoutEnabled,
-                AccessFailedCount = user.AccessFailedCount,
-                Roles = roles
-            }
+            UserData = userResponse
         };
 
         return loggedInUserResponse;
@@ -322,5 +233,25 @@ public class UserService(
 
         IdentityResult result = await userManager.DeleteAsync(user);
         return result.Succeeded;
+    }
+    
+    public UserResponse CreateUserResponse(User user, IList<string> roles)
+    {
+        UserResponse userResponse = new()
+        {
+            LastLogin = user.LastLogin,
+            Id = user.Id,
+            AccessFailedCount = user.AccessFailedCount,
+            UserName = user.UserName ?? "",
+            Email = user.Email ?? "",
+            EmailConfirmed = user.EmailConfirmed,
+            LockoutEnabled = user.LockoutEnabled,
+            LockoutEnd = user.LockoutEnd,
+            NormalizedEmail = user.NormalizedEmail ?? "",
+            NormalizedUserName = user.NormalizedUserName ?? "",
+            Roles = roles
+        };
+
+        return userResponse;
     }
 }
