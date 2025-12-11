@@ -13,7 +13,7 @@ using Moq;
 
 namespace LeafBidAPITest.Controllers.v1;
 
-public sealed class AuctionControllerTest
+public class AuctionControllerTest
 {
     private static ApplicationDbContext CreateDbContext()
     {
@@ -141,6 +141,7 @@ public sealed class AuctionControllerTest
         ActionResult<Auction> actionResult = await controller.CreateAuction(dto);
 
         // Assert
+        // Asserts that the action result is a JsonResult with a 401 status code
         JsonResult json = Assert.IsType<JsonResult>(actionResult.Result);
         Assert.Equal(StatusCodes.Status401Unauthorized, json.StatusCode);
         Assert.Equal("Not authorized", GetJsonMessage(json));
@@ -209,6 +210,7 @@ public sealed class AuctionControllerTest
         ActionResult<Auction> actionResult = await controller.CreateAuction(dto); // creates another auction with the same products which should return error
 
         // Assert
+        // Asserts that the action result is a JsonResult with a 400 status code
         JsonResult json = Assert.IsType<JsonResult>(actionResult.Result);
         Assert.Equal(StatusCodes.Status400BadRequest, json.StatusCode);
         Assert.Equal("Product already belongs to an existing auction.", GetJsonMessage(json));
@@ -269,19 +271,19 @@ public sealed class AuctionControllerTest
         Assert.Equal(ClockLocationEnum.Aalsmeer, createdAuction.ClockLocationEnum);
         
         // Asserts that the products were created with the correct serve order and stock
-        List<AuctionProducts> links = await dbContext.AuctionProducts
+        List<AuctionProducts> productsInAuction = await dbContext.AuctionProducts
             .Where(ap => ap.AuctionId == createdAuction.Id)
             .OrderBy(ap => ap.ServeOrder)
             .ToListAsync();
 
-        Assert.Equal(2, links.Count);
+        Assert.Equal(2, productsInAuction.Count);
 
-        Assert.Equal(1, links[0].ServeOrder);
-        Assert.Equal(p1.Id, links[0].ProductId);
-        Assert.Equal(p1.Stock, links[0].AuctionStock);
+        Assert.Equal(1, productsInAuction[0].ServeOrder);
+        Assert.Equal(p1.Id, productsInAuction[0].ProductId);
+        Assert.Equal(p1.Stock, productsInAuction[0].AuctionStock);
 
-        Assert.Equal(2, links[1].ServeOrder);
-        Assert.Equal(p2.Id, links[1].ProductId);
-        Assert.Equal(p2.Stock, links[1].AuctionStock);
+        Assert.Equal(2, productsInAuction[1].ServeOrder);
+        Assert.Equal(p2.Id, productsInAuction[1].ProductId);
+        Assert.Equal(p2.Stock, productsInAuction[1].AuctionStock);
     }
 }
