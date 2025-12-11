@@ -50,7 +50,6 @@ public class AuctionSaleProductService(ApplicationDbContext context) : IAuctionS
             throw new NotFoundException("Auction sale product not found");
         }
 
-        auctionSaleProducts.Id = auctionSaleProductData.Id;
         auctionSaleProducts.AuctionSaleId = auctionSaleProductData.AuctionSaleId;
         auctionSaleProducts.ProductId = auctionSaleProductData.ProductId;
         auctionSaleProducts.Quantity = auctionSaleProductData.Quantity;
