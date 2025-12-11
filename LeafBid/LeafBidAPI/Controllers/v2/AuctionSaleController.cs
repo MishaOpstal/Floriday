@@ -14,7 +14,7 @@ namespace LeafBidAPI.Controllers.v2;
 [ApiVersion("2.0")]
 [Authorize]
 // [AllowAnonymous]
-public class AuctionSaleController(IAuctionSaleService auctionSaleService) : ControllerBase()
+public class AuctionSaleController(IAuctionSaleService auctionSaleService) : ControllerBase
 {
     /// <summary>
     /// Get all auction sales
