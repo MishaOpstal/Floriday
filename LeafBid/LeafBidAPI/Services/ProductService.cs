@@ -133,12 +133,12 @@ public class ProductService(ApplicationDbContext context) : IProductService
         if (updatedProduct.PotSize.HasValue)
         {
             product.PotSize = updatedProduct.PotSize;
-            updatedProduct.StemLength = null;
+            product.StemLength = null;
         }
         else if (updatedProduct.StemLength.HasValue)
         {
             product.StemLength = updatedProduct.StemLength;
-            updatedProduct.PotSize = null;
+            product.PotSize = null;
         }
 
         await context.SaveChangesAsync();
