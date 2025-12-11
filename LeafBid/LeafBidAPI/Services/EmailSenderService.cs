@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace LeafBidAPI.Services
 {
-    public class EmailSender(IOptions<EmailSettings> emailSettings) : IEmailSender<User>
+    public class EmailSenderService(IOptions<EmailSettings> emailSettings) : IEmailSender<User>
     {
         private readonly EmailSettings _emailSettings = emailSettings.Value;
 

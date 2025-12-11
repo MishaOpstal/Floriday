@@ -87,10 +87,10 @@ public class UserController(
     [AllowAnonymous]
     public async Task<IActionResult> LoginUser([FromBody] LoginUserDto login)
     {
-        var user = await userManager.FindByEmailAsync(login.Email ?? "");
+        User? user = await userManager.FindByEmailAsync(login.Email ?? "");
         if (user == null) return Unauthorized("Invalid credentials.");
 
-        var result = await signInManager.PasswordSignInAsync(
+        SignInResult result = await signInManager.PasswordSignInAsync(
             user,
             login.Password,
             isPersistent: login.Remember,
@@ -103,7 +103,7 @@ public class UserController(
         await userManager.UpdateAsync(user);
 
         // Optional: return the same shape as /me so your frontend can hydrate immediately
-        var roles = await userManager.GetRolesAsync(user);
+        IList<string> roles = await userManager.GetRolesAsync(user);
         return Ok(new
         {
             loggedIn = true,
@@ -151,16 +151,16 @@ public class UserController(
         User? user = await userManager.GetUserAsync(User);
         if (user == null)
         {
-            return Unauthorized(new GetLoggedInUserDto
+            return Unauthorized(new LoggedInUserResponse
             {
                 LoggedIn = false,
                 UserData = null
             });
         }
 
-        var roles = await userManager.GetRolesAsync(user);
+        IList<string> roles = await userManager.GetRolesAsync(user);
 
-        var dto = new GetLoggedInUserDto
+        LoggedInUserResponse dto = new LoggedInUserResponse
         {
             LoggedIn = true,
             UserData = new UserResponse

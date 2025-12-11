@@ -1,6 +1,7 @@
 using System.Reflection;
 using LeafBidAPI.Data;
 using LeafBidAPI.Filters;
+using LeafBidAPI.Interfaces;
 using LeafBidAPI.Models;
 using LeafBidAPI.Services;
 using Microsoft.AspNetCore.DataProtection;
@@ -15,8 +16,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var allowedOrigins = "_allowedOrigins";
-        var builder = WebApplication.CreateBuilder(args);
+        string allowedOrigins = "_allowedOrigins";
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
         builder.WebHost.ConfigureKestrel(options =>
         {
             options.ListenAnyIP(8080); // match Docker container port
@@ -39,6 +40,16 @@ public class Program
                         .AllowCredentials();
                 });
         });
+
+        // Dependency Injection for Services
+        builder.Services.AddScoped<IAuctionService, AuctionService>();
+        builder.Services.AddScoped<IAuctionSaleService, AuctionSaleService>();
+        builder.Services.AddScoped<IAuctionSaleProductService, AuctionSaleProductService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IRoleService, RoleService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IPagesServices, PagesServices>();
+
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
         builder.Services.AddAuthorization();
@@ -104,7 +115,7 @@ public class Program
         }
         else
         {
-            builder.Services.AddTransient<IEmailSender<User>, EmailSender>();
+            builder.Services.AddTransient<IEmailSender<User>, EmailSenderService>();
         }
 
         // Set-up versioning
@@ -127,27 +138,32 @@ public class Program
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "LeafBidAPI", Version = "v1" });
+            c.SwaggerDoc("v2", new OpenApiInfo { Title = "LeafBidAPI", Version = "v2" });
 
-            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             c.SchemaFilter<EnumSchemaFilter>();
         });
 
-        var app = builder.Build();
+        WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI v1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeafBidAPI V1");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "LeafBidAPI V2");
+            });
         }
 
         //Role seeding
-        using (var scope = app.Services.CreateScope())
+        using (IServiceScope scope = app.Services.CreateScope())
         {
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             string[] roles = ["Admin", "Buyer", "Provider", "Auctioneer"];
-            foreach (var role in roles)
+            foreach (string role in roles)
             {
                 if (!roleManager.RoleExistsAsync(role).Result)
                 {
